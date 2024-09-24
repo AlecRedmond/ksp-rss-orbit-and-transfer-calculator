@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.equations.application.Body;
 import org.example.equations.method.KeplerianMethod;
+import org.example.formatting.StringFormatter;
 
 import java.util.*;
 
@@ -116,7 +117,8 @@ public class VisVivaGui extends Application {
 
     for (int i = 0; i < newDouble.length; i++) {
       try {
-        newDouble[i] = Double.parseDouble(textFields.get(i).getText());
+        // newDouble[i] = Double.parseDouble(textFields.get(i).getText());
+        newDouble[i] = StringFormatter.stringToDouble(textFields.get(i).getText());
       } catch (Exception e) {
         newDouble[i] = 0;
       }

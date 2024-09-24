@@ -1,5 +1,6 @@
 package org.example.formatting;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -44,12 +45,27 @@ public class StringFormatter {
     boolean makeNegative = false;
 
     LinkedList<String> splitStringsList = new LinkedList<>(List.of(myString.split(" ")));
-    while (splitStringsList.get(0).equals("")) {
-      splitStringsList.removeFirst();
-    }
+    splitStringsList.removeAll(Collections.singleton(""));
+
+    splitStringsList = removeWhiteSpace(splitStringsList);
 
     if (splitStringsList.get(0).equals("-")) {
       makeNegative = true;
+      splitStringsList.removeFirst();
+    }
+
+    if (splitStringsList.get(0).matches("-?[0-9]*\\w+")) {
+      StringBuilder sb = new StringBuilder(splitStringsList.get(0));
+      StringBuilder sb2 = new StringBuilder();
+      while (String.valueOf(sb.charAt(sb.length() - 1)).matches("[^0-9]")) {
+        sb2.insert(0, sb.charAt(sb.length() - 1));
+        sb.deleteCharAt(sb.length() - 1);
+      }
+      if (!sb2.isEmpty()) {
+        splitStringsList = new LinkedList<>();
+        splitStringsList.add(0, sb.toString());
+        splitStringsList.add(1, sb2.toString());
+      }
     }
 
     for (String element : splitStringsList) {
@@ -58,6 +74,7 @@ public class StringFormatter {
         if (makeNegative) {
           myDouble = 0 - myDouble;
         }
+        splitStringsList.remove(element);
         break;
       } catch (Exception e) {
       }
@@ -74,6 +91,21 @@ public class StringFormatter {
     double order = getOrder(mod);
 
     return myDouble * order;
+  }
+
+  public static LinkedList<String> removeWhiteSpace(LinkedList<String> splitStringsList) {
+    StringBuilder sb;
+    LinkedList<String> workingList = new LinkedList<>();
+    for (String element : splitStringsList) {
+      sb = new StringBuilder(element);
+      for (int i = 0; i < sb.length(); i++) {
+        if (String.valueOf(sb.charAt(i)).equals(" ")) {
+          sb.deleteCharAt(i);
+        }
+      }
+      workingList.add(sb.toString());
+    }
+    return workingList;
   }
 
   private static double getOrder(char mod) {
