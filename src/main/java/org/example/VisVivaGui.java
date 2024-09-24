@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.equations.application.Body;
 import org.example.equations.method.KeplerianMethod;
+import org.example.gui.OrbitalGridPlane;
 
 import java.util.*;
 
@@ -24,22 +25,24 @@ public class VisVivaGui extends Application {
   public void start(Stage primaryStage) throws Exception {
     primaryStage.setTitle("GridPlane Experiment");
 
-    TextField apsisOneTextField = new TextField();
-    TextField apsisTwoTextField = new TextField();
-    Label apsisOneLabel = new Label("Apsis 1 altitude (m)");
-    Label apsisTwoLabel = new Label("Apsis 2 altitude (m)");
-    TextField eccentricityField = new TextField();
-    TextField semiMajorAxisField = new TextField();
-    Label eccentricityLabel = new Label("Eccentricity");
-    Label semiMajorAxisLabel = new Label("SemiMajorAxis");
+    TextField periapsisTF = new TextField();
+    Label periapsisLb = new Label("Periapsis altitude (m)");
+    TextField apoapsisTF = new TextField();
+    Label apoapsisLb = new Label("Apsis 2 altitude (m)");
+    TextField eccentricityTF = new TextField();
+    Label eccentricityLb = new Label("Eccentricity");
+    TextField semiMajorAxisTF = new TextField();
+    Label semiMajorAxisLb = new Label("SemiMajorAxis");
 
     LinkedHashMap<Node, Node> nodeHashMap = new LinkedHashMap<>();
-    nodeHashMap.put(apsisOneLabel, apsisOneTextField);
-    nodeHashMap.put(apsisTwoLabel, apsisTwoTextField);
-    nodeHashMap.put(eccentricityLabel, eccentricityField);
-    nodeHashMap.put(semiMajorAxisLabel, semiMajorAxisField);
+    nodeHashMap.put(periapsisLb, periapsisTF);
+    nodeHashMap.put(apoapsisLb, apoapsisTF);
+    nodeHashMap.put(eccentricityLb, eccentricityTF);
+    nodeHashMap.put(semiMajorAxisLb, semiMajorAxisTF);
 
-    shapeGridPlane(nodeHashMap);
+    LinkedHashMap<Node,Node> nodeHashMap1 = OrbitalGridPlane.getGridPaneHashMap();
+
+    shapeGridPlane(nodeHashMap1);
     gridPane.setHgap(10);
     gridPane.setVgap(10);
 
@@ -47,14 +50,14 @@ public class VisVivaGui extends Application {
 
     button.setOnAction(
         action -> {
-          double apsisOne = Double.parseDouble(apsisOneTextField.getText());
-          double apsisTwo = Double.parseDouble(apsisTwoTextField.getText());
+          double apsisOne = Double.parseDouble(periapsisTF.getText());
+          double apsisTwo = Double.parseDouble(apoapsisTF.getText());
           KeplerianMethod keplerianMethod =
               new KeplerianMethod(Body.EARTH, apsisOne, apsisTwo, true);
           double eccentricity = keplerianMethod.getKeplerian().getEccentricity();
           double semiMajorAxis = keplerianMethod.getKeplerian().getSemiMajorAxis();
-          eccentricityField.setText(String.valueOf(eccentricity));
-          semiMajorAxisField.setText(String.valueOf(semiMajorAxis));
+          eccentricityTF.setText(String.valueOf(eccentricity));
+          semiMajorAxisTF.setText(String.valueOf(semiMajorAxis));
         });
 
     VBox vBox = new VBox(button);
