@@ -1,6 +1,5 @@
 package org.example.formatting;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -64,6 +63,32 @@ public class StringFormatter {
       }
     }
 
-    return myDouble;
+    char mod = '-';
+
+    for (String element : splitStringsList) {
+      if (element.matches("[kMGTmμnp]\\w+")) {
+        mod = element.charAt(0);
+      }
+    }
+
+    double order = getOrder(mod);
+
+    return myDouble * order;
+  }
+
+  private static double getOrder(char mod) {
+    double order;
+    switch (mod) {
+      case 'k' -> order = 1e3;
+      case 'M' -> order = 1e6;
+      case 'G' -> order = 1e9;
+      case 'T' -> order = 1e12;
+      case 'm' -> order = 1e-3;
+      case 'μ' -> order = 1e-6;
+      case 'n' -> order = 1e-9;
+      case 'p' -> order = 1e-12;
+      default -> order = 1;
+    }
+    return order;
   }
 }

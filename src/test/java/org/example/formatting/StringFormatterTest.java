@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class StringFormatterTest {
   private double testDouble = 3e-3;
-  private String testString = "500.00 km";
-  private String testString2 = "500 km";
+  private String testString = "5E2 km";
+  private String testString2 = "500 Mm";
   private String testString3 = " - 500.00 km";
 
 
@@ -23,8 +23,8 @@ class StringFormatterTest {
     double myDouble = StringFormatter.stringToDouble(testString);
     double myDouble2 = StringFormatter.stringToDouble(testString2);
     double myDouble3 = StringFormatter.stringToDouble(testString3);
-    assertEquals(myDouble,500);
-    assertEquals(myDouble2,500);
-    assertEquals(myDouble3,-500);
+    assertEquals(myDouble,500e3);
+    assertEquals(myDouble2,500e6);
+    assertEquals(myDouble3,-500e3);
   }
 }
