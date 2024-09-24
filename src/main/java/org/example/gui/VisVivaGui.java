@@ -12,7 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.equations.application.Body;
 import org.example.equations.method.KeplerianMethod;
-import org.example.formatting.StringFormatter;
+import org.example.formatting.StringUnitParser;
 
 import java.util.*;
 
@@ -79,14 +79,14 @@ public class VisVivaGui extends Application {
           semiMajorAxisDouble[0] = keplerianMethodLeft.getKeplerian().getSemiMajorAxis();
           semiMajorAxisDouble[1] = keplerianMethodRight.getKeplerian().getSemiMajorAxis();
 
-          periapsisTF.get(0).setText(String.valueOf(periapsisDouble[0]));
-          periapsisTF.get(1).setText(String.valueOf(periapsisDouble[1]));
-          apoapsisTF.get(0).setText(String.valueOf(apoapsisDouble[0]));
-          apoapsisTF.get(1).setText(String.valueOf(apoapsisDouble[1]));
-          eccentricityTF.get(0).setText(String.valueOf(eccentricityDouble[0]));
-          eccentricityTF.get(1).setText(String.valueOf(eccentricityDouble[1]));
-          semiMajorAxisTF.get(0).setText(String.valueOf(semiMajorAxisDouble[0]));
-          semiMajorAxisTF.get(1).setText(String.valueOf(semiMajorAxisDouble[1]));
+          periapsisTF.get(0).setText(returnUnits(periapsisDouble[0],"m"));
+          periapsisTF.get(1).setText(returnUnits(periapsisDouble[1],"m"));
+          apoapsisTF.get(0).setText(returnUnits(apoapsisDouble[0],"m"));
+          apoapsisTF.get(1).setText(returnUnits(apoapsisDouble[1],"m"));
+          eccentricityTF.get(0).setText(returnUnits(eccentricityDouble[0],"eccentricity"));
+          eccentricityTF.get(1).setText(returnUnits(eccentricityDouble[1],"eccentricity"));
+          semiMajorAxisTF.get(0).setText(returnUnits(semiMajorAxisDouble[0],"m"));
+          semiMajorAxisTF.get(1).setText(returnUnits(semiMajorAxisDouble[1],"m"));
         });
 
     VBox vBox = new VBox(button);
@@ -117,14 +117,16 @@ public class VisVivaGui extends Application {
 
     for (int i = 0; i < newDouble.length; i++) {
       try {
-        // newDouble[i] = Double.parseDouble(textFields.get(i).getText());
-        newDouble[i] = StringFormatter.stringToDouble(textFields.get(i).getText());
+        newDouble[i] = StringUnitParser.stringToDouble(textFields.get(i).getText());
       } catch (Exception e) {
         newDouble[i] = 0;
       }
     }
-
     return newDouble;
+  }
+
+  public String returnUnits(double myDouble, String unitSymbol){
+      return StringUnitParser.doubleToString(myDouble,unitSymbol);
   }
 
   public static void main(String[] args) {

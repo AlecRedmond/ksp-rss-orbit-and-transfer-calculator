@@ -17,16 +17,16 @@ class StringFormatterTest {
 
   @Test
   void testDoubleToString() {
-    String testDoubleString = StringFormatter.doubleToString(testDouble,"m");
+    String testDoubleString = StringUnitParser.doubleToString(testDouble,"m");
     assertEquals(testDoubleString,"3.00 mm");
 
   }
 
   @Test
   void testStringToDouble() {
-    double myDouble = StringFormatter.stringToDouble(testString);
-    double myDouble2 = StringFormatter.stringToDouble(testString2);
-    double myDouble3 = StringFormatter.stringToDouble(testString3);
+    double myDouble = StringUnitParser.stringToDouble(testString);
+    double myDouble2 = StringUnitParser.stringToDouble(testString2);
+    double myDouble3 = StringUnitParser.stringToDouble(testString3);
     assertEquals(myDouble,-500e3);
     assertEquals(myDouble2,500e6);
     assertEquals(myDouble3,-500e3);
@@ -34,7 +34,7 @@ class StringFormatterTest {
 
   @Test
   void removeWhiteSpace() {
-    String newString = StringFormatter.removeWhiteSpace(testString);
+    String newString = StringUnitParser.removeWhiteSpace(testString);
     assertEquals(newString,"-5E2km");
   }
 }
