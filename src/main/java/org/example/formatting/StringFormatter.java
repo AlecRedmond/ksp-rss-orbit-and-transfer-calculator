@@ -1,8 +1,5 @@
 package org.example.formatting;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 
 public class StringFormatter {
   public static String doubleToString(double myDouble, String unitSymbol) {
@@ -42,50 +39,32 @@ public class StringFormatter {
 
   public static double stringToDouble(String myString) {
     double myDouble = 0;
-    boolean makeNegative = false;
+    String numericalElement;
+    String magnitudeElement = "";
 
-    LinkedList<String> splitStringsList = new LinkedList<>(List.of(myString.split(" ")));
-    splitStringsList.removeAll(Collections.singleton(""));
+    String strippedString = removeWhiteSpace(myString);
 
-    splitStringsList = removeWhiteSpace(splitStringsList);
-
-    if (splitStringsList.get(0).equals("-")) {
-      makeNegative = true;
-      splitStringsList.removeFirst();
+    StringBuilder sbNumerical = new StringBuilder(strippedString);
+    StringBuilder sbMagnitude = new StringBuilder();
+    while (String.valueOf(sbNumerical.charAt(sbNumerical.length() - 1)).matches("[^0-9]")) {
+      sbMagnitude.insert(0, sbNumerical.charAt(sbNumerical.length() - 1));
+      sbNumerical.deleteCharAt(sbNumerical.length() - 1);
+    }
+    numericalElement = sbNumerical.toString();
+    if (!sbMagnitude.isEmpty()) {
+      magnitudeElement = sbMagnitude.toString();
     }
 
-    if (splitStringsList.get(0).matches("-?[0-9]*\\w+")) {
-      StringBuilder sb = new StringBuilder(splitStringsList.get(0));
-      StringBuilder sb2 = new StringBuilder();
-      while (String.valueOf(sb.charAt(sb.length() - 1)).matches("[^0-9]")) {
-        sb2.insert(0, sb.charAt(sb.length() - 1));
-        sb.deleteCharAt(sb.length() - 1);
-      }
-      if (!sb2.isEmpty()) {
-        splitStringsList = new LinkedList<>();
-        splitStringsList.add(0, sb.toString());
-        splitStringsList.add(1, sb2.toString());
-      }
-    }
+    try {
+      myDouble = Double.parseDouble(numericalElement);
 
-    for (String element : splitStringsList) {
-      try {
-        myDouble = Double.parseDouble(element);
-        if (makeNegative) {
-          myDouble = 0 - myDouble;
-        }
-        splitStringsList.remove(element);
-        break;
-      } catch (Exception e) {
-      }
+    } catch (Exception ignored) {
     }
 
     char mod = '-';
 
-    for (String element : splitStringsList) {
-      if (element.matches("[kMGTmμnp]\\w+")) {
-        mod = element.charAt(0);
-      }
+    if (magnitudeElement.matches("[kMGTmμnp]\\w+")) {
+      mod = magnitudeElement.charAt(0);
     }
 
     double order = getOrder(mod);
@@ -93,19 +72,18 @@ public class StringFormatter {
     return myDouble * order;
   }
 
-  public static LinkedList<String> removeWhiteSpace(LinkedList<String> splitStringsList) {
+  public static String removeWhiteSpace(String string) {
     StringBuilder sb;
-    LinkedList<String> workingList = new LinkedList<>();
-    for (String element : splitStringsList) {
-      sb = new StringBuilder(element);
-      for (int i = 0; i < sb.length(); i++) {
-        if (String.valueOf(sb.charAt(i)).equals(" ")) {
-          sb.deleteCharAt(i);
-        }
+    String newString;
+    sb = new StringBuilder(string);
+    for (int i = 0; i < sb.length(); i++) {
+      if (String.valueOf(sb.charAt(i)).equals(" ")) {
+        sb.deleteCharAt(i);
+        i--;
       }
-      workingList.add(sb.toString());
     }
-    return workingList;
+    newString = sb.toString();
+    return newString;
   }
 
   private static double getOrder(char mod) {
