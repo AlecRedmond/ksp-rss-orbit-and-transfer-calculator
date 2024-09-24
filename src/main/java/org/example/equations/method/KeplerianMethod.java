@@ -31,9 +31,13 @@ public class KeplerianMethod {
       periapsis += body.getRadius();
     }
 
+    setEllipseElements(apoapsis, periapsis);
+
+    apoapsis -= body.getRadius();
+    periapsis -= body.getRadius();
+
     this.keplerian.setApoapsis(apoapsis);
     this.keplerian.setPeriapsis(periapsis);
-    setEllipseElements(apoapsis, periapsis);
   }
 
   private void setEllipseElements(double trueApoapsis, double truePeriapsis) {

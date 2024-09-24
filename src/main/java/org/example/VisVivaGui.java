@@ -28,7 +28,7 @@ public class VisVivaGui extends Application {
     TextField periapsisTF = new TextField();
     Label periapsisLb = new Label("Periapsis altitude (m)");
     TextField apoapsisTF = new TextField();
-    Label apoapsisLb = new Label("Apsis 2 altitude (m)");
+    Label apoapsisLb = new Label("Apoapsis altitude (m)");
     TextField eccentricityTF = new TextField();
     Label eccentricityLb = new Label("Eccentricity");
     TextField semiMajorAxisTF = new TextField();
@@ -40,9 +40,7 @@ public class VisVivaGui extends Application {
     nodeHashMap.put(eccentricityLb, eccentricityTF);
     nodeHashMap.put(semiMajorAxisLb, semiMajorAxisTF);
 
-    LinkedHashMap<Node,Node> nodeHashMap1 = OrbitalGridPlane.getGridPaneHashMap();
-
-    shapeGridPlane(nodeHashMap1);
+    shapeGridPlane(nodeHashMap);
     gridPane.setHgap(10);
     gridPane.setVgap(10);
 
@@ -54,14 +52,18 @@ public class VisVivaGui extends Application {
           double apsisTwo = Double.parseDouble(apoapsisTF.getText());
           KeplerianMethod keplerianMethod =
               new KeplerianMethod(Body.EARTH, apsisOne, apsisTwo, true);
+          double apoapsis = keplerianMethod.getKeplerian().getApoapsis();
+          double periapsis = keplerianMethod.getKeplerian().getPeriapsis();
           double eccentricity = keplerianMethod.getKeplerian().getEccentricity();
           double semiMajorAxis = keplerianMethod.getKeplerian().getSemiMajorAxis();
+          periapsisTF.setText(String.valueOf(periapsis));
+          apoapsisTF.setText(String.valueOf(apoapsis));
           eccentricityTF.setText(String.valueOf(eccentricity));
           semiMajorAxisTF.setText(String.valueOf(semiMajorAxis));
         });
 
     VBox vBox = new VBox(button);
-    HBox hBox = new HBox(gridPane,vBox);
+    HBox hBox = new HBox(gridPane, vBox);
     hBox.setAlignment(Pos.BASELINE_CENTER);
 
     Scene scene = new Scene(hBox, 640, 480);
