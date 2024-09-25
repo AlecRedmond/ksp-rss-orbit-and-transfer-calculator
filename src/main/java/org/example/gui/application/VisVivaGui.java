@@ -69,6 +69,7 @@ public class VisVivaGui extends Application {
     int finalRightHoldButtonPosition = rightHoldButtonPosition;
     int finalLeftTextFieldPosition = leftTextFieldPosition;
     int finalRightTextFieldPosition = rightTextFieldPosition;
+
     calculateEAndSma.setOnAction(
         action -> {
           ArrayList<VVDataElement> vvDataElementsLeft = new ArrayList<>();
@@ -136,50 +137,6 @@ public class VisVivaGui extends Application {
     Scene scene = new Scene(hBox, 640, 480);
     stage.setScene(scene);
     stage.show();
-  }
-
-  public String[][] getTextFieldData(Node[][] myGrid) {
-    TextField textField;
-    String[][] textFieldData;
-    int myGridXLength = myGrid.length;
-    int myGridYLength = myGrid[0].length;
-    ArrayList<Integer> indexOfTextFields = new ArrayList<>();
-
-    for (int i = 0; i < myGridXLength; i++) {
-      try {
-        textField = (TextField) myGrid[indexOfTextFields.get(i)][0];
-        indexOfTextFields.add(i);
-      } catch (Exception ignored) {
-      }
-    }
-
-    textFieldData = new String[indexOfTextFields.size()][myGridYLength];
-    for (int y = 0; y < myGridYLength; y++) {
-      for (int i = 0; i < indexOfTextFields.size(); i++) {
-        textField = (TextField) myGrid[indexOfTextFields.get(i)][y];
-        textFieldData[i][y] = textField.getText();
-      }
-    }
-
-    return textFieldData;
-  }
-
-  private void shapeGridPlane(LinkedHashMap<Node, ArrayList<TextField>> nodeHashMap) {
-    Label leftKey;
-
-    int row = 0;
-    for (Map.Entry<Node, ArrayList<TextField>> entry : nodeHashMap.entrySet()) {
-      leftKey = (Label) entry.getKey();
-
-      this.gridPane.add(leftKey, 0, row);
-      this.gridPane.add(entry.getValue().get(0), 1, row);
-      this.gridPane.add(entry.getValue().get(1), 2, row);
-      row++;
-    }
-  }
-
-  private double parseToDouble(String string) {
-    return StringUnitParser.stringToDouble(string);
   }
 
   public String parseToString(double myData, String parameterName) {
