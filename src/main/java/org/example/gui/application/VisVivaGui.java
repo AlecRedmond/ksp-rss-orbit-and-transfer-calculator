@@ -32,16 +32,18 @@ public class VisVivaGui extends Application {
   ArrayList<Node> innerNodes;
   ArrayList<Integer> fieldLocations;
 
+  public static void main(String[] args) {
+    launch(args);
+  }
+
   @Override
   public void start(Stage stage) throws Exception {
     this.stage = stage;
-    buildScene();
+    this.stage.setTitle("GridPlane Experiment");
 
     setKeplerElements();
-
     shapeMyNodesArray();
-
-    shapeGrid(myNodes);
+    setGridFromMyNodes(myNodes);
 
     this.gridPane.setHgap(10);
     this.gridPane.setVgap(10);
@@ -107,7 +109,7 @@ public class VisVivaGui extends Application {
             List.of(Periapsis.class, Apoapsis.class, Eccentricity.class, SemiMajorAxis.class));
   }
 
-  private void shapeGrid(ArrayList<ArrayList<Node>> myNodes) {
+  private void setGridFromMyNodes(ArrayList<ArrayList<Node>> myNodes) {
     int innerNodeSize = myNodes.get(0).size();
 
     for (int y = 0; y < myNodes.size(); y++) {
@@ -182,11 +184,5 @@ public class VisVivaGui extends Application {
         });
   }
 
-  public void buildScene() {
-    stage.setTitle("GridPlane Experiment");
-  }
 
-  public static void main(String[] args) {
-    launch(args);
-  }
 }
