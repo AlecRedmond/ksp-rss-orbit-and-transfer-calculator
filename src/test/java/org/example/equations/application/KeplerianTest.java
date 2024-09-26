@@ -1,14 +1,16 @@
 package org.example.equations.application;
 
+import org.example.equations.application.keplerianelements.Periapsis;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class KeplerianTest {
-    Keplerian keplerian = new Keplerian();
+  Keplerian keplerian = new Keplerian();
 
-    @Test
-    public void doesItEqualNull(){
-        assertEquals(null,keplerian.getApoapsis());
-    }
+  @Test
+  void newSetHold() {
+      keplerian.setPeriapsis(100);
+      keplerian.newSetHold(true, Periapsis.class);
+  }
 }
