@@ -1,12 +1,12 @@
 package org.example.formatting;
 
 public class StringUnitParser {
-  public static String doubleToString(double myDouble, String unitSymbol) {
+  public static String doubleToString(double myDouble, String parameterName) {
     String myString;
     String magnitudeSymbol;
 
-    if(unitSymbol.equals("eccentricity")){
-      myString = String.format("%.3f",myDouble);
+    if (parameterName.toLowerCase().equals("eccentricity")) {
+      myString = String.format("%.3f", myDouble);
       return myString;
     }
 
@@ -20,7 +20,7 @@ public class StringUnitParser {
       orderOfMagnitudeCounter--;
     }
 
-    if (!unitSymbol.isEmpty()) {
+    if (!parameterName.isEmpty()) {
       switch (orderOfMagnitudeCounter) {
         case 0 -> magnitudeSymbol = "";
         case 1 -> magnitudeSymbol = "k";
@@ -41,9 +41,16 @@ public class StringUnitParser {
       magnitudeSymbol = String.format("e%02d", scientific);
     }
 
+    String unitSymbol = findUnitSymbol(parameterName.toLowerCase());
+
     myString = String.format("%3.2f %s%s", myDouble, magnitudeSymbol, unitSymbol);
 
     return myString;
+  }
+
+  public static String findUnitSymbol(String unitType) {
+    unitType = unitType.toLowerCase();
+    return UnitsForElements.ELEMENTS.getOrDefault(unitType, "");
   }
 
   public static double stringToDouble(String myString) {
