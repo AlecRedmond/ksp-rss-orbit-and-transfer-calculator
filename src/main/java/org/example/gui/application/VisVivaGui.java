@@ -11,10 +11,15 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.example.equations.application.keplerianelements.Apoapsis;
+import org.example.equations.application.keplerianelements.Eccentricity;
+import org.example.equations.application.keplerianelements.Periapsis;
+import org.example.equations.application.keplerianelements.SemiMajorAxis;
 import org.example.equations.method.KeplerianMethod;
 import org.example.formatting.StringUnitParser;
 import org.example.gui.method.VVDataElement;
 
+import java.lang.reflect.Method;
 import java.util.*;
 
 public class VisVivaGui extends Application {
@@ -27,8 +32,12 @@ public class VisVivaGui extends Application {
   public void start(Stage stage) throws Exception {
     stage.setTitle("GridPlane Experiment");
 
-    LinkedList<String> keplerElements =
-        new LinkedList<>(List.of("Periapsis", "Apoapsis", "Eccentricity", "Semi-Major Axis"));
+    //    LinkedList<String> keplerElements =
+    //        new LinkedList<>(List.of("Periapsis", "Apoapsis", "Eccentricity", "Semi-Major Axis"));
+
+    LinkedList<Class> keplerElements =
+        new LinkedList<>(
+            List.of(Periapsis.class, Apoapsis.class, Eccentricity.class, SemiMajorAxis.class));
 
     int leftHoldButtonPosition = 0;
     int leftTextFieldPosition = 0;
@@ -37,18 +46,32 @@ public class VisVivaGui extends Application {
 
     ArrayList<ArrayList<Node>> myNodes = new ArrayList<>();
     ArrayList<Node> innerNodes;
-    for (String keplerElement : keplerElements) {
-      innerNodes = new ArrayList<>();
-      innerNodes.add(new Label(keplerElement));
-      leftHoldButtonPosition = innerNodes.size();
-      innerNodes.add(new ToggleButton("Hold"));
-      leftTextFieldPosition = innerNodes.size();
-      innerNodes.add(new TextField(""));
-      rightTextFieldPosition = innerNodes.size();
-      innerNodes.add(new TextField(""));
-      rightHoldButtonPosition = innerNodes.size();
-      innerNodes.add(new ToggleButton("Hold"));
-      myNodes.add(innerNodes);
+    try {
+      for (Class keplerElement : keplerElements) {
+        innerNodes = new ArrayList<>();
+
+        Object instance = keplerElement.getDeclaredConstructor().newInstance();
+        Method method = keplerElement.getMethod("displayName");
+        String methodString = (String) method.invoke(instance);
+
+        innerNodes.add(new Label(methodString));
+
+        leftHoldButtonPosition = innerNodes.size();
+        innerNodes.add(new ToggleButton("Hold"));
+
+        leftTextFieldPosition = innerNodes.size();
+        innerNodes.add(new TextField(""));
+
+        rightTextFieldPosition = innerNodes.size();
+        innerNodes.add(new TextField(""));
+
+        rightHoldButtonPosition = innerNodes.size();
+        innerNodes.add(new ToggleButton("Hold"));
+
+        myNodes.add(innerNodes);
+      }
+    } catch (Exception e) {
+      System.out.println(e);
     }
 
     int innerNodeSize = myNodes.get(0).size();
@@ -72,7 +95,7 @@ public class VisVivaGui extends Application {
 
     calculateEAndSma.setOnAction(
         action -> {
-          ArrayList<VVDataElement> vvDataElementsLeft = new ArrayList<>();
+          /*ArrayList<VVDataElement> vvDataElementsLeft = new ArrayList<>();
           ArrayList<VVDataElement> vvDataElementsRight = new ArrayList<>();
           for (int i = 0; i < myNodes.size(); i++) {
             String parameterName = String.valueOf(keplerElements.get(i));
@@ -115,7 +138,7 @@ public class VisVivaGui extends Application {
             String setNameRight = parseToString(dataRight, parameterNameRight);
             TextField rightTextField = (TextField) myNodes.get(i).get(finalRightTextFieldPosition);
             rightTextField.setText(setNameRight);
-          }
+          }*/
         });
 
     clearAllFields.setOnAction(

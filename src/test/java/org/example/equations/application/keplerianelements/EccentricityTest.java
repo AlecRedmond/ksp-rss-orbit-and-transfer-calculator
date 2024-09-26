@@ -8,10 +8,12 @@ class EccentricityTest {
     static double testData = 0.02;
     static String testString = "0.020";
     static Eccentricity data;
+    static SemiMajorAxis semiMajorAxis;
 
     @BeforeAll
     static void generateApoapsis(){
     data = new Eccentricity();
+    semiMajorAxis = new SemiMajorAxis();
     }
 
     @Test
@@ -32,4 +34,15 @@ class EccentricityTest {
         data.setFromString(testString);
         assertEquals(testData, data.get());
     }
+
+    @Test
+    void setGetHold(){
+        data.setHold(true);
+        boolean smaBool = semiMajorAxis.isHeld();
+        assertNotEquals(smaBool,data.isHeld());
+        semiMajorAxis.setHold(true);
+        data.setHold(false);
+        assertNotEquals(semiMajorAxis.isHeld(),data.isHeld());
+    }
+
 }

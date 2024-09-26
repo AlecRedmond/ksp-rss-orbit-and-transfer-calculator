@@ -28,4 +28,9 @@ public class Periapsis extends KeplerElement<Double> {
         dataFromString = StringUnitParser.stringToDouble(string);
         this.data = dataFromString;
     }
+
+    @Override
+    public String displayName() {
+        return "Periapsis";
+    }
 }
