@@ -18,13 +18,15 @@ import org.example.equations.method.KeplerianMethod;
 
 public class VisVivaGui extends Application {
 
+  Stage stage = new Stage();
   GridPane gridPane = new GridPane();
   KeplerianMethod keplerianMethodLeft;
   KeplerianMethod keplerianMethodRight;
 
   @Override
   public void start(Stage stage) throws Exception {
-    stage.setTitle("GridPlane Experiment");
+    this.stage = stage;
+    buildScene();
 
     LinkedList<Class> keplerElements =
         new LinkedList<>(
@@ -66,13 +68,15 @@ public class VisVivaGui extends Application {
       System.out.println("One of the classes does not have a displayName() method");
     }
 
-    int innerNodeSize = myNodes.get(0).size();
+    ArrayList<Integer> fieldLocations =
+        new ArrayList<>(
+            List.of(
+                leftHoldButtonPosition,
+                rightHoldButtonPosition,
+                leftTextFieldPosition,
+                rightTextFieldPosition));
 
-    for (int y = 0; y < myNodes.size(); y++) {
-      for (int x = 0; x < innerNodeSize; x++) {
-        this.gridPane.add(myNodes.get(y).get(x), x, y);
-      }
-    }
+    shapeGrid(myNodes);
 
     this.gridPane.setHgap(10);
     this.gridPane.setVgap(10);
@@ -80,10 +84,38 @@ public class VisVivaGui extends Application {
     Button calculateEAndSma = new Button("Calculate e and SMA");
     Button clearAllFields = new Button("Clear All Fields");
 
-    int finalLeftHoldButtonPosition = leftHoldButtonPosition;
-    int finalRightHoldButtonPosition = rightHoldButtonPosition;
-    int finalLeftTextFieldPosition = leftTextFieldPosition;
-    int finalRightTextFieldPosition = rightTextFieldPosition;
+    calculateEAndSMAButtonEvent(fieldLocations, calculateEAndSma, myNodes, keplerElements);
+
+    clearAllFieldsButton(clearAllFields, myNodes);
+
+    VBox vBox = new VBox(calculateEAndSma, clearAllFields);
+    vBox.setSpacing(10);
+    HBox hBox = new HBox(this.gridPane, vBox);
+
+    Scene scene = new Scene(hBox, 640, 480);
+    stage.setScene(scene);
+    stage.show();
+  }
+
+  private void shapeGrid(ArrayList<ArrayList<Node>> myNodes) {
+    int innerNodeSize = myNodes.get(0).size();
+
+    for (int y = 0; y < myNodes.size(); y++) {
+      for (int x = 0; x < innerNodeSize; x++) {
+        this.gridPane.add(myNodes.get(y).get(x), x, y);
+      }
+    }
+  }
+
+  private void calculateEAndSMAButtonEvent(
+      ArrayList<Integer> fieldLocations,
+      Button calculateEAndSma,
+      ArrayList<ArrayList<Node>> myNodes,
+      LinkedList<Class> keplerElements) {
+    int finalLeftHoldButtonPosition = fieldLocations.get(0);
+    int finalRightHoldButtonPosition = fieldLocations.get(1);
+    int finalLeftTextFieldPosition = fieldLocations.get(2);
+    int finalRightTextFieldPosition = fieldLocations.get(3);
 
     calculateEAndSma.setOnAction(
         action -> {
@@ -123,7 +155,10 @@ public class VisVivaGui extends Application {
             ((TextField) myNodes.get(i).get(finalRightTextFieldPosition)).setText(rightOutput);
           }
         });
+  }
 
+  private static void clearAllFieldsButton(
+      Button clearAllFields, ArrayList<ArrayList<Node>> myNodes) {
     clearAllFields.setOnAction(
         actionEvent -> {
           for (ArrayList<Node> element : myNodes) {
@@ -135,14 +170,10 @@ public class VisVivaGui extends Application {
             }
           }
         });
+  }
 
-    VBox vBox = new VBox(calculateEAndSma, clearAllFields);
-    vBox.setSpacing(10);
-    HBox hBox = new HBox(this.gridPane, vBox);
-
-    Scene scene = new Scene(hBox, 640, 480);
-    stage.setScene(scene);
-    stage.show();
+  public void buildScene() {
+    stage.setTitle("GridPlane Experiment");
   }
 
   public static void main(String[] args) {
