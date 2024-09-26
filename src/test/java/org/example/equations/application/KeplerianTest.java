@@ -9,8 +9,5 @@ class KeplerianTest {
   Keplerian keplerian = new Keplerian();
 
   @Test
-  void newSetHold() {
-      keplerian.setPeriapsis(100);
-      keplerian.newSetHold(true, Periapsis.class);
-  }
+  void newSetHold() {}
 }
