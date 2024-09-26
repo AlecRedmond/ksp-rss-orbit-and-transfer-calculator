@@ -22,23 +22,47 @@ public class VisVivaGui extends Application {
   GridPane gridPane = new GridPane();
   KeplerianMethod keplerianMethodLeft;
   KeplerianMethod keplerianMethodRight;
+  LinkedList<Class> keplerElements;
+  int leftHoldButtonPosition = 0;
+  int leftTextFieldPosition = 0;
+  int rightHoldButtonPosition = 0;
+  int rightTextFieldPosition = 0;
+
+  ArrayList<ArrayList<Node>> myNodes = new ArrayList<>();
+  ArrayList<Node> innerNodes;
+  ArrayList<Integer> fieldLocations;
 
   @Override
   public void start(Stage stage) throws Exception {
     this.stage = stage;
     buildScene();
 
-    LinkedList<Class> keplerElements =
-        new LinkedList<>(
-            List.of(Periapsis.class, Apoapsis.class, Eccentricity.class, SemiMajorAxis.class));
+    setKeplerElements();
 
-    int leftHoldButtonPosition = 0;
-    int leftTextFieldPosition = 0;
-    int rightHoldButtonPosition = 0;
-    int rightTextFieldPosition = 0;
+    shapeMyNodesArray();
 
-    ArrayList<ArrayList<Node>> myNodes = new ArrayList<>();
-    ArrayList<Node> innerNodes;
+    shapeGrid(myNodes);
+
+    this.gridPane.setHgap(10);
+    this.gridPane.setVgap(10);
+
+    Button calculateEAndSma = new Button("Calculate e and SMA");
+    Button clearAllFields = new Button("Clear All Fields");
+
+    calculateEAndSMAButtonEvent(fieldLocations, calculateEAndSma, myNodes, keplerElements);
+
+    clearAllFieldsButton(clearAllFields, myNodes);
+
+    VBox vBox = new VBox(calculateEAndSma, clearAllFields);
+    vBox.setSpacing(10);
+    HBox hBox = new HBox(this.gridPane, vBox);
+
+    Scene scene = new Scene(hBox, 640, 480);
+    stage.setScene(scene);
+    stage.show();
+  }
+
+  private void shapeMyNodesArray() {
     try {
       for (Class keplerElement : keplerElements) {
         innerNodes = new ArrayList<>();
@@ -68,33 +92,19 @@ public class VisVivaGui extends Application {
       System.out.println("One of the classes does not have a displayName() method");
     }
 
-    ArrayList<Integer> fieldLocations =
+    fieldLocations =
         new ArrayList<>(
             List.of(
                 leftHoldButtonPosition,
                 rightHoldButtonPosition,
                 leftTextFieldPosition,
                 rightTextFieldPosition));
+  }
 
-    shapeGrid(myNodes);
-
-    this.gridPane.setHgap(10);
-    this.gridPane.setVgap(10);
-
-    Button calculateEAndSma = new Button("Calculate e and SMA");
-    Button clearAllFields = new Button("Clear All Fields");
-
-    calculateEAndSMAButtonEvent(fieldLocations, calculateEAndSma, myNodes, keplerElements);
-
-    clearAllFieldsButton(clearAllFields, myNodes);
-
-    VBox vBox = new VBox(calculateEAndSma, clearAllFields);
-    vBox.setSpacing(10);
-    HBox hBox = new HBox(this.gridPane, vBox);
-
-    Scene scene = new Scene(hBox, 640, 480);
-    stage.setScene(scene);
-    stage.show();
+  private void setKeplerElements() {
+    keplerElements =
+        new LinkedList<>(
+            List.of(Periapsis.class, Apoapsis.class, Eccentricity.class, SemiMajorAxis.class));
   }
 
   private void shapeGrid(ArrayList<ArrayList<Node>> myNodes) {
