@@ -26,6 +26,9 @@ public class Eccentricity extends KeplerElement<Double> {
     public void setFromString(String string) {
         double dataFromString;
         dataFromString = StringUnitParser.stringToDouble(string);
+        if(dataFromString >= 1 || dataFromString < 0){
+            dataFromString = 0;
+        }
         this.data = dataFromString;
     }
 

@@ -30,7 +30,7 @@ public class VisVivaGui extends Application {
 
   ArrayList<ArrayList<Node>> myNodes = new ArrayList<>();
   ArrayList<Node> innerNodes;
-  ArrayList<Integer> fieldLocations;
+  ArrayList<Integer> fieldAndHoldLocations;
 
   public static void main(String[] args) {
     launch(args);
@@ -39,29 +39,38 @@ public class VisVivaGui extends Application {
   @Override
   public void start(Stage stage) throws Exception {
     this.stage = stage;
-    this.stage.setTitle("GridPlane Experiment");
 
     setKeplerElements();
     shapeMyNodesArray();
-    setGridFromMyNodes(myNodes);
-
-    this.gridPane.setHgap(10);
-    this.gridPane.setVgap(10);
+    setGridFromMyNodes();
 
     Button calculateEAndSma = new Button("Calculate e and SMA");
+    calculateEAndSMAButtonEvent(calculateEAndSma);
+
     Button clearAllFields = new Button("Clear All Fields");
+    clearAllFieldsButtonEvent(clearAllFields);
 
-    calculateEAndSMAButtonEvent(fieldLocations, calculateEAndSma, myNodes, keplerElements);
+    Button generateTransfers = new Button("Generate Transfers");
 
-    clearAllFieldsButton(clearAllFields, myNodes);
+
 
     VBox vBox = new VBox(calculateEAndSma, clearAllFields);
-    vBox.setSpacing(10);
     HBox hBox = new HBox(this.gridPane, vBox);
-
     Scene scene = new Scene(hBox, 640, 480);
+
+    this.stage.setTitle("GridPlane Experiment");
+    this.gridPane.setHgap(10);
+    this.gridPane.setVgap(10);
+    vBox.setSpacing(10);
+
     stage.setScene(scene);
     stage.show();
+  }
+
+  private void setKeplerElements() {
+    keplerElements =
+        new LinkedList<>(
+            List.of(Periapsis.class, Apoapsis.class, Eccentricity.class, SemiMajorAxis.class));
   }
 
   private void shapeMyNodesArray() {
@@ -94,7 +103,7 @@ public class VisVivaGui extends Application {
       System.out.println("One of the classes does not have a displayName() method");
     }
 
-    fieldLocations =
+    fieldAndHoldLocations =
         new ArrayList<>(
             List.of(
                 leftHoldButtonPosition,
@@ -103,13 +112,7 @@ public class VisVivaGui extends Application {
                 rightTextFieldPosition));
   }
 
-  private void setKeplerElements() {
-    keplerElements =
-        new LinkedList<>(
-            List.of(Periapsis.class, Apoapsis.class, Eccentricity.class, SemiMajorAxis.class));
-  }
-
-  private void setGridFromMyNodes(ArrayList<ArrayList<Node>> myNodes) {
+  private void setGridFromMyNodes() {
     int innerNodeSize = myNodes.get(0).size();
 
     for (int y = 0; y < myNodes.size(); y++) {
@@ -120,14 +123,11 @@ public class VisVivaGui extends Application {
   }
 
   private void calculateEAndSMAButtonEvent(
-      ArrayList<Integer> fieldLocations,
-      Button calculateEAndSma,
-      ArrayList<ArrayList<Node>> myNodes,
-      LinkedList<Class> keplerElements) {
-    int finalLeftHoldButtonPosition = fieldLocations.get(0);
-    int finalRightHoldButtonPosition = fieldLocations.get(1);
-    int finalLeftTextFieldPosition = fieldLocations.get(2);
-    int finalRightTextFieldPosition = fieldLocations.get(3);
+      Button calculateEAndSma) {
+    int finalLeftHoldButtonPosition = this.fieldAndHoldLocations.get(0);
+    int finalRightHoldButtonPosition = this.fieldAndHoldLocations.get(1);
+    int finalLeftTextFieldPosition = this.fieldAndHoldLocations.get(2);
+    int finalRightTextFieldPosition = this.fieldAndHoldLocations.get(3);
 
     calculateEAndSma.setOnAction(
         action -> {
@@ -135,23 +135,23 @@ public class VisVivaGui extends Application {
           this.keplerianMethodRight = new KeplerianMethod();
 
           // first set the holds
-          for (int i = 0; i < myNodes.size(); i++) {
-            Class currentClass = keplerElements.get(i);
+          for (int i = 0; i < this.myNodes.size(); i++) {
+            Class currentClass = this.keplerElements.get(i);
             boolean leftHoldSelected =
-                ((ToggleButton) myNodes.get(i).get(finalLeftHoldButtonPosition)).isSelected();
+                ((ToggleButton) this.myNodes.get(i).get(finalLeftHoldButtonPosition)).isSelected();
             this.keplerianMethodLeft.setHold(leftHoldSelected, currentClass);
             boolean rightHoldSelected =
-                ((ToggleButton) myNodes.get(i).get(finalRightHoldButtonPosition)).isSelected();
+                ((ToggleButton) this.myNodes.get(i).get(finalRightHoldButtonPosition)).isSelected();
             this.keplerianMethodRight.setHold(rightHoldSelected, currentClass);
             // Parse Data if holds are true
             if (leftHoldSelected) {
               String string =
-                  ((TextField) myNodes.get(i).get(finalLeftTextFieldPosition)).getText();
+                  ((TextField) this.myNodes.get(i).get(finalLeftTextFieldPosition)).getText();
               this.keplerianMethodLeft.setFromString(string, currentClass);
             }
             if (rightHoldSelected) {
               String string =
-                  ((TextField) myNodes.get(i).get(finalRightTextFieldPosition)).getText();
+                  ((TextField) this.myNodes.get(i).get(finalRightTextFieldPosition)).getText();
               this.keplerianMethodRight.setFromString(string, currentClass);
             }
           }
@@ -159,21 +159,21 @@ public class VisVivaGui extends Application {
           this.keplerianMethodLeft.calculateMissing();
           this.keplerianMethodRight.calculateMissing();
 
-          for (int i = 0; i < myNodes.size(); i++) {
-            Class currentClass = keplerElements.get(i);
+          for (int i = 0; i < this.myNodes.size(); i++) {
+            Class currentClass = this.keplerElements.get(i);
             String leftOutput = this.keplerianMethodLeft.getAsString(currentClass);
             String rightOutput = this.keplerianMethodRight.getAsString(currentClass);
-            ((TextField) myNodes.get(i).get(finalLeftTextFieldPosition)).setText(leftOutput);
-            ((TextField) myNodes.get(i).get(finalRightTextFieldPosition)).setText(rightOutput);
+            ((TextField) this.myNodes.get(i).get(finalLeftTextFieldPosition)).setText(leftOutput);
+            ((TextField) this.myNodes.get(i).get(finalRightTextFieldPosition)).setText(rightOutput);
           }
         });
   }
 
-  private static void clearAllFieldsButton(
-      Button clearAllFields, ArrayList<ArrayList<Node>> myNodes) {
+  private void clearAllFieldsButtonEvent(
+      Button clearAllFields) {
     clearAllFields.setOnAction(
         actionEvent -> {
-          for (ArrayList<Node> element : myNodes) {
+          for (ArrayList<Node> element : this.myNodes) {
             for (Node subElement : element) {
               try {
                 ((TextField) subElement).setText("");
@@ -183,6 +183,4 @@ public class VisVivaGui extends Application {
           }
         });
   }
-
-
 }
