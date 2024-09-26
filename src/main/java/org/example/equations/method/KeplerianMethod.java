@@ -23,17 +23,6 @@ import java.util.stream.Stream;
 @NoArgsConstructor
 public class KeplerianMethod {
   private Keplerian keplerian = new Keplerian();
-  private ArrayList<VVDataElement> listOfHeldParameters = new ArrayList<>();
-
-  public void setFromDataElement(VVDataElement vvDataElement) {
-    String elementName = vvDataElement.getParameterName().toLowerCase();
-    boolean holdEnabled = vvDataElement.isHeld();
-    double data = vvDataElement.getData();
-    if (holdEnabled) {
-      this.listOfHeldParameters.add(vvDataElement);
-      setFromString(elementName, data);
-    }
-  }
 
   public void calculateMissing() {
     boolean periapsis = this.keplerian.isHeld(Periapsis.class);
@@ -68,30 +57,15 @@ public class KeplerianMethod {
     }
   }
 
-  private void setFromString(String string, double data) {
-    switch (string) {
-      case "periapsis" -> this.keplerian.setPeriapsis(data);
-      case "apoapsis" -> this.keplerian.setApoapsis(data);
-      case "eccentricity" -> this.keplerian.setEccentricity(data);
-      case "semi-major axis" -> this.keplerian.setSemiMajorAxis(data);
-    }
+  public void setFromString(String string, Class aClass) {
+    this.keplerian.setFromString(string, aClass);
   }
 
-  public double getFromParameterName(String parameter) {
-    switch (parameter) {
-      case "periapsis" -> {
-        return this.keplerian.getPeriapsis();
-      }
-      case "apoapsis" -> {
-        return this.keplerian.getApoapsis();
-      }
-      case "eccentricity" -> {
-        return this.keplerian.getEccentricity();
-      }
-      case "semi-major axis" -> {
-        return this.keplerian.getSemiMajorAxis();
-      }
-    }
-    return 0;
+  public void setHold(boolean holdValue, Class aClass) {
+    this.keplerian.setHold(holdValue, aClass);
+  }
+
+  public String getAsString(Class aClass) {
+    return this.keplerian.getAsString(aClass);
   }
 }

@@ -89,4 +89,29 @@ public class Keplerian {
     }
     return false;
   }
+
+  public void setFromString(String string, Class aClass) {
+    if (aClass.equals(Eccentricity.class)) {
+      this.eccentricity.setFromString(string);
+    } else if (aClass.equals(SemiMajorAxis.class)) {
+      this.semiMajorAxis.setFromString(string);
+    } else if (aClass.equals(Apoapsis.class)) {
+      this.apoapsis.setFromString(string);
+    } else if (aClass.equals(Periapsis.class)) {
+      this.periapsis.setFromString(string);
+    }
+  }
+
+  public String getAsString(Class aClass) {
+    if (aClass.equals(Eccentricity.class)) {
+      return this.eccentricity.getAsString();
+    } else if (aClass.equals(SemiMajorAxis.class)) {
+      return this.semiMajorAxis.getAsString();
+    } else if (aClass.equals(Apoapsis.class)) {
+      return this.apoapsis.getAsString();
+    } else if (aClass.equals(Periapsis.class)) {
+      return this.periapsis.getAsString();
+    }
+    return "";
+  }
 }

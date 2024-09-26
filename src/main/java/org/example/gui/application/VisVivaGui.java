@@ -1,12 +1,11 @@
 package org.example.gui.application;
 
+import java.lang.reflect.Method;
+import java.util.*;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -17,10 +16,6 @@ import org.example.equations.application.keplerianelements.Periapsis;
 import org.example.equations.application.keplerianelements.SemiMajorAxis;
 import org.example.equations.method.KeplerianMethod;
 import org.example.formatting.StringUnitParser;
-import org.example.gui.method.VVDataElement;
-
-import java.lang.reflect.Method;
-import java.util.*;
 
 public class VisVivaGui extends Application {
 
@@ -31,9 +26,6 @@ public class VisVivaGui extends Application {
   @Override
   public void start(Stage stage) throws Exception {
     stage.setTitle("GridPlane Experiment");
-
-    //    LinkedList<String> keplerElements =
-    //        new LinkedList<>(List.of("Periapsis", "Apoapsis", "Eccentricity", "Semi-Major Axis"));
 
     LinkedList<Class> keplerElements =
         new LinkedList<>(
@@ -72,6 +64,7 @@ public class VisVivaGui extends Application {
       }
     } catch (Exception e) {
       System.out.println(e);
+      System.out.println("One of the classes does not have a displayName() method");
     }
 
     int innerNodeSize = myNodes.get(0).size();
@@ -95,50 +88,41 @@ public class VisVivaGui extends Application {
 
     calculateEAndSma.setOnAction(
         action -> {
-          /*ArrayList<VVDataElement> vvDataElementsLeft = new ArrayList<>();
-          ArrayList<VVDataElement> vvDataElementsRight = new ArrayList<>();
-          for (int i = 0; i < myNodes.size(); i++) {
-            String parameterName = String.valueOf(keplerElements.get(i));
-            boolean isLeftSelected =
-                ((ToggleButton) myNodes.get(i).get(finalLeftHoldButtonPosition)).isSelected();
-            boolean isRightSelected =
-                ((ToggleButton) myNodes.get(i).get(finalRightHoldButtonPosition)).isSelected();
-            TextField leftTextField = (TextField) myNodes.get(i).get(finalLeftTextFieldPosition);
-            String leftData = leftTextField.getText();
-            TextField rightTextField = (TextField) myNodes.get(i).get(finalRightTextFieldPosition);
-            String rightData = rightTextField.getText();
-            vvDataElementsLeft.add(new VVDataElement(parameterName, isLeftSelected, leftData));
-            vvDataElementsRight.add(new VVDataElement(parameterName, isRightSelected, rightData));
-          }
-
           this.keplerianMethodLeft = new KeplerianMethod();
-          for (VVDataElement element : vvDataElementsLeft) {
-            element.setData();
-            this.keplerianMethodLeft.setFromDataElement(element);
-          }
-
           this.keplerianMethodRight = new KeplerianMethod();
-          for (VVDataElement element : vvDataElementsRight) {
-            element.setData();
-            this.keplerianMethodRight.setFromDataElement(element);
+
+          // first set the holds
+          for (int i = 0; i < myNodes.size(); i++) {
+            Class currentClass = keplerElements.get(i);
+            Boolean leftHoldSelected =
+                ((ToggleButton) myNodes.get(i).get(finalLeftHoldButtonPosition)).isSelected();
+            this.keplerianMethodLeft.setHold(leftHoldSelected, currentClass);
+            Boolean rightHoldSelected =
+                ((ToggleButton) myNodes.get(i).get(finalRightHoldButtonPosition)).isSelected();
+            this.keplerianMethodRight.setHold(rightHoldSelected, currentClass);
+            // Parse Data if holds are true
+            if (leftHoldSelected) {
+              String string =
+                  ((TextField) myNodes.get(i).get(finalLeftTextFieldPosition)).getText();
+              this.keplerianMethodLeft.setFromString(string, currentClass);
+            }
+            if (rightHoldSelected) {
+              String string =
+                  ((TextField) myNodes.get(i).get(finalRightTextFieldPosition)).getText();
+              this.keplerianMethodRight.setFromString(string, currentClass);
+            }
           }
 
           this.keplerianMethodLeft.calculateMissing();
           this.keplerianMethodRight.calculateMissing();
 
-          for (int i = 0; i < vvDataElementsLeft.size(); i++) {
-            String parameterNameLeft = vvDataElementsLeft.get(i).getParameterName().toLowerCase();
-            double dataLeft = this.keplerianMethodLeft.getFromParameterName(parameterNameLeft);
-            String setNameLeft = parseToString(dataLeft, parameterNameLeft);
-            TextField leftTextField = (TextField) myNodes.get(i).get(finalLeftTextFieldPosition);
-            leftTextField.setText(setNameLeft);
-
-            String parameterNameRight = vvDataElementsRight.get(i).getParameterName().toLowerCase();
-            double dataRight = this.keplerianMethodRight.getFromParameterName(parameterNameRight);
-            String setNameRight = parseToString(dataRight, parameterNameRight);
-            TextField rightTextField = (TextField) myNodes.get(i).get(finalRightTextFieldPosition);
-            rightTextField.setText(setNameRight);
-          }*/
+          for (int i = 0; i < myNodes.size(); i++) {
+            Class currentClass = keplerElements.get(i);
+            String leftOutput = this.keplerianMethodLeft.getAsString(currentClass);
+            String rightOutput = this.keplerianMethodRight.getAsString(currentClass);
+            ((TextField) myNodes.get(i).get(finalLeftTextFieldPosition)).setText(leftOutput);
+            ((TextField) myNodes.get(i).get(finalRightTextFieldPosition)).setText(rightOutput);
+          }
         });
 
     clearAllFields.setOnAction(
