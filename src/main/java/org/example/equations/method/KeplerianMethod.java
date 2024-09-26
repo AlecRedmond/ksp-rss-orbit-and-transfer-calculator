@@ -1,21 +1,16 @@
 package org.example.equations.method;
 
+import java.util.List;
+import java.util.stream.Stream;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.example.equations.application.Body;
 import org.example.equations.application.Keplerian;
 import org.example.equations.application.keplerianelements.Apoapsis;
 import org.example.equations.application.keplerianelements.Eccentricity;
 import org.example.equations.application.keplerianelements.Periapsis;
 import org.example.equations.application.keplerianelements.SemiMajorAxis;
-import org.example.gui.method.VVDataElement;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Stream;
 
 @Data
 @Getter

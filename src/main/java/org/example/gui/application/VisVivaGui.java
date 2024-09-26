@@ -15,7 +15,6 @@ import org.example.equations.application.keplerianelements.Eccentricity;
 import org.example.equations.application.keplerianelements.Periapsis;
 import org.example.equations.application.keplerianelements.SemiMajorAxis;
 import org.example.equations.method.KeplerianMethod;
-import org.example.formatting.StringUnitParser;
 
 public class VisVivaGui extends Application {
 
@@ -94,10 +93,10 @@ public class VisVivaGui extends Application {
           // first set the holds
           for (int i = 0; i < myNodes.size(); i++) {
             Class currentClass = keplerElements.get(i);
-            Boolean leftHoldSelected =
+            boolean leftHoldSelected =
                 ((ToggleButton) myNodes.get(i).get(finalLeftHoldButtonPosition)).isSelected();
             this.keplerianMethodLeft.setHold(leftHoldSelected, currentClass);
-            Boolean rightHoldSelected =
+            boolean rightHoldSelected =
                 ((ToggleButton) myNodes.get(i).get(finalRightHoldButtonPosition)).isSelected();
             this.keplerianMethodRight.setHold(rightHoldSelected, currentClass);
             // Parse Data if holds are true
@@ -144,10 +143,6 @@ public class VisVivaGui extends Application {
     Scene scene = new Scene(hBox, 640, 480);
     stage.setScene(scene);
     stage.show();
-  }
-
-  public String parseToString(double myData, String parameterName) {
-    return StringUnitParser.doubleToString(myData, parameterName);
   }
 
   public static void main(String[] args) {
