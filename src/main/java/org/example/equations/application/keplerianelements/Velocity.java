@@ -1,15 +1,13 @@
 package org.example.equations.application.keplerianelements;
 
-import lombok.Data;
 import org.example.formatting.StringUnitParser;
 
-@Data
-public class SemiMajorAxis extends KeplerElement<Double> {
-  private double data;
+public class Velocity extends KeplerElement<Double> {
+  public double data;
 
   @Override
-  public void set(Double data) {
-    this.data = data;
+  public void set(Double velocity) {
+    this.data = velocity;
   }
 
   @Override
@@ -19,7 +17,7 @@ public class SemiMajorAxis extends KeplerElement<Double> {
 
   @Override
   public String getAsString() {
-    return StringUnitParser.doubleToString(this.data,unitSI(),true,3,"");
+    return StringUnitParser.doubleToString(this.data,unitSI(),false,0,displayName());
   }
 
   @Override
@@ -31,11 +29,11 @@ public class SemiMajorAxis extends KeplerElement<Double> {
 
   @Override
   public String displayName() {
-    return "Semi-Major Axis";
+    return "Velocity";
   }
 
   @Override
   public String unitSI() {
-    return "m";
+    return "m/s";
   }
 }

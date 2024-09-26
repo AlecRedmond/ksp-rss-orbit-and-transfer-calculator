@@ -19,7 +19,7 @@ public class Apoapsis extends KeplerElement<Double> {
 
   @Override
   public String getAsString() {
-    return StringUnitParser.doubleToString(this.data, this.getClass().getSimpleName());
+    return StringUnitParser.doubleToString(this.data,unitSI(),true,2,"apsis");
   }
 
   @Override
@@ -32,5 +32,10 @@ public class Apoapsis extends KeplerElement<Double> {
   @Override
   public String displayName() {
     return "Apoapsis";
+  }
+
+  @Override
+  public String unitSI() {
+    return "m";
   }
 }

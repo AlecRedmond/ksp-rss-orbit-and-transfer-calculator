@@ -11,6 +11,8 @@ abstract class KeplerElement<T> {
 
   public abstract String displayName();
 
+  public abstract String unitSI();
+
   private boolean holdButtonState;
 
   public void setHold(boolean held) {

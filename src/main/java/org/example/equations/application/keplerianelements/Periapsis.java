@@ -5,32 +5,37 @@ import org.example.formatting.StringUnitParser;
 
 @Data
 public class Periapsis extends KeplerElement<Double> {
-    private double data;
+  private double data;
 
-    @Override
-    public void set(Double data) {
-        this.data = data;
-    }
+  @Override
+  public void set(Double data) {
+    this.data = data;
+  }
 
-    @Override
-    public Double get() {
-        return this.data;
-    }
+  @Override
+  public Double get() {
+    return this.data;
+  }
 
-    @Override
-    public String getAsString() {
-        return StringUnitParser.doubleToString(this.data, this.getClass().getSimpleName());
-    }
+  @Override
+  public String getAsString() {
+    return StringUnitParser.doubleToString(this.data,unitSI(),true,2,"apsis");
+  }
 
-    @Override
-    public void setFromString(String string) {
-        double dataFromString;
-        dataFromString = StringUnitParser.stringToDouble(string);
-        this.data = dataFromString;
-    }
+  @Override
+  public void setFromString(String string) {
+    double dataFromString;
+    dataFromString = StringUnitParser.stringToDouble(string);
+    this.data = dataFromString;
+  }
 
-    @Override
-    public String displayName() {
-        return "Periapsis";
-    }
+  @Override
+  public String displayName() {
+    return "Periapsis";
+  }
+
+  @Override
+  public String unitSI() {
+    return "m";
+  }
 }

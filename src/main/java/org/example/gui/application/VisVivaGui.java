@@ -40,10 +40,12 @@ public class VisVivaGui extends Application {
   public void start(Stage stage) throws Exception {
     this.stage = stage;
 
+    //GridPane Initialisation.
     setKeplerElements();
     shapeMyNodesArray();
     setGridFromMyNodes();
 
+    //Functional Buttons.
     Button calculateEAndSma = new Button("Calculate e and SMA");
     calculateEAndSMAButtonEvent(calculateEAndSma);
 
@@ -54,6 +56,8 @@ public class VisVivaGui extends Application {
 
 
 
+
+    //SceneBuilding
     VBox vBox = new VBox(calculateEAndSma, clearAllFields);
     HBox hBox = new HBox(this.gridPane, vBox);
     Scene scene = new Scene(hBox, 640, 480);
