@@ -5,7 +5,7 @@ public class StringUnitParser {
     String myString;
     String magnitudeSymbol;
 
-    if (parameterName.equals("eccentricity")) {
+    if (parameterName.toLowerCase().equals("eccentricity")) {
       myString = String.format("%.3f", myDouble);
       return myString;
     }
@@ -41,7 +41,7 @@ public class StringUnitParser {
       magnitudeSymbol = String.format("e%02d", scientific);
     }
 
-    String unitSymbol = findUnitSymbol(parameterName);
+    String unitSymbol = findUnitSymbol(parameterName.toLowerCase());
 
     myString = String.format("%3.2f %s%s", myDouble, magnitudeSymbol, unitSymbol);
 
