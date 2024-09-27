@@ -1,7 +1,11 @@
 package org.example.equations.application.keplerianelements;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.example.formatting.StringUnitParser;
 
+@Data
+@NoArgsConstructor
 public class Velocity extends KeplerElement<Double> {
   public double data;
 

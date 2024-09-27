@@ -6,17 +6,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.equations.application.keplerianelements.*;
 
+import java.util.LinkedList;
+import java.util.List;
+
 @Data
 @Getter
 @Setter
 @NoArgsConstructor
 public class Keplerian {
-  private Apoapsis apoapsis = new Apoapsis();
-  private Periapsis periapsis = new Periapsis();
-  private Eccentricity eccentricity = new Eccentricity();
-  private SemiMajorAxis semiMajorAxis = new SemiMajorAxis();
-  private VelocityPeriapsis velocityPeriapsis;
-  private VelocityApoapsis velocityApoapsis;
+  private Apoapsis apoapsis = new Apoapsis(0.0);
+  private Periapsis periapsis = new Periapsis(0.0);
+  private Eccentricity eccentricity = new Eccentricity(0.0);
+  private SemiMajorAxis semiMajorAxis = new SemiMajorAxis(0.0);
+  private VelocityPeriapsis velocityPeriapsis = new VelocityPeriapsis(0.0);
+  private VelocityApoapsis velocityApoapsis = new VelocityApoapsis(0.0);
+  private OrbitalPeriod orbitalPeriod = new OrbitalPeriod(0.0);
   private double inclination, longitudeOfAscendingNode;
   private double argumentOfPeriapsis, trueAnomaly;
   private Body body = Body.EARTH;
@@ -28,58 +32,23 @@ public class Keplerian {
     this.periapsis.set(0.0);
     this.velocityPeriapsis.set(0.0);
     this.velocityApoapsis.set(0.0);
+    this.orbitalPeriod.set(0.0);
     this.inclination = 0;
     this.longitudeOfAscendingNode = 0;
     this.argumentOfPeriapsis = 0;
     this.trueAnomaly = 0;
   }
 
-  public double getApoapsis() {
-    return this.apoapsis.get();
-  }
-
-  public double getPeriapsis() {
-    return this.periapsis.get();
-  }
-
-  public double getEccentricity() {
-    return this.eccentricity.get();
-  }
-
-  public double getSemiMajorAxis() {
-    return this.semiMajorAxis.get();
-  }
-
-  public double getVelocityApoapsis() {
-    return this.velocityApoapsis.get();
-  }
-
-  public double getVelocityPeriapsis() {
-    return this.velocityPeriapsis.get();
-  }
-
-  public void setApoapsis(double data) {
-    this.apoapsis.set(data);
-  }
-
-  public void setPeriapsis(double data) {
-    this.periapsis.set(data);
-  }
-
-  public void setEccentricity(double data) {
-    this.eccentricity.set(data);
-  }
-
-  public void setSemiMajorAxis(double data) {
-    this.semiMajorAxis.set(data);
-  }
-
-  public void setVelocityApoapsis(double data) {
-    this.velocityApoapsis.set(data);
-  }
-
-  public void setVelocityPeriapsis(double data) {
-    this.velocityPeriapsis.set(data);
+  public LinkedList<Class> keplerianClassList() {
+    return new LinkedList<>(
+        List.of(
+            this.apoapsis.getClass(),
+            this.periapsis.getClass(),
+            this.eccentricity.getClass(),
+            this.semiMajorAxis.getClass(),
+            this.orbitalPeriod.getClass(),
+            this.velocityApoapsis.getClass(),
+            this.velocityPeriapsis.getClass()));
   }
 
   public void setHold(boolean holdValue, Class aClass) {
@@ -95,24 +64,9 @@ public class Keplerian {
       this.velocityPeriapsis.setHold(holdValue);
     } else if (aClass.equals(VelocityApoapsis.class)) {
       this.velocityApoapsis.setHold(holdValue);
+    } else if (aClass.equals(OrbitalPeriod.class)) {
+      this.orbitalPeriod.setHold(holdValue);
     }
-  }
-
-  public boolean isHeld(Class aClass) {
-    if (aClass.equals(Eccentricity.class)) {
-      return this.eccentricity.isHeld();
-    } else if (aClass.equals(SemiMajorAxis.class)) {
-      return this.semiMajorAxis.isHeld();
-    } else if (aClass.equals(Apoapsis.class)) {
-      return this.apoapsis.isHeld();
-    } else if (aClass.equals(Periapsis.class)) {
-      return this.periapsis.isHeld();
-    } else if (aClass.equals(VelocityApoapsis.class)) {
-      return this.velocityApoapsis.isHeld();
-    } else if (aClass.equals(VelocityPeriapsis.class)) {
-      return this.velocityPeriapsis.isHeld();
-    }
-    return false;
   }
 
   public void setFromString(String string, Class aClass) {
@@ -128,6 +82,8 @@ public class Keplerian {
       this.velocityPeriapsis.setFromString(string);
     } else if (aClass.equals(VelocityApoapsis.class)) {
       this.velocityApoapsis.setFromString(string);
+    } else if (aClass.equals(OrbitalPeriod.class)) {
+      this.orbitalPeriod.setFromString(string);
     }
   }
 
@@ -144,6 +100,8 @@ public class Keplerian {
       return this.velocityPeriapsis.getAsString();
     } else if (aClass.equals(VelocityApoapsis.class)) {
       return this.velocityApoapsis.getAsString();
+    } else if (aClass.equals(OrbitalPeriod.class)) {
+      return this.orbitalPeriod.getAsString();
     }
     return "";
   }

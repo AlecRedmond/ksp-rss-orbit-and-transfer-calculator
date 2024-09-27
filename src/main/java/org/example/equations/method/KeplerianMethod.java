@@ -1,16 +1,16 @@
 package org.example.equations.method;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.equations.application.Keplerian;
-import org.example.equations.application.keplerianelements.Apoapsis;
-import org.example.equations.application.keplerianelements.Eccentricity;
-import org.example.equations.application.keplerianelements.Periapsis;
-import org.example.equations.application.keplerianelements.SemiMajorAxis;
+import org.example.equations.application.keplerianelements.*;
 
 @Data
 @Getter
@@ -18,24 +18,24 @@ import org.example.equations.application.keplerianelements.SemiMajorAxis;
 @NoArgsConstructor
 public class KeplerianMethod {
   private Keplerian keplerian = new Keplerian();
+  private HashMap<Class, String> dataToParse = new HashMap<>();
 
   public void calculateMissing() {
-    boolean periapsis = this.keplerian.isHeld(Periapsis.class);
-    boolean apoapsis = this.keplerian.isHeld(Apoapsis.class);
-    boolean semiMajorAxis = this.keplerian.isHeld(SemiMajorAxis.class);
-    boolean eccentricity = this.keplerian.isHeld(Eccentricity.class);
+    setAllInputData();
 
-    List<Boolean> streamOfBools =
-        Stream.of(periapsis, apoapsis, semiMajorAxis, eccentricity)
-            .filter(element -> element)
-            .toList();
+    boolean apoapsis = heldValue(Apoapsis.class);
+    boolean periapsis = heldValue(Periapsis.class);
+    boolean eccentricity = heldValue(Eccentricity.class);
+    boolean semiMajorAxis = heldValue(SemiMajorAxis.class);
+    boolean orbitalPeriod = heldValue(OrbitalPeriod.class);
+    boolean velocityAP = heldValue(VelocityApoapsis.class);
+    boolean velocityPE = heldValue(VelocityPeriapsis.class);
 
-    if (streamOfBools.size() != 2) {
-      this.keplerian.setAllToZero();
-      return;
+    if (orbitalPeriod){
+      this.keplerian = FillEquations.convertOrbitalPeriod(this.keplerian);
     }
 
-    if (periapsis && apoapsis) {
+    if (apoapsis && periapsis) {
       this.keplerian = FillEquations.findPeriapsisApoapsis(this.keplerian);
     }
 
@@ -52,12 +52,18 @@ public class KeplerianMethod {
     }
   }
 
-  public void setFromString(String string, Class aClass) {
-    this.keplerian.setFromString(string, aClass);
+  private void setAllInputData() {
+    for (Map.Entry<Class, String> entry : this.dataToParse.entrySet()) {
+      setFromString(entry.getValue(), entry.getKey());
+    }
   }
 
-  public void setHold(boolean holdValue, Class aClass) {
-    this.keplerian.setHold(holdValue, aClass);
+  private boolean heldValue(Class aClass) {
+    return dataToParse.containsKey(aClass);
+  }
+
+  public void setFromString(String string, Class aClass) {
+    this.keplerian.setFromString(string, aClass);
   }
 
   public String getAsString(Class aClass) {

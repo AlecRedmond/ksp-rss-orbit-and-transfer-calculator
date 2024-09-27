@@ -1,11 +1,18 @@
 package org.example.equations.application.keplerianelements;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.example.formatting.StringUnitParser;
 
 @Data
+@NoArgsConstructor
 public class SemiMajorAxis extends KeplerElement<Double> {
   private double data;
+
+  public SemiMajorAxis(double data) {
+    this.data = data;
+    this.setHold(false);
+  }
 
   @Override
   public void set(Double data) {
