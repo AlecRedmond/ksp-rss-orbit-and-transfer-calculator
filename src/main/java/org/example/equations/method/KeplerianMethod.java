@@ -29,9 +29,26 @@ public class KeplerianMethod {
     boolean velocityAP = heldValue(VelocityApoapsis.class);
     boolean velocityPE = heldValue(VelocityPeriapsis.class);
 
-    if (orbitalPeriod){
+    if (orbitalPeriod) {
       this.keplerian = FillEquations.convertOrbitalPeriodToSMA(this.keplerian);
       semiMajorAxis = true;
+    }
+
+    if (velocityAP || velocityPE) {
+      if (apoapsis || periapsis) {
+        this.keplerian =
+            FillEquations.calculateSMAFromVelocityAndAltitude(this.keplerian, periapsis);
+        semiMajorAxis = true;
+      }
+      if (semiMajorAxis) {
+        this.keplerian =
+            FillEquations.calculateAltitudeFromVelocityAndSMA(this.keplerian, velocityPE);
+        if (velocityPE) {
+          periapsis = true;
+        } else {
+          apoapsis = true;
+        }
+      }
     }
 
     if (apoapsis && periapsis) {
