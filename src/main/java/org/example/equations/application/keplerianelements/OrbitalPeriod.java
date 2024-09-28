@@ -2,6 +2,7 @@ package org.example.equations.application.keplerianelements;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.formatting.StringUnitParser;
 
 @Data
 @NoArgsConstructor
@@ -25,7 +26,7 @@ public class OrbitalPeriod extends KeplerElement<Double> {
 
   @Override
   public String getAsString() {
-    return "";
+    return StringUnitParser.doubleToString(this.data,unitSI(),false,0,displayName());
   }
 
   @Override

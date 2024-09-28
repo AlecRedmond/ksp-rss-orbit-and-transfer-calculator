@@ -1,5 +1,7 @@
 package org.example.formatting;
 
+import org.example.equations.application.keplerianelements.OrbitalPeriod;
+
 public class StringUnitParser {
   static int orderOfMagnitudeCounter = 0;
   static int leadingSpace = 3;
@@ -24,13 +26,57 @@ public class StringUnitParser {
       magnitudeSymbol = getMagnitudeSymbol();
     }
 
-    parseMyArgs(args);
+    if (args.equals(new OrbitalPeriod().displayName())) {
+      return doubleToTimeString(myDouble);
 
-    formattingString = buildString(StringUnitParser.decimalPlaces);
+    } else {
+      parseMyArgs(args);
+      formattingString = buildString(StringUnitParser.decimalPlaces);
 
-    myString = String.format(formattingString, StringUnitParser.myDouble, magnitudeSymbol, unitSI);
+      myString =
+          String.format(formattingString, StringUnitParser.myDouble, magnitudeSymbol, unitSI);
+    }
 
     return myString;
+  }
+
+  private static String doubleToTimeString(double myDouble) {
+    double seconds;
+    int minutes;
+    int hours;
+    int days;
+
+    int myWorkingInt;
+
+    seconds = myDouble % 60;
+    myWorkingInt = (int) myDouble;
+    myWorkingInt -= (myWorkingInt % 60);
+    myWorkingInt = myWorkingInt / 60;
+
+    minutes = myWorkingInt % 60;
+    myWorkingInt -= minutes;
+    myWorkingInt = myWorkingInt / 60;
+
+    hours = myWorkingInt % 24;
+    myWorkingInt -= hours;
+    myWorkingInt = myWorkingInt / 24;
+
+    if (myWorkingInt == 0) {
+      return String.format("%02d", hours)
+          + ":"
+          + String.format("%02d", minutes)
+          + ":"
+          + String.format("%04.1f", seconds);
+    } else {
+      days = myWorkingInt;
+      return String.format("%02d", days)
+          + ":"
+          + String.format("%02d", hours)
+          + ":"
+          + String.format("%02d", minutes)
+          + ":"
+          + String.format("%04.1f", seconds);
+    }
   }
 
   private static String buildString(int decimalPlaces) {
@@ -55,8 +101,7 @@ public class StringUnitParser {
       case "apsis" -> {
         if (orderOfMagnitudeCounter < 2 && orderOfMagnitudeCounter > -2) {
           decimalPlaces = 0;
-        }
-        else{
+        } else {
           decimalPlaces = 3;
         }
       }
@@ -117,6 +162,19 @@ public class StringUnitParser {
 
     StringBuilder sbNumerical = new StringBuilder(strippedString);
     StringBuilder sbMagnitude = new StringBuilder();
+
+    boolean containsColon = false;
+    for (int i = 0; i < sbNumerical.length(); i++) {
+      if (String.valueOf(sbNumerical.charAt(i)).matches(":")) {
+        containsColon = true;
+        break;
+      }
+    }
+
+    if (containsColon) {
+      return timeStringToDouble(myString);
+    }
+
     while (String.valueOf(sbNumerical.charAt(sbNumerical.length() - 1)).matches("[^0-9]")) {
       sbMagnitude.insert(0, sbNumerical.charAt(sbNumerical.length() - 1));
       sbNumerical.deleteCharAt(sbNumerical.length() - 1);
@@ -141,6 +199,22 @@ public class StringUnitParser {
     double order = getOrder(mod);
 
     return myDouble * order;
+  }
+
+  private static double timeStringToDouble(String myString) {
+    myDouble = 0;
+    int countingIndex = 0;
+    String[] splitString = myString.split(":");
+    if (splitString.length == 4) {
+      myDouble += (Double.parseDouble(splitString[countingIndex])) * (24 * 60 * 60);
+      countingIndex++;
+    }
+    myDouble += (Double.parseDouble(splitString[countingIndex])) * (60 * 60);
+    countingIndex++;
+    myDouble += (Double.parseDouble(splitString[countingIndex])) * (60);
+    countingIndex++;
+    myDouble += (Double.parseDouble(splitString[countingIndex]));
+    return myDouble;
   }
 
   public static String removeWhiteSpace(String string) {
