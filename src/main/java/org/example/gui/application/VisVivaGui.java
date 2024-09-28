@@ -12,8 +12,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.example.equations.application.keplerianelements.OrbitalPeriod;
-import org.example.equations.application.keplerianelements.SemiMajorAxis;
+import org.example.equations.application.keplerianelements.*;
 import org.example.equations.method.KeplerianMethod;
 
 import static java.util.Arrays.stream;
@@ -125,6 +124,46 @@ public class VisVivaGui extends Application {
       }
       if (toggleState.get(removeClass)) {
         int indexToUnset = listOfParameterClasses.indexOf(removeClass);
+        actionedList.get(indexToUnset).setSelected(false);
+      }
+    }
+
+    if (lastClass.equals(Apoapsis.class) || lastClass.equals(Periapsis.class)) {
+      Class removeClass = VelocityPeriapsis.class;
+      if (lastClass.equals(Periapsis.class)) {
+        removeClass = VelocityApoapsis.class;
+      }
+      if (toggleState.get(removeClass)) {
+        int indexToUnset = listOfParameterClasses.indexOf(removeClass);
+        actionedList.get(indexToUnset).setSelected(false);
+      }
+    }
+
+    if (lastClass.equals(Eccentricity.class)) {
+      ArrayList<Class> removeClasses = new ArrayList<>();
+      removeClasses.add(VelocityPeriapsis.class);
+      removeClasses.add(VelocityApoapsis.class);
+      int indexToUnset;
+      for (Class element : removeClasses) {
+        indexToUnset = listOfParameterClasses.indexOf(element);
+        actionedList.get(indexToUnset).setSelected(false);
+      }
+    }
+
+    if (lastClass.equals(VelocityApoapsis.class) || lastClass.equals(VelocityPeriapsis.class)) {
+      ArrayList<Class> removeClasses = new ArrayList<>();
+      removeClasses.add(Eccentricity.class);
+      if (lastClass.equals(VelocityApoapsis.class)) {
+        removeClasses.add(Periapsis.class);
+        removeClasses.add(VelocityPeriapsis.class);
+      } else {
+        removeClasses.add(Apoapsis.class);
+        removeClasses.add(VelocityApoapsis.class);
+      }
+
+      int indexToUnset;
+      for (Class element : removeClasses) {
+        indexToUnset = listOfParameterClasses.indexOf(element);
         actionedList.get(indexToUnset).setSelected(false);
       }
     }
