@@ -1,10 +1,8 @@
 package org.example.equations.method;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,7 +30,8 @@ public class KeplerianMethod {
     boolean velocityPE = heldValue(VelocityPeriapsis.class);
 
     if (orbitalPeriod){
-      this.keplerian = FillEquations.convertOrbitalPeriod(this.keplerian);
+      this.keplerian = FillEquations.convertOrbitalPeriodToSMA(this.keplerian);
+      semiMajorAxis = true;
     }
 
     if (apoapsis && periapsis) {

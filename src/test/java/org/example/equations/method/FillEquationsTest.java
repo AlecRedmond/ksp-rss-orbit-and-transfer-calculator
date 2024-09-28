@@ -4,8 +4,6 @@ import org.example.equations.application.Keplerian;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class FillEquationsTest {
 
   static double orbitalPeriod = 60*60*1.5;
@@ -19,7 +17,7 @@ class FillEquationsTest {
 
   @Test
   void convertOrbitalPeriod() {
-    FillEquations.convertOrbitalPeriod(keplerian);
+    FillEquations.convertOrbitalPeriodToSMA(keplerian);
     System.out.println(keplerian.getSemiMajorAxis().get());
   }
 }

@@ -49,9 +49,14 @@ public class StringUnitParser {
     int myWorkingInt;
 
     seconds = myDouble % 60;
+
     myWorkingInt = (int) myDouble;
     myWorkingInt -= (myWorkingInt % 60);
     myWorkingInt = myWorkingInt / 60;
+    if(String.format("%04.1f", seconds).equals("60.0")){
+      seconds = 0;
+      myWorkingInt++;
+    }
 
     minutes = myWorkingInt % 60;
     myWorkingInt -= minutes;

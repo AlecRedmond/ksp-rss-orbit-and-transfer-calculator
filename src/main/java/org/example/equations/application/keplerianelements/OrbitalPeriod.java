@@ -31,7 +31,9 @@ public class OrbitalPeriod extends KeplerElement<Double> {
 
   @Override
   public void setFromString(String string) {
-
+    double dataFromString;
+    dataFromString = StringUnitParser.stringToDouble(string);
+    this.data = dataFromString;
   }
 
   @Override

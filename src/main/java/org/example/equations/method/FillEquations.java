@@ -21,6 +21,7 @@ public class FillEquations {
 
     keplerian.getSemiMajorAxis().set((apoapsis + periapsis) / 2);
     keplerian.getEccentricity().set((apoapsis - periapsis) / (apoapsis + periapsis));
+    keplerian = convertSemiMajorAxisToOrbitalPeriod(keplerian);
     return keplerian;
   }
 
@@ -64,15 +65,24 @@ public class FillEquations {
     keplerian
         .getPeriapsis()
         .set((semiMajorAxis * (1 - eccentricity)) - keplerian.getBody().getRadius());
+    keplerian = convertSemiMajorAxisToOrbitalPeriod(keplerian);
     return keplerian;
   }
 
-  public static Keplerian convertOrbitalPeriod(Keplerian keplerian) {
+  public static Keplerian convertOrbitalPeriodToSMA(Keplerian keplerian) {
     double orbitalPeriod = keplerian.getOrbitalPeriod().get();
     double mu = keplerian.getBody().getMu();
     double semiMajorAxis =
         Math.pow((orbitalPeriod * Math.sqrt(mu)) / (2 * Math.PI), ((double) 2 / 3));
     keplerian.getSemiMajorAxis().set(semiMajorAxis);
+    return keplerian;
+  }
+
+  public static Keplerian convertSemiMajorAxisToOrbitalPeriod(Keplerian keplerian){
+    double semiMajorAxis = keplerian.getSemiMajorAxis().get();
+    double mu = keplerian.getBody().getMu();
+    double orbitalPeriod = (2 * Math.PI) * Math.sqrt((Math.pow(semiMajorAxis,3))/mu);
+    keplerian.getOrbitalPeriod().set(orbitalPeriod);
     return keplerian;
   }
 }
