@@ -17,17 +17,38 @@ import org.example.equations.application.keplerianelements.*;
 public class KeplerianMethod {
   private Keplerian keplerian = new Keplerian();
   private HashMap<Class, String> dataToParse = new HashMap<>();
+  private boolean fromConstructor = false;
+  private boolean apoapsis;
+  private boolean periapsis;
+  private boolean eccentricity;
+  private boolean semiMajorAxis;
+  private boolean orbitalPeriod;
+  private boolean velocityAP;
+  private boolean velocityPE;
+
+  public KeplerianMethod(double apsis1, double apsis2) {
+    fromConstructor = true;
+    apoapsis = true;
+    periapsis = true;
+
+    if (apsis1 > apsis2) {
+      keplerian.getApoapsis().set(apsis1);
+      keplerian.getPeriapsis().set(apsis2);
+    }
+    else{
+      keplerian.getApoapsis().set(apsis2);
+      keplerian.getPeriapsis().set(apsis1);
+    }
+
+    calculateMissing();
+  }
 
   public void calculateMissing() {
-    setAllInputData();
 
-    boolean apoapsis = heldValue(Apoapsis.class);
-    boolean periapsis = heldValue(Periapsis.class);
-    boolean eccentricity = heldValue(Eccentricity.class);
-    boolean semiMajorAxis = heldValue(SemiMajorAxis.class);
-    boolean orbitalPeriod = heldValue(OrbitalPeriod.class);
-    boolean velocityAP = heldValue(VelocityApoapsis.class);
-    boolean velocityPE = heldValue(VelocityPeriapsis.class);
+    if (!fromConstructor) {
+      setAllInputData();
+      calculateHoldsIfNotConstructor();
+    }
 
     if (orbitalPeriod) {
       this.keplerian = FillEquations.convertOrbitalPeriodToSMA(this.keplerian);
@@ -66,6 +87,16 @@ public class KeplerianMethod {
     if (semiMajorAxis && eccentricity) {
       this.keplerian = FillEquations.findEccentricitySemiMajorAxis(this.keplerian);
     }
+  }
+
+  private void calculateHoldsIfNotConstructor() {
+    apoapsis = heldValue(Apoapsis.class);
+    periapsis = heldValue(Periapsis.class);
+    eccentricity = heldValue(Eccentricity.class);
+    semiMajorAxis = heldValue(SemiMajorAxis.class);
+    orbitalPeriod = heldValue(OrbitalPeriod.class);
+    velocityAP = heldValue(VelocityApoapsis.class);
+    velocityPE = heldValue(VelocityPeriapsis.class);
   }
 
   private void setAllInputData() {

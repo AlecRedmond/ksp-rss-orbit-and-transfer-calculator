@@ -7,7 +7,7 @@ import org.example.formatting.StringUnitParser;
 @Data
 @NoArgsConstructor
 public class Velocity extends KeplerElement<Double> {
-  public double data;
+  public double data = 0.0;
 
   @Override
   public void set(Double velocity) {

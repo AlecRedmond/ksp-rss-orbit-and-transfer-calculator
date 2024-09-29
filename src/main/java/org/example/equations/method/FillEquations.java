@@ -4,6 +4,8 @@ import org.example.equations.application.Body;
 import org.example.equations.application.Keplerian;
 
 public class FillEquations {
+  private static Body body = Body.EARTH;
+
   public static Keplerian findPeriapsisApoapsis(Keplerian keplerian) {
     double apoapsis = keplerian.getApoapsis().get();
     double periapsis = keplerian.getPeriapsis().get();
@@ -95,7 +97,7 @@ public class FillEquations {
       keplerian
           .getSemiMajorAxis()
           .set(
-              HohmannTransfer.smaFromVelocityAndAltitude(
+              smaFromVelocityAndAltitude(
                   keplerian.getVelocityPeriapsis().get(), keplerian.getPeriapsis().get()));
 
       return keplerian;
@@ -103,7 +105,7 @@ public class FillEquations {
       keplerian
           .getSemiMajorAxis()
           .set(
-              HohmannTransfer.smaFromVelocityAndAltitude(
+              smaFromVelocityAndAltitude(
                   keplerian.getVelocityApoapsis().get(), keplerian.getApoapsis().get()));
 
       return keplerian;
@@ -117,7 +119,7 @@ public class FillEquations {
       keplerian
           .getPeriapsis()
           .set(
-              HohmannTransfer.altitudeFromVelocityAndSMA(
+              altitudeFromVelocityAndSMA(
                   keplerian.getVelocityPeriapsis().get(), keplerian.getSemiMajorAxis().get()));
 
       return keplerian;
@@ -125,7 +127,7 @@ public class FillEquations {
       keplerian
           .getApoapsis()
           .set(
-              HohmannTransfer.altitudeFromVelocityAndSMA(
+              altitudeFromVelocityAndSMA(
                   keplerian.getVelocityApoapsis().get(), keplerian.getSemiMajorAxis().get()));
 
       return keplerian;
@@ -136,10 +138,30 @@ public class FillEquations {
     double altitudePE = keplerian.getPeriapsis().get();
     double altitudeAP = keplerian.getApoapsis().get();
     double sma = keplerian.getSemiMajorAxis().get();
-    double velocityAP = HohmannTransfer.velocityFromAltitudeAndSMA(altitudeAP, sma);
-    double velocityPE = HohmannTransfer.velocityFromAltitudeAndSMA(altitudePE, sma);
+    double velocityAP = velocityFromAltitudeAndSMA(altitudeAP, sma);
+    double velocityPE = velocityFromAltitudeAndSMA(altitudePE, sma);
     keplerian.getVelocityApoapsis().set(velocityAP);
     keplerian.getVelocityPeriapsis().set(velocityPE);
     return keplerian;
+  }
+
+  public static double velocityFromAltitudeAndSMA(double altitude, double sma) {
+    double radius = addRadiusOfBody(altitude);
+    return Math.sqrt(body.getMu() * ((2 / radius) - (1 / sma)));
+  }
+
+  private static double addRadiusOfBody(double altitude) {
+    return altitude += body.getRadius();
+  }
+
+  public static double smaFromVelocityAndAltitude(double velocity, double altitude) {
+    double radius = addRadiusOfBody(altitude);
+    return 1 / ((2 / radius) - ((velocity * velocity) / body.getMu()));
+  }
+
+  public static double altitudeFromVelocityAndSMA(double velocity, double sma) {
+    double radius = 2 / (((velocity * velocity) / body.getMu()) + (1 / sma));
+    radius -= body.getRadius();
+    return radius;
   }
 }

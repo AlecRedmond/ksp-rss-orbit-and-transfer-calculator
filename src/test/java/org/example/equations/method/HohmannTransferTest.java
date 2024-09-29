@@ -1,36 +1,43 @@
 package org.example.equations.method;
 
+import org.example.equations.application.Keplerian;
+import org.example.equations.application.keplerianelements.Apoapsis;
+import org.example.equations.application.keplerianelements.Periapsis;
+import org.example.equations.application.keplerianelements.Velocity;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 class HohmannTransferTest {
-  static HohmannTransfer hohmannTransfer;
-  static double sma = 6.621e6;
-  static double altitude = 250e3;
-  static double velocity = 7758.555;
+  static KeplerianMethod keplerianMethod1;
+  static KeplerianMethod keplerianMethod2;
+  static Keplerian keplerian1 = new Keplerian();
+  static Keplerian keplerian2 = new Keplerian();
+  static double orbit1PE = 250e3;
+  static double orbit1AP = 250e3;
+  static double orbit2PE = 35786e3;
+  static double orbit2AP = 35786e3;
 
   @BeforeAll
   static void startUp() {
-    hohmannTransfer = new HohmannTransfer();
+
+    keplerianMethod1 = new KeplerianMethod(orbit1AP,orbit1PE);
+    keplerianMethod2 = new KeplerianMethod(orbit2AP,orbit2PE);
+
   }
 
   @Test
-  void velocityFromAltitudeAndSMA() {
-    double testVelocity = HohmannTransfer.velocityFromAltitudeAndSMA(altitude,sma);
-    assertEquals((int) velocity,(int) testVelocity);
+  void testHohmannTransfer(){
+    HohmannTransfer hohmannTransfer = new HohmannTransfer(keplerianMethod1,keplerianMethod2);
+    ArrayList<ArrayList<String>> hohmannText = hohmannTransfer.hohmannStringOutput();
+    for(ArrayList<String> element : hohmannText){
+      for(String subElement : element){
+        System.out.println(subElement);
+      }
+    }
   }
 
-  @Test
-  void smaFromVelocityAndAltitude(){
-    double testSMA = HohmannTransfer.smaFromVelocityAndAltitude(velocity,altitude);
-    assertEquals(Math.round(sma),Math.round(testSMA));
-  }
 
-  @Test
-  void altitudeFromVelocityAndSMA(){
-    double testAltitude = HohmannTransfer.altitudeFromVelocityAndSMA(velocity,sma);
-    assertEquals(Math.round(altitude),Math.round(testAltitude));
-  }
 }

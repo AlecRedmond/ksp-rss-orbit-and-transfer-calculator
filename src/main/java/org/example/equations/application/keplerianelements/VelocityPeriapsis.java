@@ -13,6 +13,14 @@ public class VelocityPeriapsis extends Velocity {
         this.setHold(false);
     }
 
+    public Double get() {
+        return this.data;
+    }
+
+    public void set(double data){
+        this.data = data;
+    }
+
     @Override
     public String displayName(){
         return "Velocity Pe";
