@@ -47,6 +47,8 @@ public class VisVivaGui extends Application {
   Text burn2Text = (new Text("Burn2"));
   HBox transfers = new HBox(burn1Text, transferOrbitText, burn2Text);
 
+  TextField inclinationChangeTextField = new TextField("");
+
   public static void main(String[] args) {
     launch(args);
   }
@@ -63,15 +65,20 @@ public class VisVivaGui extends Application {
     // Hold button checker
     initialiseHoldButtons();
 
-    // Functional Buttons.
+    // Functional Buttons & Inclination Change Textfield.
     Button calculateEAndSma = new Button("Calculate");
     calculateEAndSMAButtonEvent(calculateEAndSma);
 
     Button clearAllFields = new Button("Clear All Fields");
     clearAllFieldsButtonEvent(clearAllFields);
 
+    Label inclinationChangeLabel = new Label("Inclination Change (°)");
+
+    VBox inclinationChange = new VBox(inclinationChangeLabel, inclinationChangeTextField);
+    inclinationChange.setSpacing(10);
+
     // SceneBuilding
-    HBox buttonHbox = new HBox(calculateEAndSma, clearAllFields);
+    HBox buttonHbox = new HBox(calculateEAndSma, clearAllFields, inclinationChange);
     HBox gridHBox = new HBox(this.gridPane);
     VBox vBox = new VBox(gridHBox, buttonHbox, this.transfers);
     Scene scene = new Scene(vBox, 640, 480);
@@ -297,19 +304,42 @@ public class VisVivaGui extends Application {
             ((TextField) this.myNodes.get(i).get(finalRightTextFieldPosition)).setText(rightOutput);
           }
 
-          HohmannTransfer hohmannTransfer =
-              new HohmannTransfer(this.keplerianMethodLeft, this.keplerianMethodRight);
-          this.hohmannTransferStrings = hohmannTransfer.hohmannStringOutput();
+          try {
+            double inclination = Double.parseDouble(inclinationChangeTextField.getText().stripLeading().stripTrailing());
+            HohmannTransfer hohmannTransfer =
+                new HohmannTransfer(
+                    this.keplerianMethodLeft, this.keplerianMethodRight, inclination);
+            this.hohmannTransferStrings = hohmannTransfer.hohmannStringOutput();
+
+          } catch (Exception e) {
+
+            System.out.println(e);
+            System.out.println("Could not Parse Inclination");
+            HohmannTransfer hohmannTransfer =
+                new HohmannTransfer(this.keplerianMethodLeft, this.keplerianMethodRight);
+            this.hohmannTransferStrings = hohmannTransfer.hohmannStringOutput();
+          }
 
           writeToTransferPanes();
         });
   }
 
   private void writeToTransferPanes() {
+    String burn1ExtraText = "";
+    String burn2ExtraText = "";
+    if (hohmannTransferStrings.get(0).size() > 2) {
+      burn1ExtraText = hohmannTransferStrings.get(0).get(2);
+    }
+    if (hohmannTransferStrings.get(2).size() > 2) {
+      burn2ExtraText = hohmannTransferStrings.get(2).get(2);
+    }
+
     burn1Text.setText(
         String.format(
-            "Initial Burn At %s%n %s",
-            hohmannTransferStrings.get(0).get(0), hohmannTransferStrings.get(0).get(1)));
+            "Initial Burn At %s%n%s%n%s",
+            hohmannTransferStrings.get(0).get(0),
+            hohmannTransferStrings.get(0).get(1),
+            burn1ExtraText));
 
     transferOrbitText.setText(
         String.format(
@@ -319,8 +349,10 @@ public class VisVivaGui extends Application {
             hohmannTransferStrings.get(1).get(2)));
     burn2Text.setText(
         String.format(
-            "Final Burn At %s%n %s",
-            hohmannTransferStrings.get(2).get(0), hohmannTransferStrings.get(2).get(1)));
+            "Final Burn At %s%n%s%n%s",
+            hohmannTransferStrings.get(2).get(0),
+            hohmannTransferStrings.get(2).get(1),
+            burn2ExtraText));
   }
 
   private void clearAllFieldsButtonEvent(Button clearAllFields) {
@@ -334,6 +366,7 @@ public class VisVivaGui extends Application {
               }
             }
           }
+          inclinationChangeTextField.setText("");
         });
   }
 }
