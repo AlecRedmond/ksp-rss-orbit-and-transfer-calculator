@@ -3,19 +3,19 @@ package org.example.gui.application;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.IntStream;
-
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.example.equations.application.keplerianelements.*;
+import org.example.equations.method.HohmannTransfer;
 import org.example.equations.method.KeplerianMethod;
-
-import static java.util.Arrays.stream;
 
 public class VisVivaGui extends Application {
 
@@ -40,6 +40,13 @@ public class VisVivaGui extends Application {
   int lastToggledRightIndex = 0;
   HashMap<Class, Boolean> rightHoldsHashMap = new HashMap<>();
 
+  ArrayList<ArrayList<String>> hohmannTransferStrings;
+
+  Text burn1Text = (new Text("Burn1"));
+  Text transferOrbitText = (new Text("Transfer Orbit"));
+  Text burn2Text = (new Text("Burn2"));
+  HBox transfers = new HBox(burn1Text, transferOrbitText, burn2Text);
+
   public static void main(String[] args) {
     launch(args);
   }
@@ -57,23 +64,27 @@ public class VisVivaGui extends Application {
     initialiseHoldButtons();
 
     // Functional Buttons.
-    Button calculateEAndSma = new Button("Calculate e and SMA");
+    Button calculateEAndSma = new Button("Calculate");
     calculateEAndSMAButtonEvent(calculateEAndSma);
 
     Button clearAllFields = new Button("Clear All Fields");
     clearAllFieldsButtonEvent(clearAllFields);
 
-    Button generateTransfers = new Button("Generate Transfers");
-
     // SceneBuilding
-    VBox vBox = new VBox(calculateEAndSma, clearAllFields);
-    HBox hBox = new HBox(this.gridPane, vBox);
-    Scene scene = new Scene(hBox, 640, 480);
+    HBox buttonHbox = new HBox(calculateEAndSma, clearAllFields);
+    HBox gridHBox = new HBox(this.gridPane);
+    VBox vBox = new VBox(gridHBox, buttonHbox, this.transfers);
+    Scene scene = new Scene(vBox, 640, 480);
 
     this.stage.setTitle("GridPlane Experiment");
     this.gridPane.setHgap(10);
     this.gridPane.setVgap(10);
+    buttonHbox.setSpacing(10);
+    buttonHbox.setAlignment(Pos.CENTER);
+    gridHBox.setAlignment(Pos.CENTER);
     vBox.setSpacing(10);
+    this.transfers.setAlignment(Pos.CENTER);
+    this.transfers.setSpacing(10);
 
     stage.setScene(scene);
     stage.show();
@@ -285,7 +296,31 @@ public class VisVivaGui extends Application {
             ((TextField) this.myNodes.get(i).get(finalLeftTextFieldPosition)).setText(leftOutput);
             ((TextField) this.myNodes.get(i).get(finalRightTextFieldPosition)).setText(rightOutput);
           }
+
+          HohmannTransfer hohmannTransfer =
+              new HohmannTransfer(this.keplerianMethodLeft, this.keplerianMethodRight);
+          this.hohmannTransferStrings = hohmannTransfer.hohmannStringOutput();
+
+          writeToTransferPanes();
         });
+  }
+
+  private void writeToTransferPanes() {
+    burn1Text.setText(
+        String.format(
+            "Initial Burn At %s%n %s",
+            hohmannTransferStrings.get(0).get(0), hohmannTransferStrings.get(0).get(1)));
+
+    transferOrbitText.setText(
+        String.format(
+            "Transfer Orbit:%n%s%n%s%n%s",
+            hohmannTransferStrings.get(1).get(0),
+            hohmannTransferStrings.get(1).get(1),
+            hohmannTransferStrings.get(1).get(2)));
+    burn2Text.setText(
+        String.format(
+            "Final Burn At %s%n %s",
+            hohmannTransferStrings.get(2).get(0), hohmannTransferStrings.get(2).get(1)));
   }
 
   private void clearAllFieldsButtonEvent(Button clearAllFields) {

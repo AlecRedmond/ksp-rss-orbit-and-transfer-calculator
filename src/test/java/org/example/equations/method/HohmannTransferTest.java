@@ -15,10 +15,10 @@ class HohmannTransferTest {
   static KeplerianMethod keplerianMethod2;
   static Keplerian keplerian1 = new Keplerian();
   static Keplerian keplerian2 = new Keplerian();
-  static double orbit1PE = 250e3;
-  static double orbit1AP = 250e3;
-  static double orbit2PE = 35786e3;
-  static double orbit2AP = 35786e3;
+  static double orbit1PE = 170e3;
+  static double orbit1AP = 170e3;
+  static double orbit2PE = 170e3;
+  static double orbit2AP = 40000e3;
 
   @BeforeAll
   static void startUp() {
@@ -32,6 +32,7 @@ class HohmannTransferTest {
   void testHohmannTransfer(){
     HohmannTransfer hohmannTransfer = new HohmannTransfer(keplerianMethod1,keplerianMethod2);
     ArrayList<ArrayList<String>> hohmannText = hohmannTransfer.hohmannStringOutput();
+    System.out.println(keplerianMethod1.getKeplerian());
     for(ArrayList<String> element : hohmannText){
       for(String subElement : element){
         System.out.println(subElement);

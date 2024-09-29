@@ -84,17 +84,17 @@ public class HohmannTransfer {
       firstBurnString.add(mostEfficient[0].getAsString());
       secondBurnString.add(orbitB.getApoapsis().getAsString());
       secondBurnString.add(mostEfficient[1].getAsString());
-      transferOrbitStrings.add("Periapsis   : " + transferOrbit1.getPeriapsis().getAsString());
-      transferOrbitStrings.add("Apoapsis    : " + transferOrbit1.getApoapsis().getAsString());
-      transferOrbitStrings.add("Orbit Period: " + transferOrbit1.getOrbitalPeriod().getAsString());
+      transferOrbitStrings.add("Periapsis\t\t: " + transferOrbit1.getPeriapsis().getAsString());
+      transferOrbitStrings.add("Apoapsis\t\t: " + transferOrbit1.getApoapsis().getAsString());
+      transferOrbitStrings.add("Orbit Period\t: " + transferOrbit1.getOrbitalPeriod().getAsString());
     } else {
       firstBurnString.add(orbitB.getPeriapsis().getAsString());
       firstBurnString.add(mostEfficient[0].getAsString());
       secondBurnString.add(orbitA.getApoapsis().getAsString());
       secondBurnString.add(mostEfficient[1].getAsString());
-      transferOrbitStrings.add("Periapsis   : " + transferOrbit2.getPeriapsis().getAsString());
-      transferOrbitStrings.add("Apoapsis    : " + transferOrbit2.getApoapsis().getAsString());
-      transferOrbitStrings.add("Orbit Period: " + transferOrbit2.getOrbitalPeriod().getAsString());
+      transferOrbitStrings.add("Periapsis%t%t: " + transferOrbit2.getPeriapsis().getAsString());
+      transferOrbitStrings.add("Apoapsis%t%t: " + transferOrbit2.getApoapsis().getAsString());
+      transferOrbitStrings.add("Orbit Period%t: " + transferOrbit2.getOrbitalPeriod().getAsString());
     }
 
     ArrayList<ArrayList<String>> hohmannStringsOutput = new ArrayList<>();

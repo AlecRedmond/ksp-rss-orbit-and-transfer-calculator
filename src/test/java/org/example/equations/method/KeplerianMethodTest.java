@@ -1,17 +1,14 @@
 package org.example.equations.method;
 
-import org.example.equations.application.Keplerian;
-import org.example.equations.application.keplerianelements.Apoapsis;
-import org.example.equations.application.keplerianelements.Eccentricity;
-import org.example.equations.application.keplerianelements.OrbitalPeriod;
-import org.example.equations.application.keplerianelements.Periapsis;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.example.equations.application.Keplerian;
+import org.example.equations.application.keplerianelements.Apoapsis;
+import org.example.equations.application.keplerianelements.OrbitalPeriod;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 class KeplerianMethodTest {
 
