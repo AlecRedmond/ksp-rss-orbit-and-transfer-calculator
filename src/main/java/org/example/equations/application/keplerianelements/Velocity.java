@@ -6,17 +6,12 @@ import org.example.formatting.StringUnitParser;
 
 @Data
 @NoArgsConstructor
-public class Periapsis extends KeplerElement<Double> {
-  private double data;
-
-  public Periapsis(double data) {
-    this.data = data;
-    this.setHold(false);
-  }
+public class Velocity extends KeplerElement<Double> {
+  public double data = 0.0;
 
   @Override
-  public void set(Double data) {
-    this.data = data;
+  public void set(Double velocity) {
+    this.data = velocity;
   }
 
   @Override
@@ -26,7 +21,7 @@ public class Periapsis extends KeplerElement<Double> {
 
   @Override
   public String getAsString() {
-    return StringUnitParser.doubleToString(this.data,unitSI(),true,2,"apsis");
+    return StringUnitParser.doubleToString(this.data,unitSI(),false,0,displayName());
   }
 
   @Override
@@ -38,11 +33,11 @@ public class Periapsis extends KeplerElement<Double> {
 
   @Override
   public String displayName() {
-    return "Periapsis";
+    return "Velocity";
   }
 
   @Override
   public String unitSI() {
-    return "m";
+    return "m/s";
   }
 }

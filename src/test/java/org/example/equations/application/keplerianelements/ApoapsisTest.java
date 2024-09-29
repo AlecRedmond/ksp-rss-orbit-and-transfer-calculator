@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ApoapsisTest {
-  static double testData = 350e3;
-  static String testString = "350.00 km";
+  static double testData = 35768e3;
+  static String testString = "35.768 Mm";
   static Apoapsis apoapsis;
 
   @BeforeAll

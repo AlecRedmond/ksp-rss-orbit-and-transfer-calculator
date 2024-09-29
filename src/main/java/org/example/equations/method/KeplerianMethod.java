@@ -1,16 +1,14 @@
 package org.example.equations.method;
 
-import java.util.List;
-import java.util.stream.Stream;
+import java.util.HashMap;
+import java.util.Map;
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.equations.application.Keplerian;
-import org.example.equations.application.keplerianelements.Apoapsis;
-import org.example.equations.application.keplerianelements.Eccentricity;
-import org.example.equations.application.keplerianelements.Periapsis;
-import org.example.equations.application.keplerianelements.SemiMajorAxis;
+import org.example.equations.application.keplerianelements.*;
 
 @Data
 @Getter
@@ -18,24 +16,63 @@ import org.example.equations.application.keplerianelements.SemiMajorAxis;
 @NoArgsConstructor
 public class KeplerianMethod {
   private Keplerian keplerian = new Keplerian();
+  private HashMap<Class, String> dataToParse = new HashMap<>();
+  private boolean fromConstructor = false;
+  private boolean apoapsis;
+  private boolean periapsis;
+  private boolean eccentricity;
+  private boolean semiMajorAxis;
+  private boolean orbitalPeriod;
+  private boolean velocityAP;
+  private boolean velocityPE;
 
-  public void calculateMissing() {
-    boolean periapsis = this.keplerian.isHeld(Periapsis.class);
-    boolean apoapsis = this.keplerian.isHeld(Apoapsis.class);
-    boolean semiMajorAxis = this.keplerian.isHeld(SemiMajorAxis.class);
-    boolean eccentricity = this.keplerian.isHeld(Eccentricity.class);
+  public KeplerianMethod(double apsis1, double apsis2) {
+    fromConstructor = true;
+    apoapsis = true;
+    periapsis = true;
 
-    List<Boolean> streamOfBools =
-        Stream.of(periapsis, apoapsis, semiMajorAxis, eccentricity)
-            .filter(element -> element)
-            .toList();
-
-    if (streamOfBools.size() != 2) {
-      this.keplerian.setAllToZero();
-      return;
+    if (apsis1 > apsis2) {
+      keplerian.getApoapsis().set(apsis1);
+      keplerian.getPeriapsis().set(apsis2);
+    }
+    else{
+      keplerian.getApoapsis().set(apsis2);
+      keplerian.getPeriapsis().set(apsis1);
     }
 
-    if (periapsis && apoapsis) {
+    calculateMissing();
+  }
+
+  public void calculateMissing() {
+
+    if (!fromConstructor) {
+      setAllInputData();
+      calculateHoldsIfNotConstructor();
+    }
+
+    if (orbitalPeriod) {
+      this.keplerian = FillEquations.convertOrbitalPeriodToSMA(this.keplerian);
+      semiMajorAxis = true;
+    }
+
+    if (velocityAP || velocityPE) {
+      if (apoapsis || periapsis) {
+        this.keplerian =
+            FillEquations.calculateSMAFromVelocityAndAltitude(this.keplerian, periapsis);
+        semiMajorAxis = true;
+      }
+      if (semiMajorAxis) {
+        this.keplerian =
+            FillEquations.calculateAltitudeFromVelocityAndSMA(this.keplerian, velocityPE);
+        if (velocityPE) {
+          periapsis = true;
+        } else {
+          apoapsis = true;
+        }
+      }
+    }
+
+    if (apoapsis && periapsis) {
       this.keplerian = FillEquations.findPeriapsisApoapsis(this.keplerian);
     }
 
@@ -52,12 +89,28 @@ public class KeplerianMethod {
     }
   }
 
-  public void setFromString(String string, Class aClass) {
-    this.keplerian.setFromString(string, aClass);
+  private void calculateHoldsIfNotConstructor() {
+    apoapsis = heldValue(Apoapsis.class);
+    periapsis = heldValue(Periapsis.class);
+    eccentricity = heldValue(Eccentricity.class);
+    semiMajorAxis = heldValue(SemiMajorAxis.class);
+    orbitalPeriod = heldValue(OrbitalPeriod.class);
+    velocityAP = heldValue(VelocityApoapsis.class);
+    velocityPE = heldValue(VelocityPeriapsis.class);
   }
 
-  public void setHold(boolean holdValue, Class aClass) {
-    this.keplerian.setHold(holdValue, aClass);
+  private void setAllInputData() {
+    for (Map.Entry<Class, String> entry : this.dataToParse.entrySet()) {
+      setFromString(entry.getValue(), entry.getKey());
+    }
+  }
+
+  private boolean heldValue(Class aClass) {
+    return dataToParse.containsKey(aClass);
+  }
+
+  public void setFromString(String string, Class aClass) {
+    this.keplerian.setFromString(string, aClass);
   }
 
   public String getAsString(Class aClass) {

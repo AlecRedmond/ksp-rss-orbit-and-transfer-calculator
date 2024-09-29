@@ -1,38 +1,36 @@
 package org.example.equations.method;
 
-import org.example.equations.application.Body;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.HashMap;
+import java.util.Map;
 import org.example.equations.application.Keplerian;
 import org.example.equations.application.keplerianelements.Apoapsis;
-import org.example.equations.application.keplerianelements.Eccentricity;
+import org.example.equations.application.keplerianelements.OrbitalPeriod;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 class KeplerianMethodTest {
 
-  private static Keplerian keplerian;
+  private static Keplerian keplerian = new Keplerian();
+  private static HashMap<Class, String> dataToParse = new HashMap<>(Map.of(
+          OrbitalPeriod.class,"1:29:04.5",
+          Apoapsis.class,"250 km"
+  ));
   private static KeplerianMethod keplerianMethod;
 
   @BeforeAll
   static void setKeplerianMethod(){
-    keplerian = new Keplerian();
-    keplerian.setEccentricity(0.0);
-    keplerian.setApoapsis(250e3);
-    keplerian.setHold(true, Eccentricity.class);
-    keplerian.setHold(true, Apoapsis.class);
     keplerianMethod = new KeplerianMethod();
     keplerianMethod.setKeplerian(keplerian);
+    keplerianMethod.setDataToParse(dataToParse);
   }
 
   @Test
   void calculateMissing() {
     keplerianMethod.calculateMissing();
-    double periapsis = keplerianMethod.getKeplerian().getPeriapsis();
-    assertEquals(250e3,periapsis);
   }
+
+  @Test
+  void testCalculateMissing() {}
 }

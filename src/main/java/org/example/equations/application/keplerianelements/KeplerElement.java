@@ -1,6 +1,11 @@
 package org.example.equations.application.keplerianelements;
 
-abstract class KeplerElement<T> {
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+public abstract class KeplerElement<T> {
   public abstract void set(T t);
 
   public abstract T get();
@@ -10,6 +15,8 @@ abstract class KeplerElement<T> {
   public abstract void setFromString(String string);
 
   public abstract String displayName();
+
+  public abstract String unitSI();
 
   private boolean holdButtonState;
 

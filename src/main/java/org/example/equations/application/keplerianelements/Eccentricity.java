@@ -1,36 +1,51 @@
 package org.example.equations.application.keplerianelements;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.example.formatting.StringUnitParser;
 
 @Data
+@NoArgsConstructor
 public class Eccentricity extends KeplerElement<Double> {
-    private double data;
+  private double data;
 
-    @Override
-    public void set(Double data) {
-        this.data = data;
-    }
+  public Eccentricity(double data) {
+    this.data = data;
+    this.setHold(false);
+  }
 
-    @Override
-    public Double get() {
-        return this.data;
-    }
+  @Override
+  public void set(Double data) {
+    this.data = data;
+  }
 
-    @Override
-    public String getAsString() {
-        return StringUnitParser.doubleToString(this.data, this.getClass().getSimpleName());
-    }
+  @Override
+  public Double get() {
+    return this.data;
+  }
 
-    @Override
-    public void setFromString(String string) {
-        double dataFromString;
-        dataFromString = StringUnitParser.stringToDouble(string);
-        this.data = dataFromString;
-    }
+  @Override
+  public String getAsString() {
+    return StringUnitParser.doubleToString(this.data,unitSI(),false,3,displayName());
+  }
 
-    @Override
-    public String displayName() {
-        return "Eccentricity";
+  @Override
+  public void setFromString(String string) {
+    double dataFromString;
+    dataFromString = StringUnitParser.stringToDouble(string);
+    if (dataFromString >= 1 || dataFromString < 0) {
+      dataFromString = 0;
     }
+    this.data = dataFromString;
+  }
+
+  @Override
+  public String displayName() {
+    return "Eccentricity";
+  }
+
+  @Override
+  public String unitSI() {
+    return "";
+  }
 }
