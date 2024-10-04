@@ -19,6 +19,7 @@ class HohmannTransferTest {
   static double orbit1AP = 170e3;
   static double orbit2PE = 170e3;
   static double orbit2AP = 40000e3;
+  static double degreesIchange = 5.25;
 
   @BeforeAll
   static void startUp() {
@@ -30,7 +31,7 @@ class HohmannTransferTest {
 
   @Test
   void testHohmannTransfer(){
-    HohmannTransfer hohmannTransfer = new HohmannTransfer(keplerianMethod1,keplerianMethod2);
+    HohmannTransfer hohmannTransfer = new HohmannTransfer(keplerianMethod1,keplerianMethod2,degreesIchange);
     ArrayList<ArrayList<String>> hohmannText = hohmannTransfer.hohmannStringOutput();
     System.out.println(keplerianMethod1.getKeplerian());
     for(ArrayList<String> element : hohmannText){
