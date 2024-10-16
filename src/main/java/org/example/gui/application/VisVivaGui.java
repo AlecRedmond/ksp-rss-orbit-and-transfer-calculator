@@ -13,10 +13,17 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.example.equations.application.keplerianelements.*;
 import org.example.equations.method.HohmannTransfer;
 import org.example.equations.method.KeplerianMethod;
+import org.example.gui.method.VisVivaGuiMethods;
 
+@Data
+@Getter
+@Setter
 public class VisVivaGui extends Application {
 
   Stage stage = new Stage();
@@ -83,6 +90,7 @@ public class VisVivaGui extends Application {
     VBox vBox = new VBox(gridHBox, buttonHbox, this.transfers);
     Scene scene = new Scene(vBox, 640, 480);
 
+
     this.stage.setTitle("GridPlane Experiment");
     this.gridPane.setHgap(10);
     this.gridPane.setVgap(10);
@@ -93,6 +101,7 @@ public class VisVivaGui extends Application {
     this.transfers.setAlignment(Pos.CENTER);
     this.transfers.setSpacing(10);
 
+    scene.getStylesheets().add(getClass().getResource("controlStyle1.css").toExternalForm());
     stage.setScene(scene);
     stage.show();
   }
