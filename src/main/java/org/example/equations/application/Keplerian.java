@@ -51,24 +51,6 @@ public class Keplerian {
             this.velocityPeriapsis.getClass()));
   }
 
-  public void setHold(boolean holdValue, Class aClass) {
-    if (aClass.equals(Eccentricity.class)) {
-      this.eccentricity.setHold(holdValue);
-    } else if (aClass.equals(SemiMajorAxis.class)) {
-      this.semiMajorAxis.setHold(holdValue);
-    } else if (aClass.equals(Apoapsis.class)) {
-      this.apoapsis.setHold(holdValue);
-    } else if (aClass.equals(Periapsis.class)) {
-      this.periapsis.setHold(holdValue);
-    } else if (aClass.equals(VelocityPeriapsis.class)) {
-      this.velocityPeriapsis.setHold(holdValue);
-    } else if (aClass.equals(VelocityApoapsis.class)) {
-      this.velocityApoapsis.setHold(holdValue);
-    } else if (aClass.equals(OrbitalPeriod.class)) {
-      this.orbitalPeriod.setHold(holdValue);
-    }
-  }
-
   public void setFromString(String string, Class aClass) {
     if (aClass.equals(Eccentricity.class)) {
       this.eccentricity.setFromString(string);
