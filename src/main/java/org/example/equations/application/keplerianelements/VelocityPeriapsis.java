@@ -6,12 +6,11 @@ import org.example.formatting.StringUnitParser;
 
 @Data
 @NoArgsConstructor
-public class VelocityPeriapsis extends KeplerElement<Double> {
+public class VelocityPeriapsis implements KeplerInterface<Double> {
   private double data;
 
   public VelocityPeriapsis(double data) {
     this.data = data;
-    this.setHold(false);
   }
 
   @Override

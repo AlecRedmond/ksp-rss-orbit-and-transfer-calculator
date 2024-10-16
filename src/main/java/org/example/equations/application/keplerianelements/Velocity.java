@@ -6,7 +6,7 @@ import org.example.formatting.StringUnitParser;
 
 @Data
 @NoArgsConstructor
-public class Velocity extends KeplerElement<Double> {
+public class Velocity implements KeplerInterface<Double> {
   public double data = 0.0;
 
   @Override

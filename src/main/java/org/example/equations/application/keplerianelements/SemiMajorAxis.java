@@ -6,12 +6,11 @@ import org.example.formatting.StringUnitParser;
 
 @Data
 @NoArgsConstructor
-public class SemiMajorAxis extends KeplerElement<Double> {
+public class SemiMajorAxis implements KeplerInterface<Double> {
   private double data;
 
   public SemiMajorAxis(double data) {
     this.data = data;
-    this.setHold(false);
   }
 
   @Override

@@ -6,12 +6,11 @@ import org.example.formatting.StringUnitParser;
 
 @Data
 @NoArgsConstructor
-public class Eccentricity extends KeplerElement<Double> {
+public class Eccentricity implements KeplerInterface<Double> {
   private double data;
 
   public Eccentricity(double data) {
     this.data = data;
-    this.setHold(false);
   }
 
   @Override

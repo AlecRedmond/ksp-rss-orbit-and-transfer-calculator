@@ -6,12 +6,11 @@ import org.example.formatting.StringUnitParser;
 
 @Data
 @NoArgsConstructor
-public class Periapsis extends KeplerElement<Double> {
+public class Periapsis implements KeplerInterface<Double> {
   private double data;
 
   public Periapsis(double data) {
     this.data = data;
-    this.setHold(false);
   }
 
   @Override

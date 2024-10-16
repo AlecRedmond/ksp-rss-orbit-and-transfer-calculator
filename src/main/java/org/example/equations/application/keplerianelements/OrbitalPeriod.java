@@ -6,12 +6,11 @@ import org.example.formatting.StringUnitParser;
 
 @Data
 @NoArgsConstructor
-public class OrbitalPeriod extends KeplerElement<Double> {
+public class OrbitalPeriod implements KeplerInterface<Double> {
   private double data;
 
   public OrbitalPeriod(double data) {
     this.data = data;
-    this.setHold(false);
   }
 
   @Override
