@@ -89,10 +89,7 @@ public class VisVivaGui extends Application {
     HBox gridHBox = new HBox(this.gridPane);
     VBox vBox = new VBox(gridHBox, buttonHbox, this.transfers);
     Scene scene = new Scene(vBox, 640, 480);
-    scene
-        .getStylesheets()
-        .add(
-            "src/main/java/org/example/gui/application/controlStyle2.css");
+
 
     this.stage.setTitle("GridPlane Experiment");
     this.gridPane.setHgap(10);
@@ -104,6 +101,7 @@ public class VisVivaGui extends Application {
     this.transfers.setAlignment(Pos.CENTER);
     this.transfers.setSpacing(10);
 
+    scene.getStylesheets().add(getClass().getResource("controlStyle1.css").toExternalForm());
     stage.setScene(scene);
     stage.show();
   }
