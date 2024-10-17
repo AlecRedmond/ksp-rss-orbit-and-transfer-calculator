@@ -1,13 +1,14 @@
 package org.example.equations.application;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.equations.application.keplerianelements.*;
-
-import java.util.LinkedList;
-import java.util.List;
 
 @Data
 @Getter
@@ -51,21 +52,17 @@ public class Keplerian {
             this.velocityPeriapsis.getClass()));
   }
 
-  public void setFromString(String string, Class aClass) {
-    if (aClass.equals(Eccentricity.class)) {
-      this.eccentricity.setFromString(string);
-    } else if (aClass.equals(SemiMajorAxis.class)) {
-      this.semiMajorAxis.setFromString(string);
-    } else if (aClass.equals(Apoapsis.class)) {
-      this.apoapsis.setFromString(string);
-    } else if (aClass.equals(Periapsis.class)) {
-      this.periapsis.setFromString(string);
-    } else if (aClass.equals(VelocityPeriapsis.class)) {
-      this.velocityPeriapsis.setFromString(string);
-    } else if (aClass.equals(VelocityApoapsis.class)) {
-      this.velocityApoapsis.setFromString(string);
-    } else if (aClass.equals(OrbitalPeriod.class)) {
-      this.orbitalPeriod.setFromString(string);
+  public void setFromString(String string, KeplerInterface<?> keplerInterface) {
+    keplerInterface.setFromString(string);
+    Field[] fields = this.getClass().getDeclaredFields();
+
+    for (Field field : fields) {
+      if (field.getName().equalsIgnoreCase(keplerInterface.getClass().getSimpleName())) {
+        try {
+          field.set(this, keplerInterface);
+        } catch (IllegalAccessException ignored) {
+        }
+      }
     }
   }
 
