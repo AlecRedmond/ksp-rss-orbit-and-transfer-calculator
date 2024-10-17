@@ -22,8 +22,6 @@ public class Keplerian {
   private VelocityPeriapsis velocityPeriapsis = new VelocityPeriapsis(0.0);
   private VelocityApoapsis velocityApoapsis = new VelocityApoapsis(0.0);
   private OrbitalPeriod orbitalPeriod = new OrbitalPeriod(0.0);
-  private double inclination, longitudeOfAscendingNode;
-  private double argumentOfPeriapsis, trueAnomaly;
   private Body body = Body.EARTH;
 
   public void setAllToZero() {
@@ -34,10 +32,6 @@ public class Keplerian {
     this.velocityPeriapsis.set(0.0);
     this.velocityApoapsis.set(0.0);
     this.orbitalPeriod.set(0.0);
-    this.inclination = 0;
-    this.longitudeOfAscendingNode = 0;
-    this.argumentOfPeriapsis = 0;
-    this.trueAnomaly = 0;
   }
 
   public LinkedList<Class> keplerianClassList() {
@@ -66,22 +60,15 @@ public class Keplerian {
     }
   }
 
-  public String getAsString(Class aClass) {
-    if (aClass.equals(Eccentricity.class)) {
-      return this.eccentricity.getAsString();
-    } else if (aClass.equals(SemiMajorAxis.class)) {
-      return this.semiMajorAxis.getAsString();
-    } else if (aClass.equals(Apoapsis.class)) {
-      return this.apoapsis.getAsString();
-    } else if (aClass.equals(Periapsis.class)) {
-      return this.periapsis.getAsString();
-    } else if (aClass.equals(VelocityPeriapsis.class)) {
-      return this.velocityPeriapsis.getAsString();
-    } else if (aClass.equals(VelocityApoapsis.class)) {
-      return this.velocityApoapsis.getAsString();
-    } else if (aClass.equals(OrbitalPeriod.class)) {
-      return this.orbitalPeriod.getAsString();
+  public String getAsString(KeplerInterface<?> keplerInterface) {
+    Field[] fields = this.getClass().getDeclaredFields();
+    for (Field field : fields) {
+      if(field.getName().equalsIgnoreCase(keplerInterface.getClass().getSimpleName())){
+          try {
+          } catch (IllegalAccessException e) {
+              throw new RuntimeException(e);
+          }
+      }
     }
-    return "";
   }
 }
