@@ -73,16 +73,16 @@ class KeplerianMethodTest {
   }
 
   private void runAssertEqualsOnAll() {
-    assertTrue(withinPointFivePercent(apoapsis,keplerian.getDataFor(APOAPSIS)));
-    assertTrue(withinPointFivePercent(periapsis,keplerian.getDataFor(PERIAPSIS)));
-    assertTrue(withinPointFivePercent(semiMajorAxis,keplerian.getDataFor(SEMI_MAJOR_AXIS)));
-    assertTrue(withinPointFivePercent(eccentricity,keplerian.getDataFor(ECCENTRICITY)));
-    assertTrue(withinPointFivePercent(orbitalPeriod,keplerian.getDataFor(ORBITAL_PERIOD)));
-    assertTrue(withinPointFivePercent(velocityApoapsis,keplerian.getDataFor(VELOCITY_APOAPSIS)));
-    assertTrue(withinPointFivePercent(velocityPeriapsis,keplerian.getDataFor(VELOCITY_PERIAPSIS)));
+    assertTrue(withinMarg(apoapsis,keplerian.getDataFor(APOAPSIS)));
+    assertTrue(withinMarg(periapsis,keplerian.getDataFor(PERIAPSIS)));
+    assertTrue(withinMarg(semiMajorAxis,keplerian.getDataFor(SEMI_MAJOR_AXIS)));
+    assertTrue(withinMarg(eccentricity,keplerian.getDataFor(ECCENTRICITY)));
+    assertTrue(withinMarg(orbitalPeriod,keplerian.getDataFor(ORBITAL_PERIOD)));
+    assertTrue(withinMarg(velocityApoapsis,keplerian.getDataFor(VELOCITY_APOAPSIS)));
+    assertTrue(withinMarg(velocityPeriapsis,keplerian.getDataFor(VELOCITY_PERIAPSIS)));
   }
 
-  private boolean withinPointFivePercent(double myData, double foundData) {
+  private boolean withinMarg(double myData, double foundData) {
     double difference = Math.abs(myData - foundData);
     double magnitude = difference / myData;
     if(magnitude < 0.0005){
