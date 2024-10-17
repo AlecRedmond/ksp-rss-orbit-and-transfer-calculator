@@ -14,8 +14,8 @@ public class Eccentricity extends KeplerBase {
   }
 
   @Override
-  public KeplarianElement getType() {
-    return KeplarianElement.ECCENTRICITY;
+  public KeplerEnums getType() {
+    return KeplerEnums.ECCENTRICITY;
   }
 
   @Override

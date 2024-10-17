@@ -14,8 +14,8 @@ public class Periapsis extends KeplerBase {
   }
 
   @Override
-  public KeplarianElement getType() {
-    return KeplarianElement.PERIAPSIS;
+  public KeplerEnums getType() {
+    return KeplerEnums.PERIAPSIS;
   }
 
   @Override

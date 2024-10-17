@@ -1,6 +1,6 @@
 package org.example.equations.application;
 
-import static org.example.equations.application.keplerianelements.Kepler.KeplarianElement.*;
+import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.example.equations.application.keplerianelements.Periapsis;

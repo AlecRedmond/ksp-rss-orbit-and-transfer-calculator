@@ -14,8 +14,8 @@ public class Apoapsis extends KeplerBase {
   }
 
   @Override
-  public KeplarianElement getType() {
-    return KeplarianElement.APOAPSIS;
+  public KeplerEnums getType() {
+    return KeplerEnums.APOAPSIS;
   }
 
   @Override

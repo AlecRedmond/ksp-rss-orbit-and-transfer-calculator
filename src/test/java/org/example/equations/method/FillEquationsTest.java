@@ -1,6 +1,6 @@
 package org.example.equations.method;
 
-import static org.example.equations.application.keplerianelements.Kepler.KeplarianElement.*;
+import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
 import org.example.equations.application.Keplerian;
 import org.junit.jupiter.api.BeforeAll;

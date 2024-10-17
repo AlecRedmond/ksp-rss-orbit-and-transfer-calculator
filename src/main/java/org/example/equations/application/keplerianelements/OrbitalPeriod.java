@@ -14,8 +14,8 @@ public class OrbitalPeriod extends KeplerBase {
   }
 
   @Override
-  public KeplarianElement getType() {
-    return KeplarianElement.ORBITAL_PERIOD;
+  public KeplerEnums getType() {
+    return KeplerEnums.ORBITAL_PERIOD;
   }
 
   @Override

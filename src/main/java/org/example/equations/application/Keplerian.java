@@ -1,6 +1,6 @@
 package org.example.equations.application;
 
-import static org.example.equations.application.keplerianelements.Kepler.KeplarianElement.*;
+import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.equations.application.keplerianelements.*;
-import org.example.equations.application.keplerianelements.Kepler.KeplarianElement;
+import org.example.equations.application.keplerianelements.Kepler.KeplerEnums;
 
 @Data
 @Getter
@@ -16,7 +16,7 @@ import org.example.equations.application.keplerianelements.Kepler.KeplarianEleme
 public class Keplerian {
   private Body body;
 
-  private Map<KeplarianElement, Kepler> keplarianElements = new HashMap<>();
+  private Map<KeplerEnums, Kepler> keplarianElements = new HashMap<>();
 
   public Keplerian(Body body) {
     this.body = body;
@@ -49,11 +49,11 @@ public class Keplerian {
     return keplarianElements.get(kepler.getType()).getAsString();
   }
 
-  public double getDataFor(KeplarianElement keplarianElement) {
-    return keplarianElements.get(keplarianElement).getData();
+  public double getDataFor(KeplerEnums keplerEnums) {
+    return keplarianElements.get(keplerEnums).getData();
   }
 
-  public void setDataFor(KeplarianElement keplarianElement, double data) {
-    keplarianElements.get(keplarianElement).setData(data);
+  public void setDataFor(KeplerEnums keplerEnums, double data) {
+    keplarianElements.get(keplerEnums).setData(data);
   }
 }

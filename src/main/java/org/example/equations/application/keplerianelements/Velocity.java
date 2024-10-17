@@ -10,8 +10,8 @@ public class Velocity extends KeplerBase {
   public double data = 0.0;
 
   @Override
-  public KeplarianElement getType() {
-    return KeplarianElement.VELOCITY;
+  public KeplerEnums getType() {
+    return KeplerEnums.VELOCITY;
   }
 
   @Override

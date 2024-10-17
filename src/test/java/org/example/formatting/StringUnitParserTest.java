@@ -14,16 +14,12 @@ class StringUnitParserTest {
   
   @Test
   void doubleToString() {
-//    String testStringHour = StringUnitParser.doubleToString(timeHour,"",false,0,"orbital period");
-//    assertEquals(stringHour,testStringHour);
     String testStringHour2 = StringUnitParser.doubleToString(timeHour2,"",false,0,"orbital period");
     assertEquals(stringHour2,testStringHour2);
   }
 
   @Test
   void stringToDouble(){
-//    double testTimeHour = StringUnitParser.stringToDouble(stringHour);
-//    assertEquals(timeHour,testTimeHour);
     double testTimeHour2 = StringUnitParser.stringToDouble(stringHour2);
     assertEquals(timeHour2,testTimeHour2);
   }

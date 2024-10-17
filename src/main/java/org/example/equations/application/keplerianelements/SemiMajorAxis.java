@@ -14,8 +14,8 @@ public class SemiMajorAxis extends KeplerBase {
   }
 
   @Override
-  public KeplarianElement getType() {
-    return KeplarianElement.SEMI_MAJOR_AXIS;
+  public KeplerEnums getType() {
+    return KeplerEnums.SEMI_MAJOR_AXIS;
   }
 
   @Override

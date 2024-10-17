@@ -2,7 +2,7 @@ package org.example.equations.application.keplerianelements;
 
 public interface Kepler {
 
-  enum KeplarianElement {
+  enum KeplerEnums {
     APOAPSIS,
     ECCENTRICITY,
     ORBITAL_PERIOD,
@@ -13,7 +13,7 @@ public interface Kepler {
     VELOCITY_PERIAPSIS
   }
 
-  KeplarianElement getType();
+  KeplerEnums getType();
 
   String getAsString();
 

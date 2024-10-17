@@ -24,8 +24,8 @@ public class VelocityApoapsis extends KeplerBase {
   }
 
   @Override
-  public KeplarianElement getType() {
-    return KeplarianElement.VELOCITY_APOAPSIS;
+  public KeplerEnums getType() {
+    return KeplerEnums.VELOCITY_APOAPSIS;
   }
 
   @Override
