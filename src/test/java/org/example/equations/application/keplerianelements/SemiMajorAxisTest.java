@@ -16,13 +16,13 @@ class SemiMajorAxisTest {
 
     @Test
     void set() {
-        data.set(testData);
-        assertEquals(testData, data.get());
+        data.setData(testData);
+        assertEquals(testData, data.getData());
     }
 
     @Test
     void getAsString() {
-        data.set(testData);
+        data.setData(testData);
         String test = data.getAsString();
         assertEquals(testString,test);
     }
@@ -30,6 +30,6 @@ class SemiMajorAxisTest {
     @Test
     void setFromString() {
         data.setFromString(testString);
-        assertEquals(testData, data.get());
+        assertEquals(testData, data.getData());
     }
 }

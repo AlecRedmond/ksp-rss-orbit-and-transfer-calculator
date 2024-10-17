@@ -6,7 +6,7 @@ import org.example.formatting.StringUnitParser;
 
 @Data
 @NoArgsConstructor
-public class OrbitalPeriod implements KeplerInterface<Double> {
+public class OrbitalPeriod extends KeplerBase {
   private double data;
 
   public OrbitalPeriod(double data) {
@@ -14,18 +14,13 @@ public class OrbitalPeriod implements KeplerInterface<Double> {
   }
 
   @Override
-  public void set(Double aDouble) {
-    this.data = aDouble;
-  }
-
-  @Override
-  public Double get() {
-    return this.data;
+  public KeplarianElement getType() {
+    return KeplarianElement.ORBITAL_PERIOD;
   }
 
   @Override
   public String getAsString() {
-    return StringUnitParser.doubleToString(this.data,unitSI(),false,0,displayName());
+    return StringUnitParser.doubleToString(this.data, unitSI(), false, 0, displayName());
   }
 
   @Override

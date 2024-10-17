@@ -1,9 +1,10 @@
 package org.example.equations.application;
 
+import static org.example.equations.application.keplerianelements.Kepler.KeplarianElement.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.example.equations.application.keplerianelements.Periapsis;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class KeplerianTest {
   Keplerian keplerian = new Keplerian();
@@ -14,6 +15,6 @@ class KeplerianTest {
   @Test
   void setFromString() {
     keplerian.setFromString(testString,periapsis);
-    assertEquals(testDouble,keplerian.getPeriapsis().get());
+    assertEquals(testDouble,keplerian.getDataFor(PERIAPSIS));
   }
 }

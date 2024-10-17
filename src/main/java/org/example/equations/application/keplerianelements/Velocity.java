@@ -6,17 +6,12 @@ import org.example.formatting.StringUnitParser;
 
 @Data
 @NoArgsConstructor
-public class Velocity implements KeplerInterface<Double> {
+public class Velocity extends KeplerBase {
   public double data = 0.0;
 
   @Override
-  public void set(Double velocity) {
-    this.data = velocity;
-  }
-
-  @Override
-  public Double get() {
-    return this.data;
+  public KeplarianElement getType() {
+    return KeplarianElement.VELOCITY;
   }
 
   @Override
