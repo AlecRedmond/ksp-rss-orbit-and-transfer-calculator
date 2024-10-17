@@ -6,7 +6,7 @@ import org.example.formatting.StringUnitParser;
 
 @Data
 @NoArgsConstructor
-public class Eccentricity implements KeplerInterface<Double> {
+public class Eccentricity extends KeplerBase {
   private double data;
 
   public Eccentricity(double data) {
@@ -14,18 +14,13 @@ public class Eccentricity implements KeplerInterface<Double> {
   }
 
   @Override
-  public void set(Double data) {
-    this.data = data;
-  }
-
-  @Override
-  public Double get() {
-    return this.data;
+  public KeplarianElement getType() {
+    return KeplarianElement.ECCENTRICITY;
   }
 
   @Override
   public String getAsString() {
-    return StringUnitParser.doubleToString(this.data,unitSI(),false,3,displayName());
+    return StringUnitParser.doubleToString(this.data, unitSI(), false, 3, displayName());
   }
 
   @Override

@@ -6,7 +6,7 @@ import org.example.formatting.StringUnitParser;
 
 @Data
 @NoArgsConstructor
-public class Periapsis implements KeplerInterface<Double> {
+public class Periapsis extends KeplerBase {
   private double data;
 
   public Periapsis(double data) {
@@ -14,13 +14,8 @@ public class Periapsis implements KeplerInterface<Double> {
   }
 
   @Override
-  public void set(Double data) {
-    this.data = data;
-  }
-
-  @Override
-  public Double get() {
-    return this.data;
+  public KeplarianElement getType() {
+    return KeplarianElement.PERIAPSIS;
   }
 
   @Override

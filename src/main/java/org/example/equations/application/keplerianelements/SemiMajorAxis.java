@@ -6,7 +6,7 @@ import org.example.formatting.StringUnitParser;
 
 @Data
 @NoArgsConstructor
-public class SemiMajorAxis implements KeplerInterface<Double> {
+public class SemiMajorAxis extends KeplerBase {
   private double data;
 
   public SemiMajorAxis(double data) {
@@ -14,18 +14,13 @@ public class SemiMajorAxis implements KeplerInterface<Double> {
   }
 
   @Override
-  public void set(Double data) {
-    this.data = data;
-  }
-
-  @Override
-  public Double get() {
-    return this.data;
+  public KeplarianElement getType() {
+    return KeplarianElement.SEMI_MAJOR_AXIS;
   }
 
   @Override
   public String getAsString() {
-    return StringUnitParser.doubleToString(this.data,unitSI(),true,3,"");
+    return StringUnitParser.doubleToString(this.data, unitSI(), true, 3, "");
   }
 
   @Override

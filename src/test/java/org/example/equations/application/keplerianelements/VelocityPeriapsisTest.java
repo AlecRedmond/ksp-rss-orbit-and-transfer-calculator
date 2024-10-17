@@ -19,13 +19,13 @@ class VelocityPeriapsisTest {
 
     @Test
     public void testSetter(){
-        velocity.set(2000.0);
-        double newData1 = velocity.get();
+        velocity.setData(2000.0);
+        double newData1 = velocity.getData();
         assertEquals(2000,newData1);
-        velocityPeriapsis.set(testData);
-        double newData = velocityPeriapsis.get();
+        velocityPeriapsis.setData(testData);
+        double newData = velocityPeriapsis.getData();
         assertEquals(3000,newData);
-        assertNotEquals(velocity.get(),velocityPeriapsis.get());
+        assertNotEquals(velocity.getData(),velocityPeriapsis.getData());
     }
 
 

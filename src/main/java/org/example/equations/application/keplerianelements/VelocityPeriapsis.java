@@ -6,21 +6,11 @@ import org.example.formatting.StringUnitParser;
 
 @Data
 @NoArgsConstructor
-public class VelocityPeriapsis implements KeplerInterface<Double> {
+public class VelocityPeriapsis extends KeplerBase {
   private double data;
 
   public VelocityPeriapsis(double data) {
     this.data = data;
-  }
-
-  @Override
-  public void set(Double aDouble) {
-    this.data = aDouble;
-  }
-
-  @Override
-  public Double get() {
-    return this.data;
   }
 
   @Override
@@ -31,6 +21,11 @@ public class VelocityPeriapsis implements KeplerInterface<Double> {
   @Override
   public String unitSI() {
     return "m/s";
+  }
+
+  @Override
+  public KeplarianElement getType() {
+    return KeplarianElement.VELOCITY_PERIAPSIS;
   }
 
   @Override

@@ -17,13 +17,13 @@ class ApoapsisTest {
 
   @Test
   void set() {
-    apoapsis.set(testData);
-    assertEquals(testData,apoapsis.get());
+    apoapsis.setData(testData);
+    assertEquals(testData,apoapsis.getData());
   }
 
   @Test
   void getAsString() {
-    apoapsis.set(testData);
+    apoapsis.setData(testData);
     String test = apoapsis.getAsString();
     assertEquals(testString,test);
   }
@@ -31,6 +31,6 @@ class ApoapsisTest {
   @Test
   void setFromString() {
     apoapsis.setFromString(testString);
-    assertEquals(testData,apoapsis.get());
+    assertEquals(testData,apoapsis.getData());
   }
 }

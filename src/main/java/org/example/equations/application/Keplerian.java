@@ -1,74 +1,59 @@
 package org.example.equations.application;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import static org.example.equations.application.keplerianelements.Kepler.KeplarianElement.*;
+
+import java.util.HashMap;
+import java.util.Map;
 import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.equations.application.keplerianelements.*;
+import org.example.equations.application.keplerianelements.Kepler.KeplarianElement;
 
 @Data
 @Getter
 @Setter
-@NoArgsConstructor
 public class Keplerian {
-  private Apoapsis apoapsis = new Apoapsis(0.0);
-  private Periapsis periapsis = new Periapsis(0.0);
-  private Eccentricity eccentricity = new Eccentricity(0.0);
-  private SemiMajorAxis semiMajorAxis = new SemiMajorAxis(0.0);
-  private VelocityPeriapsis velocityPeriapsis = new VelocityPeriapsis(0.0);
-  private VelocityApoapsis velocityApoapsis = new VelocityApoapsis(0.0);
-  private OrbitalPeriod orbitalPeriod = new OrbitalPeriod(0.0);
-  private Body body = Body.EARTH;
+  private Body body;
 
-  public void setAllToZero() {
-    this.eccentricity.set(0.0);
-    this.semiMajorAxis.set(0.0);
-    this.apoapsis.set(0.0);
-    this.periapsis.set(0.0);
-    this.velocityPeriapsis.set(0.0);
-    this.velocityApoapsis.set(0.0);
-    this.orbitalPeriod.set(0.0);
+  private Map<KeplarianElement, Kepler> keplarianElements = new HashMap<>();
+
+  public Keplerian(Body body) {
+    this.body = body;
+    buildKeplarianElements();
   }
 
-  public LinkedList<Class> keplerianClassList() {
-    return new LinkedList<>(
-        List.of(
-            this.apoapsis.getClass(),
-            this.periapsis.getClass(),
-            this.eccentricity.getClass(),
-            this.semiMajorAxis.getClass(),
-            this.orbitalPeriod.getClass(),
-            this.velocityApoapsis.getClass(),
-            this.velocityPeriapsis.getClass()));
+  public Keplerian() {
+    this.body = Body.EARTH;
+    buildKeplarianElements();
   }
 
-  public void setFromString(String string, KeplerInterface<?> keplerInterface) {
-    keplerInterface.setFromString(string);
-    Field[] fields = this.getClass().getDeclaredFields();
-
-    for (Field field : fields) {
-      if (field.getName().equalsIgnoreCase(keplerInterface.getClass().getSimpleName())) {
-        try {
-          field.set(this, keplerInterface);
-        } catch (IllegalAccessException ignored) {
-        }
-      }
-    }
+  private void buildKeplarianElements() {
+    keplarianElements.putAll(
+        Map.of(
+            APOAPSIS, new Apoapsis(0.0),
+            PERIAPSIS, new Periapsis(0.0),
+            ECCENTRICITY, new Eccentricity(0.0),
+            SEMI_MAJOR_AXIS, new SemiMajorAxis(0.0),
+            ORBITAL_PERIOD, new OrbitalPeriod(0.0),
+            VELOCITY_APOAPSIS, new VelocityApoapsis(0.0),
+            VELOCITY_PERIAPSIS, new VelocityPeriapsis(0.0)));
   }
 
-  public String getAsString(KeplerInterface<?> keplerInterface) {
-    Field[] fields = this.getClass().getDeclaredFields();
-    for (Field field : fields) {
-      if(field.getName().equalsIgnoreCase(keplerInterface.getClass().getSimpleName())){
-          try {
-          } catch (IllegalAccessException e) {
-              throw new RuntimeException(e);
-          }
-      }
-    }
+  public void setFromString(String inputDate, Kepler kepler) {
+    kepler.setFromString(inputDate);
+    keplarianElements.replace(kepler.getType(), kepler);
+  }
+
+  public String getAsString(Kepler kepler) {
+    return keplarianElements.get(kepler.getType()).getAsString();
+  }
+
+  public double getDataFor(KeplarianElement keplarianElement) {
+    return keplarianElements.get(keplarianElement).getData();
+  }
+
+  public void setDataFor(KeplarianElement keplarianElement, double data) {
+    keplarianElements.get(keplarianElement).setData(data);
   }
 }
