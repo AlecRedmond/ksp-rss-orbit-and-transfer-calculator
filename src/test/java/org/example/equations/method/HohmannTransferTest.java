@@ -1,7 +1,6 @@
 package org.example.equations.method;
 
 import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 import org.example.equations.application.Keplerian;
 import org.example.equations.application.KeplerianHolds;
@@ -14,8 +13,8 @@ class HohmannTransferTest {
     private static Keplerian finalOrbit;
     private static double initialPE = 300000;
     private static double initialAP = 500000;
-    private static double finalPE = 250000;
-    private static double finalAP = 600000;
+    private static double finalPE = 10000000;
+    private static double finalAP = 40000000;
 
     @BeforeAll
     public static void initialiseKeplerians(){
@@ -43,6 +42,8 @@ class HohmannTransferTest {
         System.out.println(hohmannTransfer.getTransferOrbit());
         System.out.println(hohmannTransfer.getFirstBurn());
         System.out.println(hohmannTransfer.getSecondBurn());
+        System.out.println(hohmannTransfer.getTotalBurnDV());
+        System.out.println(hohmannTransfer.getApsisOfFirstBurn());
     }
 
 }
