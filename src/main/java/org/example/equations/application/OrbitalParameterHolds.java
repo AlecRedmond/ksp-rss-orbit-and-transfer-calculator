@@ -8,15 +8,15 @@ import lombok.Data;
 import org.example.equations.application.keplerianelements.Kepler.KeplerEnums;
 
 @Data
-public class KeplerianHolds {
-    private Map<KeplerEnums, Boolean> keplerianHolds = new HashMap<>();
+public class OrbitalParameterHolds {
+    private Map<KeplerEnums, Boolean> orbitalParameterHolds = new HashMap<>();
     
-    public KeplerianHolds(){
-        buildKeplerianHolds();
+    public OrbitalParameterHolds(){
+        buildHolds();
     }
 
-    private void buildKeplerianHolds() {
-        keplerianHolds.putAll(
+    private void buildHolds() {
+        orbitalParameterHolds.putAll(
                 Map.of(
                         APOAPSIS, false,
                         PERIAPSIS, false,
@@ -28,10 +28,10 @@ public class KeplerianHolds {
     }
     
     public void setHold(KeplerEnums keplerEnum, boolean holdState){
-        keplerianHolds.put(keplerEnum,holdState);
+        orbitalParameterHolds.put(keplerEnum,holdState);
     }
     
     public boolean getHold(KeplerEnums keplerEnum){
-        return keplerianHolds.getOrDefault(keplerEnum,false);
+        return orbitalParameterHolds.getOrDefault(keplerEnum,false);
     }
 }

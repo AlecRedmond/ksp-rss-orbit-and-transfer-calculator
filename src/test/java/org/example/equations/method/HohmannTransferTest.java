@@ -2,15 +2,15 @@ package org.example.equations.method;
 
 import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
-import org.example.equations.application.Keplerian;
-import org.example.equations.application.KeplerianHolds;
+import org.example.equations.application.Orbit;
+import org.example.equations.application.OrbitalParameterHolds;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class HohmannTransferTest {
-    private static KeplerianHolds keplerianHolds;
-    private static Keplerian initialOrbit;
-    private static Keplerian finalOrbit;
+    private static OrbitalParameterHolds orbitalParameterHolds;
+    private static Orbit initialOrbit;
+    private static Orbit finalOrbit;
     private static double initialPE = 300000;
     private static double initialAP = 500000;
     private static double finalPE = 10000000;
@@ -18,22 +18,22 @@ class HohmannTransferTest {
 
     @BeforeAll
     public static void initialiseKeplerians(){
-        keplerianHolds = new KeplerianHolds();
-        keplerianHolds.setHold(PERIAPSIS,true);
-        keplerianHolds.setHold(APOAPSIS,true);
+        orbitalParameterHolds = new OrbitalParameterHolds();
+        orbitalParameterHolds.setHold(PERIAPSIS,true);
+        orbitalParameterHolds.setHold(APOAPSIS,true);
 
-        initialOrbit = new Keplerian();
+        initialOrbit = new Orbit();
         initialOrbit.setDataFor(PERIAPSIS,initialPE);
         initialOrbit.setDataFor(APOAPSIS,initialAP);
 
-        finalOrbit = new Keplerian();
+        finalOrbit = new Orbit();
         finalOrbit.setDataFor(PERIAPSIS,finalPE);
         finalOrbit.setDataFor(APOAPSIS,finalAP);
 
-        KeplerianMethod keplerianMethod = new KeplerianMethod(initialOrbit,keplerianHolds);
-        initialOrbit = keplerianMethod.getKeplerian();
-        keplerianMethod = new KeplerianMethod(finalOrbit,keplerianHolds);
-        finalOrbit = keplerianMethod.getKeplerian();
+        OrbitBuilder orbitBuilder = new OrbitBuilder(initialOrbit, orbitalParameterHolds);
+        initialOrbit = orbitBuilder.getOrbit();
+        orbitBuilder = new OrbitBuilder(finalOrbit, orbitalParameterHolds);
+        finalOrbit = orbitBuilder.getOrbit();
     }
 
     @Test

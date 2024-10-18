@@ -2,8 +2,8 @@ package org.example.equations.method;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.equations.application.Keplerian;
-import org.example.equations.application.KeplerianHolds;
+import org.example.equations.application.Orbit;
+import org.example.equations.application.OrbitalParameterHolds;
 import org.example.equations.application.keplerianelements.Kepler;
 import org.example.equations.application.keplerianelements.Kepler.KeplerEnums;
 
@@ -13,37 +13,37 @@ import static org.example.equations.application.keplerianelements.Kepler.KeplerE
 
 @Data
 @NoArgsConstructor
-public class KeplerianMethod {
-    private Keplerian keplerian;
-    private KeplerianHolds keplerianHolds;
+public class OrbitBuilder {
+    private Orbit orbit;
+    private OrbitalParameterHolds orbitalParameterHolds;
 
-    public KeplerianMethod(Keplerian keplerian,KeplerianHolds keplerianHolds){
-        this.keplerian = keplerian;
-        this.keplerianHolds = keplerianHolds;
+    public OrbitBuilder(Orbit orbit, OrbitalParameterHolds orbitalParameterHolds){
+        this.orbit = orbit;
+        this.orbitalParameterHolds = orbitalParameterHolds;
         methodFromHolds();
     }
 
     private void methodFromHolds() {
-        int holdsPressed = countHolds(keplerianHolds);
+        int holdsPressed = countHolds(orbitalParameterHolds);
         if(holdsPressed != 2){
             setAllToZero();
             return;
         }
         if(held(ORBITAL_PERIOD)){
-            FillEquations.convertOrbitalPeriodToSMA(keplerian);
-            keplerianHolds.setHold(SEMI_MAJOR_AXIS,true);
+            FillEquations.convertOrbitalPeriodToSMA(orbit);
+            orbitalParameterHolds.setHold(SEMI_MAJOR_AXIS,true);
         }
 
         if(held(APOAPSIS) || held(PERIAPSIS)){
             if(held(APOAPSIS) && held(PERIAPSIS)){
-                FillEquations.calculateFromPeriapsisApoapsis(keplerian);
+                FillEquations.calculateFromPeriapsisApoapsis(orbit);
             } else if(held(ECCENTRICITY)){
-                FillEquations.calculateFromApsisEccentricity(keplerian,held(PERIAPSIS));
+                FillEquations.calculateFromApsisEccentricity(orbit,held(PERIAPSIS));
             } else if(held(SEMI_MAJOR_AXIS)){
-                FillEquations.calculateFromApsisSemiMajorAxis(keplerian,held(PERIAPSIS));
+                FillEquations.calculateFromApsisSemiMajorAxis(orbit,held(PERIAPSIS));
             } else if(held(VELOCITY_PERIAPSIS) && held(PERIAPSIS) || held(VELOCITY_APOAPSIS) && held(APOAPSIS)){
-                FillEquations.calculateSMAFromVelocityAndAltitude(keplerian,held(PERIAPSIS));
-                FillEquations.calculateFromApsisSemiMajorAxis(keplerian,held(PERIAPSIS));
+                FillEquations.calculateSMAFromVelocityAndAltitude(orbit,held(PERIAPSIS));
+                FillEquations.calculateFromApsisSemiMajorAxis(orbit,held(PERIAPSIS));
             } else {
                 setAllToZero();
             }
@@ -52,7 +52,7 @@ public class KeplerianMethod {
 
         if(held(ECCENTRICITY)){
             if(held(SEMI_MAJOR_AXIS)){
-                FillEquations.calculateFromEccentricitySemiMajorAxis(keplerian);
+                FillEquations.calculateFromEccentricitySemiMajorAxis(orbit);
             } else {
                 setAllToZero();
             }
@@ -61,8 +61,8 @@ public class KeplerianMethod {
 
         if(held(SEMI_MAJOR_AXIS)){
             if(held(VELOCITY_APOAPSIS) || held(VELOCITY_PERIAPSIS)){
-                FillEquations.calculateAltitudeFromVelocityAndSMA(keplerian,held(VELOCITY_PERIAPSIS));
-                FillEquations.calculateFromApsisSemiMajorAxis(keplerian,held(VELOCITY_PERIAPSIS));
+                FillEquations.calculateAltitudeFromVelocityAndSMA(orbit,held(VELOCITY_PERIAPSIS));
+                FillEquations.calculateFromApsisSemiMajorAxis(orbit,held(VELOCITY_PERIAPSIS));
             } else {
                 setAllToZero();
             }
@@ -73,18 +73,18 @@ public class KeplerianMethod {
     }
 
     private boolean held(KeplerEnums keplerEnums) {
-        return keplerianHolds.getHold(keplerEnums);
+        return orbitalParameterHolds.getHold(keplerEnums);
     }
 
     private void setAllToZero() {
-        for(Map.Entry<KeplerEnums,Kepler> entry : keplerian.getKeplarianElements().entrySet()){
+        for(Map.Entry<KeplerEnums,Kepler> entry : orbit.getKeplarianElements().entrySet()){
             entry.getValue().setData(0.0);
         }
     }
 
-    private int countHolds(KeplerianHolds keplerianHolds) {
+    private int countHolds(OrbitalParameterHolds orbitalParameterHolds) {
         int holds = 0;
-        for(Map.Entry<KeplerEnums,Boolean> entry : keplerianHolds.getKeplerianHolds().entrySet()){
+        for(Map.Entry<KeplerEnums,Boolean> entry : orbitalParameterHolds.getOrbitalParameterHolds().entrySet()){
             if(entry.getValue()){
                 holds++;
             }

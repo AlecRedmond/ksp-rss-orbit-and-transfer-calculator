@@ -3,149 +3,149 @@ package org.example.equations.method;
 import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
 import org.example.equations.application.Body;
-import org.example.equations.application.Keplerian;
+import org.example.equations.application.Orbit;
 
 public class FillEquations {
   private static Body body = Body.EARTH;
 
-  public static Keplerian calculateFromPeriapsisApoapsis(Keplerian keplerian) {
-    FillEquations.body = keplerian.getBody();
-    double apoapsis = keplerian.getDataFor(APOAPSIS);
-    double periapsis = keplerian.getDataFor(PERIAPSIS);
-    Body body = keplerian.getBody();
+  public static Orbit calculateFromPeriapsisApoapsis(Orbit orbit) {
+    FillEquations.body = orbit.getBody();
+    double apoapsis = orbit.getDataFor(APOAPSIS);
+    double periapsis = orbit.getDataFor(PERIAPSIS);
+    Body body = orbit.getBody();
 
     if (apoapsis < periapsis) {
-      keplerian.setDataFor(PERIAPSIS, apoapsis);
-      keplerian.setDataFor(APOAPSIS, periapsis);
-      apoapsis = keplerian.getDataFor(APOAPSIS);
-      periapsis = keplerian.getDataFor(PERIAPSIS);
+      orbit.setDataFor(PERIAPSIS, apoapsis);
+      orbit.setDataFor(APOAPSIS, periapsis);
+      apoapsis = orbit.getDataFor(APOAPSIS);
+      periapsis = orbit.getDataFor(PERIAPSIS);
     }
 
     apoapsis += body.getRadius();
     periapsis += body.getRadius();
 
-    keplerian.setDataFor(SEMI_MAJOR_AXIS, (apoapsis + periapsis) / 2);
-    keplerian.setDataFor(ECCENTRICITY, (apoapsis - periapsis) / (apoapsis + periapsis));
-    keplerian = convertSemiMajorAxisToOrbitalPeriod(keplerian);
-    keplerian = calculateBothVelocities(keplerian);
-    return keplerian;
+    orbit.setDataFor(SEMI_MAJOR_AXIS, (apoapsis + periapsis) / 2);
+    orbit.setDataFor(ECCENTRICITY, (apoapsis - periapsis) / (apoapsis + periapsis));
+    orbit = convertSemiMajorAxisToOrbitalPeriod(orbit);
+    orbit = calculateBothVelocities(orbit);
+    return orbit;
   }
 
-  public static Keplerian calculateFromApsisEccentricity(Keplerian keplerian, boolean hasPeriapsis) {
-    FillEquations.body = keplerian.getBody();
+  public static Orbit calculateFromApsisEccentricity(Orbit orbit, boolean hasPeriapsis) {
+    FillEquations.body = orbit.getBody();
     double apoapsis;
     double periapsis;
-    double eccentricity = keplerian.getDataFor(ECCENTRICITY);
+    double eccentricity = orbit.getDataFor(ECCENTRICITY);
     double semiMajorAxis;
     if (hasPeriapsis) {
-      periapsis = keplerian.getDataFor(PERIAPSIS) + keplerian.getBody().getRadius();
+      periapsis = orbit.getDataFor(PERIAPSIS) + orbit.getBody().getRadius();
       semiMajorAxis = periapsis / (1 - eccentricity);
-      keplerian.setDataFor(SEMI_MAJOR_AXIS, semiMajorAxis);
+      orbit.setDataFor(SEMI_MAJOR_AXIS, semiMajorAxis);
     } else {
-      apoapsis = keplerian.getDataFor(APOAPSIS) + keplerian.getBody().getRadius();
+      apoapsis = orbit.getDataFor(APOAPSIS) + orbit.getBody().getRadius();
       semiMajorAxis = apoapsis / (1 + eccentricity);
-      keplerian.setDataFor(SEMI_MAJOR_AXIS, semiMajorAxis);
+      orbit.setDataFor(SEMI_MAJOR_AXIS, semiMajorAxis);
     }
-    return calculateFromEccentricitySemiMajorAxis(keplerian);
+    return calculateFromEccentricitySemiMajorAxis(orbit);
   }
 
-  public static Keplerian calculateFromApsisSemiMajorAxis(Keplerian keplerian, boolean hasPeriapsis) {
-    FillEquations.body = keplerian.getBody();
+  public static Orbit calculateFromApsisSemiMajorAxis(Orbit orbit, boolean hasPeriapsis) {
+    FillEquations.body = orbit.getBody();
     double apoapsis;
     double periapsis;
-    double semiMajorAxis = keplerian.getDataFor(SEMI_MAJOR_AXIS);
+    double semiMajorAxis = orbit.getDataFor(SEMI_MAJOR_AXIS);
     if (hasPeriapsis) {
-      periapsis = keplerian.getDataFor(PERIAPSIS) + keplerian.getBody().getRadius();
-      keplerian.setDataFor(ECCENTRICITY, 1 - (periapsis / semiMajorAxis));
+      periapsis = orbit.getDataFor(PERIAPSIS) + orbit.getBody().getRadius();
+      orbit.setDataFor(ECCENTRICITY, 1 - (periapsis / semiMajorAxis));
     } else {
-      apoapsis = keplerian.getDataFor(APOAPSIS) + keplerian.getBody().getRadius();
-      keplerian.setDataFor(ECCENTRICITY, (apoapsis / semiMajorAxis) - 1);
+      apoapsis = orbit.getDataFor(APOAPSIS) + orbit.getBody().getRadius();
+      orbit.setDataFor(ECCENTRICITY, (apoapsis / semiMajorAxis) - 1);
     }
-    return calculateFromEccentricitySemiMajorAxis(keplerian);
+    return calculateFromEccentricitySemiMajorAxis(orbit);
   }
 
-  public static Keplerian calculateFromEccentricitySemiMajorAxis(Keplerian keplerian) {
-    FillEquations.body = keplerian.getBody();
-    double eccentricity = keplerian.getDataFor(ECCENTRICITY);
-    double semiMajorAxis = keplerian.getDataFor(SEMI_MAJOR_AXIS);
-    keplerian.setDataFor(
-        APOAPSIS, (semiMajorAxis * (1 + eccentricity)) - keplerian.getBody().getRadius());
-    keplerian.setDataFor(
-        PERIAPSIS, (semiMajorAxis * (1 - eccentricity)) - keplerian.getBody().getRadius());
-    keplerian = convertSemiMajorAxisToOrbitalPeriod(keplerian);
-    keplerian = calculateBothVelocities(keplerian);
-    return keplerian;
+  public static Orbit calculateFromEccentricitySemiMajorAxis(Orbit orbit) {
+    FillEquations.body = orbit.getBody();
+    double eccentricity = orbit.getDataFor(ECCENTRICITY);
+    double semiMajorAxis = orbit.getDataFor(SEMI_MAJOR_AXIS);
+    orbit.setDataFor(
+        APOAPSIS, (semiMajorAxis * (1 + eccentricity)) - orbit.getBody().getRadius());
+    orbit.setDataFor(
+        PERIAPSIS, (semiMajorAxis * (1 - eccentricity)) - orbit.getBody().getRadius());
+    orbit = convertSemiMajorAxisToOrbitalPeriod(orbit);
+    orbit = calculateBothVelocities(orbit);
+    return orbit;
   }
 
-  public static Keplerian convertOrbitalPeriodToSMA(Keplerian keplerian) {
-    FillEquations.body = keplerian.getBody();
-    double orbitalPeriod = keplerian.getDataFor(ORBITAL_PERIOD);
-    double mu = keplerian.getBody().getMu();
+  public static Orbit convertOrbitalPeriodToSMA(Orbit orbit) {
+    FillEquations.body = orbit.getBody();
+    double orbitalPeriod = orbit.getDataFor(ORBITAL_PERIOD);
+    double mu = orbit.getBody().getMu();
     double semiMajorAxis =
         Math.pow((orbitalPeriod * Math.sqrt(mu)) / (2 * Math.PI), ((double) 2 / 3));
-    keplerian.setDataFor(SEMI_MAJOR_AXIS, semiMajorAxis);
-    return keplerian;
+    orbit.setDataFor(SEMI_MAJOR_AXIS, semiMajorAxis);
+    return orbit;
   }
 
-  public static Keplerian convertSemiMajorAxisToOrbitalPeriod(Keplerian keplerian) {
-    FillEquations.body = keplerian.getBody();
-    double semiMajorAxis = keplerian.getDataFor(SEMI_MAJOR_AXIS);
-    double mu = keplerian.getBody().getMu();
+  public static Orbit convertSemiMajorAxisToOrbitalPeriod(Orbit orbit) {
+    FillEquations.body = orbit.getBody();
+    double semiMajorAxis = orbit.getDataFor(SEMI_MAJOR_AXIS);
+    double mu = orbit.getBody().getMu();
     double orbitalPeriod = (2 * Math.PI) * Math.sqrt((Math.pow(semiMajorAxis, 3)) / mu);
-    keplerian.setDataFor(ORBITAL_PERIOD, orbitalPeriod);
-    return keplerian;
+    orbit.setDataFor(ORBITAL_PERIOD, orbitalPeriod);
+    return orbit;
   }
 
-  public static Keplerian calculateSMAFromVelocityAndAltitude(
-      Keplerian keplerian, boolean periapsis) {
-    FillEquations.body = keplerian.getBody();
+  public static Orbit calculateSMAFromVelocityAndAltitude(
+          Orbit orbit, boolean periapsis) {
+    FillEquations.body = orbit.getBody();
 
     if (periapsis) {
-      keplerian.setDataFor(
+      orbit.setDataFor(
           SEMI_MAJOR_AXIS,
           smaFromVelocityAndAltitude(
-              keplerian.getDataFor(VELOCITY_PERIAPSIS), keplerian.getDataFor(PERIAPSIS)));
+              orbit.getDataFor(VELOCITY_PERIAPSIS), orbit.getDataFor(PERIAPSIS)));
 
     } else {
-      keplerian.setDataFor(
+      orbit.setDataFor(
           SEMI_MAJOR_AXIS,
           smaFromVelocityAndAltitude(
-              keplerian.getDataFor(VELOCITY_APOAPSIS), keplerian.getDataFor(APOAPSIS)));
+              orbit.getDataFor(VELOCITY_APOAPSIS), orbit.getDataFor(APOAPSIS)));
 
     }
-      return keplerian;
+      return orbit;
   }
 
-  public static Keplerian calculateAltitudeFromVelocityAndSMA(
-      Keplerian keplerian, boolean periapsis) {
-    FillEquations.body = keplerian.getBody();
+  public static Orbit calculateAltitudeFromVelocityAndSMA(
+          Orbit orbit, boolean periapsis) {
+    FillEquations.body = orbit.getBody();
 
     if (periapsis) {
-      keplerian.setDataFor(
+      orbit.setDataFor(
           PERIAPSIS,
           altitudeFromVelocityAndSMA(
-              keplerian.getDataFor(VELOCITY_PERIAPSIS), keplerian.getDataFor(SEMI_MAJOR_AXIS)));
+              orbit.getDataFor(VELOCITY_PERIAPSIS), orbit.getDataFor(SEMI_MAJOR_AXIS)));
 
     } else {
-      keplerian.setDataFor(
+      orbit.setDataFor(
           APOAPSIS,
           altitudeFromVelocityAndSMA(
-              keplerian.getDataFor(VELOCITY_APOAPSIS), keplerian.getDataFor(SEMI_MAJOR_AXIS)));
+              orbit.getDataFor(VELOCITY_APOAPSIS), orbit.getDataFor(SEMI_MAJOR_AXIS)));
 
     }
-      return keplerian;
+      return orbit;
   }
 
-  public static Keplerian calculateBothVelocities(Keplerian keplerian) {
-    FillEquations.body = keplerian.getBody();
-    double altitudePE = keplerian.getDataFor(PERIAPSIS);
-    double altitudeAP = keplerian.getDataFor(APOAPSIS);
-    double sma = keplerian.getDataFor(SEMI_MAJOR_AXIS);
+  public static Orbit calculateBothVelocities(Orbit orbit) {
+    FillEquations.body = orbit.getBody();
+    double altitudePE = orbit.getDataFor(PERIAPSIS);
+    double altitudeAP = orbit.getDataFor(APOAPSIS);
+    double sma = orbit.getDataFor(SEMI_MAJOR_AXIS);
     double velocityAP = velocityFromAltitudeAndSMA(altitudeAP, sma);
     double velocityPE = velocityFromAltitudeAndSMA(altitudePE, sma);
-    keplerian.setDataFor(VELOCITY_APOAPSIS, velocityAP);
-    keplerian.setDataFor(VELOCITY_PERIAPSIS, velocityPE);
-    return keplerian;
+    orbit.setDataFor(VELOCITY_APOAPSIS, velocityAP);
+    orbit.setDataFor(VELOCITY_PERIAPSIS, velocityPE);
+    return orbit;
   }
 
   public static double velocityFromAltitudeAndSMA(double altitude, double sma) {

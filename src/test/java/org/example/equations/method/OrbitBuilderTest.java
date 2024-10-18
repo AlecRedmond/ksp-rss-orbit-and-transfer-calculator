@@ -3,16 +3,16 @@ package org.example.equations.method;
 import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.example.equations.application.Keplerian;
-import org.example.equations.application.KeplerianHolds;
+import org.example.equations.application.Orbit;
+import org.example.equations.application.OrbitalParameterHolds;
 import org.example.equations.application.keplerianelements.Kepler.KeplerEnums;
 import org.junit.jupiter.api.Test;
 
-class KeplerianMethodTest {
+class OrbitBuilderTest {
 
-  private static KeplerianMethod keplerianMethod;
-  private static Keplerian keplerian;
-  private static KeplerianHolds keplerianHolds;
+  private static OrbitBuilder orbitBuilder;
+  private static Orbit orbit;
+  private static OrbitalParameterHolds orbitalParameterHolds;
   private static final double apoapsis = 500000;
   private static final double periapsis = 300000;
   private static final double semiMajorAxis = 6771400.0;
@@ -23,8 +23,8 @@ class KeplerianMethodTest {
 
 
   void setAsNew() {
-    keplerian = new Keplerian();
-    keplerianHolds = new KeplerianHolds();
+    orbit = new Orbit();
+    orbitalParameterHolds = new OrbitalParameterHolds();
 
   }
 
@@ -64,22 +64,22 @@ class KeplerianMethodTest {
 
   private void runComparatorTest(KeplerEnums keplerEnum1, double double1, KeplerEnums keplerEnum2, double double2) {
     setAsNew();
-    keplerian.setDataFor(keplerEnum1,double1);
-    keplerian.setDataFor(keplerEnum2,double2);
-    keplerianHolds.setHold(keplerEnum1,true);
-    keplerianHolds.setHold(keplerEnum2,true);
+    orbit.setDataFor(keplerEnum1,double1);
+    orbit.setDataFor(keplerEnum2,double2);
+    orbitalParameterHolds.setHold(keplerEnum1,true);
+    orbitalParameterHolds.setHold(keplerEnum2,true);
     build();
     runAssertEqualsOnAll();
   }
 
   private void runAssertEqualsOnAll() {
-    assertTrue(withinMarg(apoapsis,keplerian.getDataFor(APOAPSIS)));
-    assertTrue(withinMarg(periapsis,keplerian.getDataFor(PERIAPSIS)));
-    assertTrue(withinMarg(semiMajorAxis,keplerian.getDataFor(SEMI_MAJOR_AXIS)));
-    assertTrue(withinMarg(eccentricity,keplerian.getDataFor(ECCENTRICITY)));
-    assertTrue(withinMarg(orbitalPeriod,keplerian.getDataFor(ORBITAL_PERIOD)));
-    assertTrue(withinMarg(velocityApoapsis,keplerian.getDataFor(VELOCITY_APOAPSIS)));
-    assertTrue(withinMarg(velocityPeriapsis,keplerian.getDataFor(VELOCITY_PERIAPSIS)));
+    assertTrue(withinMarg(apoapsis, orbit.getDataFor(APOAPSIS)));
+    assertTrue(withinMarg(periapsis, orbit.getDataFor(PERIAPSIS)));
+    assertTrue(withinMarg(semiMajorAxis, orbit.getDataFor(SEMI_MAJOR_AXIS)));
+    assertTrue(withinMarg(eccentricity, orbit.getDataFor(ECCENTRICITY)));
+    assertTrue(withinMarg(orbitalPeriod, orbit.getDataFor(ORBITAL_PERIOD)));
+    assertTrue(withinMarg(velocityApoapsis, orbit.getDataFor(VELOCITY_APOAPSIS)));
+    assertTrue(withinMarg(velocityPeriapsis, orbit.getDataFor(VELOCITY_PERIAPSIS)));
   }
 
   private boolean withinMarg(double myData, double foundData) {
@@ -92,6 +92,6 @@ class KeplerianMethodTest {
   }
 
   private static void build() {
-    keplerianMethod = new KeplerianMethod(keplerian, keplerianHolds);
+    orbitBuilder = new OrbitBuilder(orbit, orbitalParameterHolds);
   }
 }

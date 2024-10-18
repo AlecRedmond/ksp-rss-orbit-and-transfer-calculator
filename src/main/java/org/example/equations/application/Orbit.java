@@ -13,17 +13,17 @@ import org.example.equations.application.keplerianelements.Kepler.KeplerEnums;
 @Data
 @Getter
 @Setter
-public class Keplerian {
+public class Orbit {
   private Body body;
 
   private Map<KeplerEnums, Kepler> keplarianElements = new HashMap<>();
 
-  public Keplerian(Body body) {
+  public Orbit(Body body) {
     this.body = body;
     buildKeplarianElements();
   }
 
-  public Keplerian() {
+  public Orbit() {
     this.body = Body.EARTH;
     buildKeplarianElements();
   }
@@ -40,8 +40,8 @@ public class Keplerian {
             VELOCITY_PERIAPSIS, new VelocityPeriapsis(0.0)));
   }
 
-  public void setFromString(String inputDate, Kepler kepler) {
-    kepler.setFromString(inputDate);
+  public void setFromString(String inputData, Kepler kepler) {
+    kepler.setFromString(inputData);
     keplarianElements.replace(kepler.getType(), kepler);
   }
 
@@ -56,4 +56,6 @@ public class Keplerian {
   public void setDataFor(KeplerEnums keplerEnums, double data) {
     keplarianElements.get(keplerEnums).setData(data);
   }
+
+  public String getDisplayName(KeplerEnums keplerEnums){ return keplarianElements.get(keplerEnums).displayName();}
 }

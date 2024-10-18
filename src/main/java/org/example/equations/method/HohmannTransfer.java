@@ -3,30 +3,30 @@ package org.example.equations.method;
 import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
 import lombok.Data;
-import org.example.equations.application.Keplerian;
-import org.example.equations.application.KeplerianHolds;
+import org.example.equations.application.Orbit;
+import org.example.equations.application.OrbitalParameterHolds;
 import org.example.equations.application.keplerianelements.Kepler.KeplerEnums;
 
 @Data
 public class HohmannTransfer {
-  private Keplerian initialOrbit;
+  private Orbit initialOrbit;
   private double firstBurn;
   private KeplerEnums apsisOfFirstBurn;
-  private Keplerian transferOrbit;
+  private Orbit transferOrbit;
   private double secondBurn;
-  private Keplerian finalOrbit;
+  private Orbit finalOrbit;
   private double totalBurnDV;
   private KeplerEnums apsisOfSecondBurn;
 
-  public HohmannTransfer(Keplerian initialOrbit, Keplerian finalOrbit) {
+  public HohmannTransfer(Orbit initialOrbit, Orbit finalOrbit) {
     this.initialOrbit = initialOrbit;
     this.finalOrbit = finalOrbit;
     calculateTransferOrbit();
   }
 
   private void calculateTransferOrbit() {
-    Keplerian potentialTransfer1 = new Keplerian();
-    Keplerian potentialTransfer2 = new Keplerian();
+    Orbit potentialTransfer1 = new Orbit();
+    Orbit potentialTransfer2 = new Orbit();
 
 
     double initialApoapsis = initialOrbit.getDataFor(APOAPSIS);
@@ -78,7 +78,7 @@ public class HohmannTransfer {
     return totaldV;
   }
 
-  private double[] getDeltaVArray(Keplerian potentialTransfer, boolean isType1) {
+  private double[] getDeltaVArray(Orbit potentialTransfer, boolean isType1) {
     double[] transfers = new double[2];
     if(isType1){
       transfers[0] = potentialTransfer.getDataFor(VELOCITY_PERIAPSIS) - initialOrbit.getDataFor(VELOCITY_PERIAPSIS);
@@ -91,14 +91,14 @@ public class HohmannTransfer {
     return transfers;
   }
 
-  private Keplerian fillKeplerian(Keplerian keplerian,double periapsis,double apoapsis){
-    KeplerianHolds transferHolds = new KeplerianHolds();
+  private Orbit fillKeplerian(Orbit orbit, double periapsis, double apoapsis){
+    OrbitalParameterHolds transferHolds = new OrbitalParameterHolds();
     transferHolds.setHold(PERIAPSIS,true);
     transferHolds.setHold(APOAPSIS,true);
 
-    keplerian.setDataFor(PERIAPSIS,periapsis);
-    keplerian.setDataFor(APOAPSIS,apoapsis);
-    KeplerianMethod keplerianMethod = new KeplerianMethod(keplerian,transferHolds);
-    return keplerianMethod.getKeplerian();
+    orbit.setDataFor(PERIAPSIS,periapsis);
+    orbit.setDataFor(APOAPSIS,apoapsis);
+    OrbitBuilder orbitBuilder = new OrbitBuilder(orbit,transferHolds);
+    return orbitBuilder.getOrbit();
   }
 }
