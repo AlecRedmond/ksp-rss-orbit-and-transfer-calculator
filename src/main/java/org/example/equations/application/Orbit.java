@@ -40,13 +40,12 @@ public class Orbit {
             VELOCITY_PERIAPSIS, new VelocityPeriapsis(0.0)));
   }
 
-  public void setFromString(String inputData, Kepler kepler) {
-    kepler.setFromString(inputData);
-    keplarianElements.replace(kepler.getType(), kepler);
+  public void setFromString(KeplerEnums keplerEnums, String inputString) {
+    keplarianElements.get(keplerEnums).setFromString(inputString);
   }
 
-  public String getAsString(Kepler kepler) {
-    return keplarianElements.get(kepler.getType()).getAsString();
+  public String getAsString(KeplerEnums keplerEnums) {
+    return keplarianElements.get(keplerEnums).getAsString();
   }
 
   public double getDataFor(KeplerEnums keplerEnums) {

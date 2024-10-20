@@ -9,10 +9,10 @@ import lombok.Setter;
 public class GuiButtons {
     @Getter
     @Setter
-    private static Button clearButton = new Button("");
+    private static Button clearButton = new Button("Clear");
     @Getter
     @Setter
-    private static Button calculateButton = new Button("");
+    private static Button calculateButton = new Button("Calculate");
     @Getter
     @Setter
     private static Button deBugButton = new Button("DeBug");

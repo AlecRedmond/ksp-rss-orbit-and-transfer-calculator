@@ -5,20 +5,25 @@ import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import lombok.Data;
-import org.example.gui.nodemethod.buttonsgroup.ButtonActions;
-import org.example.gui.nodegroups.buttonsgroup.GuiButtons;
 import org.example.gui.nodegroups.TopNodeGroup;
+import org.example.gui.nodegroups.buttonsgroup.GuiButtons;
+import org.example.gui.nodemethod.buttonsgroup.ButtonActions;
 
 @Data
 public class SceneLayoutBuilder {
   private static Scene scene;
+  private static VBox vBox;
+
+
 
   public static Scene buildScene() {
-    SceneNodeFill.fillAll();
-    VBox vBox = stackSceneElements();
-    vBox.setPadding( new Insets(10));
-    return new Scene(vBox, 480, 640);
+    NodeFunctions.fillAll();
+    vBox = stackSceneElements();
+    vBox.setPadding( new Insets(20));
+    return new Scene(vBox, 640, 480);
   }
+
+
 
   private static VBox stackSceneElements() {
     VBox vBox = new VBox();
@@ -28,11 +33,8 @@ public class SceneLayoutBuilder {
             guiButtons,
             TopNodeGroup.getOutputText()
     );
-    buttonActions();
+    ButtonActions.allButtons();
     return vBox;
   }
 
-  private static void buttonActions() {
-    ButtonActions.debugButton();
-  }
 }

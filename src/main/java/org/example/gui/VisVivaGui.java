@@ -16,6 +16,7 @@ public class VisVivaGui extends Application {
     this.stage = stage;
 
     Scene scene = SceneLayoutBuilder.buildScene();
+    //scene.getStylesheets().add(getClass().getResource("controlStyle1.css").toExternalForm());
     stage.setScene(scene);
     stage.show();
 
