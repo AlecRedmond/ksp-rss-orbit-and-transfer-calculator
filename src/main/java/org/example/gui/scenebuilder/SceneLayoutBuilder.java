@@ -1,15 +1,13 @@
-package org.example.gui.method.scene;
+package org.example.gui.scenebuilder;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import lombok.Data;
-import org.example.equations.application.keplerianelements.Kepler;
-import org.example.gui.application.scene.GuiButtons;
-import org.example.gui.application.scene.SceneElements;
-
-import java.util.HashMap;
+import org.example.gui.nodemethod.buttonsgroup.ButtonActions;
+import org.example.gui.nodegroups.buttonsgroup.GuiButtons;
+import org.example.gui.nodegroups.TopNodeGroup;
 
 @Data
 public class SceneLayoutBuilder {
@@ -26,9 +24,9 @@ public class SceneLayoutBuilder {
     VBox vBox = new VBox();
     HBox guiButtons = new HBox(GuiButtons.getCalculateButton(),GuiButtons.getClearButton(),GuiButtons.getDeBugButton());
     vBox.getChildren().addAll(
-            SceneElements.getGridPane(),
+            TopNodeGroup.getGridPane(),
             guiButtons,
-            SceneElements.getOutputText()
+            TopNodeGroup.getOutputText()
     );
     buttonActions();
     return vBox;

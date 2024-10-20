@@ -1,9 +1,10 @@
-package org.example.gui.method.scene;
+package org.example.gui.scenebuilder;
 
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
-import org.example.gui.application.scene.GuiButtons;
-import org.example.gui.application.scene.SceneElements;
+import org.example.gui.nodemethod.OrbitalGridPane;
+import org.example.gui.nodegroups.buttonsgroup.GuiButtons;
+import org.example.gui.nodegroups.TopNodeGroup;
 
 public class SceneNodeFill {
   public static void fillAll() {
@@ -14,7 +15,7 @@ public class SceneNodeFill {
 
   private static void fillText() {
     Text text = new Text("Hello World");
-    SceneElements.setOutputText(text);
+    TopNodeGroup.setOutputText(text);
   }
 
   private static void fillButtons() {

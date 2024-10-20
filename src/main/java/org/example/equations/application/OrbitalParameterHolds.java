@@ -4,10 +4,13 @@ import static org.example.equations.application.keplerianelements.Kepler.KeplerE
 
 import java.util.HashMap;
 import java.util.Map;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.example.equations.application.keplerianelements.Kepler.KeplerEnums;
 
 @Data
+@AllArgsConstructor
 public class OrbitalParameterHolds {
     private Map<KeplerEnums, Boolean> orbitalParameterHolds = new HashMap<>();
     

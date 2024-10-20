@@ -1,9 +1,9 @@
-package org.example.gui.application;
+package org.example.gui;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.example.gui.method.scene.SceneLayoutBuilder;
+import org.example.gui.scenebuilder.SceneLayoutBuilder;
 
 public class VisVivaGui extends Application {
   private Stage stage;

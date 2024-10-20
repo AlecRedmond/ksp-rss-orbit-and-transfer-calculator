@@ -1,8 +1,8 @@
-package org.example.gui.method;
+package org.example.gui.scenebuilder;
 
 import javafx.stage.Stage;
 
-public class VisVivaGuiMethods {
+public class StageBuilder {
 
   public static Stage doAThingTest(Stage stage) {
     stage.setTitle("VisVivaStuff");

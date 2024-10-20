@@ -1,4 +1,4 @@
-package org.example.gui.application.scene;
+package org.example.gui.nodegroups.buttonsgroup;
 
 import javafx.scene.control.Button;
 import lombok.Data;

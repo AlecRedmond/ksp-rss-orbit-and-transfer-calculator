@@ -1,13 +1,14 @@
-package org.example.gui.application.scene;
+package org.example.gui.nodegroups;
 
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.gui.nodegroups.buttonsgroup.GuiButtons;
 
 @Data
-public class SceneElements {
+public class TopNodeGroup {
 
     @Getter
     @Setter

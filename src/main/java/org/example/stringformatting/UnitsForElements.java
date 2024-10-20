@@ -1,4 +1,4 @@
-package org.example.formatting;
+package org.example.stringformatting;
 
 import java.util.HashMap;
 import java.util.Map;
