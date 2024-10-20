@@ -5,8 +5,11 @@ import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import lombok.Data;
+import org.example.equations.application.keplerianelements.Kepler;
 import org.example.gui.application.scene.GuiButtons;
 import org.example.gui.application.scene.SceneElements;
+
+import java.util.HashMap;
 
 @Data
 public class SceneLayoutBuilder {
@@ -21,12 +24,17 @@ public class SceneLayoutBuilder {
 
   private static VBox stackSceneElements() {
     VBox vBox = new VBox();
-    HBox guiButtons = new HBox(GuiButtons.getCalculateButton(),GuiButtons.getClearButton());
+    HBox guiButtons = new HBox(GuiButtons.getCalculateButton(),GuiButtons.getClearButton(),GuiButtons.getDeBugButton());
     vBox.getChildren().addAll(
             SceneElements.getGridPane(),
             guiButtons,
             SceneElements.getOutputText()
     );
+    buttonActions();
     return vBox;
+  }
+
+  private static void buttonActions() {
+    ButtonActions.debugButton();
   }
 }

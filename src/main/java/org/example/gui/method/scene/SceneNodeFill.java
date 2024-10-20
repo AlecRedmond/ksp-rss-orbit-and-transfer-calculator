@@ -1,8 +1,6 @@
 package org.example.gui.method.scene;
 
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import org.example.gui.application.scene.GuiButtons;
 import org.example.gui.application.scene.SceneElements;

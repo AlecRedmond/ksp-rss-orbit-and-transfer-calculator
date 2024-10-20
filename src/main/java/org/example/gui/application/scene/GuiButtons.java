@@ -13,6 +13,11 @@ public class GuiButtons {
     @Getter
     @Setter
     private static Button calculateButton = new Button("");
+    @Getter
+    @Setter
+    private static Button deBugButton = new Button("DeBug");
+
+
 
 
 }
