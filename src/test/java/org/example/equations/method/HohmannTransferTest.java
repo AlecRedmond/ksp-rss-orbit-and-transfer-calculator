@@ -11,10 +11,10 @@ class HohmannTransferTest {
     private static OrbitalParameterHolds orbitalParameterHolds;
     private static Orbit initialOrbit;
     private static Orbit finalOrbit;
-    private static double initialPE = 300000;
-    private static double initialAP = 500000;
-    private static double finalPE = 10000000;
-    private static double finalAP = 40000000;
+    private static double initialPE = 350000;
+    private static double initialAP = 350000;
+    private static double finalPE = 50000;
+    private static double finalAP = 400000;
 
     @BeforeAll
     public static void initialiseKeplerians(){
@@ -39,11 +39,13 @@ class HohmannTransferTest {
     @Test
     public void testHohmannTransfer(){
         HohmannTransfer hohmannTransfer = new HohmannTransfer(initialOrbit,finalOrbit);
-        System.out.println(hohmannTransfer.getTransferOrbit());
-        System.out.println(hohmannTransfer.getFirstBurn());
-        System.out.println(hohmannTransfer.getSecondBurn());
-        System.out.println(hohmannTransfer.getTotalBurnDV());
-        System.out.println(hohmannTransfer.getApsisOfFirstBurn());
+        Orbit transferOrbit = hohmannTransfer.getTransferOrbit();
+        System.out.println("BURN AT: " + hohmannTransfer.getApsisOfFirstBurn());
+        System.out.println("PERIAPSIS " + transferOrbit.getDataFor(PERIAPSIS));
+        System.out.println("APOAPSIS " + transferOrbit.getDataFor(APOAPSIS));
+        System.out.println("FIRST BURN: " + hohmannTransfer.getFirstBurn());
+        System.out.println("SECOND BURN: " + hohmannTransfer.getSecondBurn());
+        System.out.println("TOTAL DV: " + hohmannTransfer.getTotalBurnDV());
     }
 
 }

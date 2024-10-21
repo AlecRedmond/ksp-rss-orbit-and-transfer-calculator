@@ -14,27 +14,24 @@ public class SceneLayoutBuilder {
   private static Scene scene;
   private static VBox vBox;
 
-
-
   public static Scene buildScene() {
     NodeFunctions.fillAll();
     vBox = stackSceneElements();
-    vBox.setPadding( new Insets(20));
+    vBox.setPadding(new Insets(20));
     return new Scene(vBox, 640, 480);
   }
 
-
+  private SceneLayoutBuilder() {}
 
   private static VBox stackSceneElements() {
     VBox vBox = new VBox();
-    HBox guiButtons = new HBox(GuiButtons.getCalculateButton(),GuiButtons.getClearButton(),GuiButtons.getDeBugButton());
-    vBox.getChildren().addAll(
-            TopNodeGroup.getGridPane(),
-            guiButtons,
-            TopNodeGroup.getOutputText()
-    );
+    HBox guiButtons =
+        new HBox(
+            GuiButtons.getCalculateButton(),
+            GuiButtons.getClearButton(),
+            GuiButtons.getDeBugButton());
+    vBox.getChildren().addAll(TopNodeGroup.getGridPane(), guiButtons, TopNodeGroup.getOutputText());
     ButtonActions.allButtons();
     return vBox;
   }
-
 }

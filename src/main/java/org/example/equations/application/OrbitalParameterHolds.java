@@ -18,6 +18,12 @@ public class OrbitalParameterHolds {
         buildHolds();
     }
 
+    public OrbitalParameterHolds(KeplerEnums keplerEnum1, KeplerEnums keplerEnum2){
+        buildHolds();
+        setHold(keplerEnum1,true);
+        setHold(keplerEnum2, true);
+    }
+
     private void buildHolds() {
         orbitalParameterHolds.putAll(
                 Map.of(
