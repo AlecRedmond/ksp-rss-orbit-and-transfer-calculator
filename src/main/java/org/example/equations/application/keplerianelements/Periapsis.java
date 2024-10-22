@@ -2,26 +2,20 @@ package org.example.equations.application.keplerianelements;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.formatting.StringUnitParser;
+import org.example.stringformatting.StringUnitParser;
 
 @Data
 @NoArgsConstructor
-public class Periapsis extends KeplerElement<Double> {
+public class Periapsis extends KeplerBase {
   private double data;
 
   public Periapsis(double data) {
     this.data = data;
-    this.setHold(false);
   }
 
   @Override
-  public void set(Double data) {
-    this.data = data;
-  }
-
-  @Override
-  public Double get() {
-    return this.data;
+  public KeplerEnums getType() {
+    return KeplerEnums.PERIAPSIS;
   }
 
   @Override

@@ -1,4 +1,4 @@
-package org.example.formatting;
+package org.example.stringformatting;
 
 import org.example.equations.application.keplerianelements.OrbitalPeriod;
 

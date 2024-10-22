@@ -2,21 +2,16 @@ package org.example.equations.application.keplerianelements;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.formatting.StringUnitParser;
+import org.example.stringformatting.StringUnitParser;
 
 @Data
 @NoArgsConstructor
-public class Velocity extends KeplerElement<Double> {
+public class Velocity extends KeplerBase {
   public double data = 0.0;
 
   @Override
-  public void set(Double velocity) {
-    this.data = velocity;
-  }
-
-  @Override
-  public Double get() {
-    return this.data;
+  public KeplerEnums getType() {
+    return KeplerEnums.VELOCITY;
   }
 
   @Override

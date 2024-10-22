@@ -2,26 +2,15 @@ package org.example.equations.application.keplerianelements;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.formatting.StringUnitParser;
+import org.example.stringformatting.StringUnitParser;
 
 @Data
 @NoArgsConstructor
-public class VelocityPeriapsis extends KeplerElement<Double> {
+public class VelocityPeriapsis extends KeplerBase {
   private double data;
 
   public VelocityPeriapsis(double data) {
     this.data = data;
-    this.setHold(false);
-  }
-
-  @Override
-  public void set(Double aDouble) {
-    this.data = aDouble;
-  }
-
-  @Override
-  public Double get() {
-    return this.data;
   }
 
   @Override
@@ -32,6 +21,11 @@ public class VelocityPeriapsis extends KeplerElement<Double> {
   @Override
   public String unitSI() {
     return "m/s";
+  }
+
+  @Override
+  public KeplerEnums getType() {
+    return KeplerEnums.VELOCITY_PERIAPSIS;
   }
 
   @Override

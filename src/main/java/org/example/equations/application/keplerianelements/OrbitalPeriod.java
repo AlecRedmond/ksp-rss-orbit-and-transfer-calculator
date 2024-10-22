@@ -2,31 +2,25 @@ package org.example.equations.application.keplerianelements;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.formatting.StringUnitParser;
+import org.example.stringformatting.StringUnitParser;
 
 @Data
 @NoArgsConstructor
-public class OrbitalPeriod extends KeplerElement<Double> {
+public class OrbitalPeriod extends KeplerBase {
   private double data;
 
   public OrbitalPeriod(double data) {
     this.data = data;
-    this.setHold(false);
   }
 
   @Override
-  public void set(Double aDouble) {
-    this.data = aDouble;
-  }
-
-  @Override
-  public Double get() {
-    return this.data;
+  public KeplerEnums getType() {
+    return KeplerEnums.ORBITAL_PERIOD;
   }
 
   @Override
   public String getAsString() {
-    return StringUnitParser.doubleToString(this.data,unitSI(),false,0,displayName());
+    return StringUnitParser.doubleToString(this.data, unitSI(), false, 0, displayName());
   }
 
   @Override

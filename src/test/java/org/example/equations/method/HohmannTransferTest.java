@@ -1,45 +1,51 @@
 package org.example.equations.method;
 
-import org.example.equations.application.Keplerian;
-import org.example.equations.application.keplerianelements.Apoapsis;
-import org.example.equations.application.keplerianelements.Periapsis;
-import org.example.equations.application.keplerianelements.Velocity;
+import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
+
+import org.example.equations.application.Orbit;
+import org.example.equations.application.OrbitalParameterHolds;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 class HohmannTransferTest {
-  static KeplerianMethod keplerianMethod1;
-  static KeplerianMethod keplerianMethod2;
-  static Keplerian keplerian1 = new Keplerian();
-  static Keplerian keplerian2 = new Keplerian();
-  static double orbit1PE = 170e3;
-  static double orbit1AP = 170e3;
-  static double orbit2PE = 170e3;
-  static double orbit2AP = 40000e3;
-  static double degreesIchange = 5.25;
+    private static OrbitalParameterHolds orbitalParameterHolds;
+    private static Orbit initialOrbit;
+    private static Orbit finalOrbit;
+    private static double initialPE = 350000;
+    private static double initialAP = 350000;
+    private static double finalPE = 50000;
+    private static double finalAP = 400000;
 
-  @BeforeAll
-  static void startUp() {
+    @BeforeAll
+    public static void initialiseKeplerians(){
+        orbitalParameterHolds = new OrbitalParameterHolds();
+        orbitalParameterHolds.setHold(PERIAPSIS,true);
+        orbitalParameterHolds.setHold(APOAPSIS,true);
 
-    keplerianMethod1 = new KeplerianMethod(orbit1AP,orbit1PE);
-    keplerianMethod2 = new KeplerianMethod(orbit2AP,orbit2PE);
+        initialOrbit = new Orbit();
+        initialOrbit.setDataFor(PERIAPSIS,initialPE);
+        initialOrbit.setDataFor(APOAPSIS,initialAP);
 
-  }
+        finalOrbit = new Orbit();
+        finalOrbit.setDataFor(PERIAPSIS,finalPE);
+        finalOrbit.setDataFor(APOAPSIS,finalAP);
 
-  @Test
-  void testHohmannTransfer(){
-    HohmannTransfer hohmannTransfer = new HohmannTransfer(keplerianMethod1,keplerianMethod2,degreesIchange);
-    ArrayList<ArrayList<String>> hohmannText = hohmannTransfer.hohmannStringOutput();
-    System.out.println(keplerianMethod1.getKeplerian());
-    for(ArrayList<String> element : hohmannText){
-      for(String subElement : element){
-        System.out.println(subElement);
-      }
+        OrbitBuilder orbitBuilder = new OrbitBuilder(initialOrbit, orbitalParameterHolds);
+        initialOrbit = orbitBuilder.getOrbit();
+        orbitBuilder = new OrbitBuilder(finalOrbit, orbitalParameterHolds);
+        finalOrbit = orbitBuilder.getOrbit();
     }
-  }
 
+    @Test
+    public void testHohmannTransfer(){
+        HohmannTransfer hohmannTransfer = new HohmannTransfer(initialOrbit,finalOrbit);
+        Orbit transferOrbit = hohmannTransfer.getTransferOrbit();
+        System.out.println("BURN AT: " + hohmannTransfer.getApsisOfFirstBurn());
+        System.out.println("PERIAPSIS " + transferOrbit.getDataFor(PERIAPSIS));
+        System.out.println("APOAPSIS " + transferOrbit.getDataFor(APOAPSIS));
+        System.out.println("FIRST BURN: " + hohmannTransfer.getFirstBurnDV());
+        System.out.println("SECOND BURN: " + hohmannTransfer.getSecondBurnDV());
+        System.out.println("TOTAL DV: " + hohmannTransfer.getTotalBurnDV());
+    }
 
 }

@@ -1,181 +1,71 @@
 package org.example.equations.method;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.example.equations.application.Keplerian;
-import org.example.equations.application.keplerianelements.Velocity;
+import org.example.equations.application.Orbit;
+import org.example.equations.application.keplerianelements.Kepler;
 
-import java.util.ArrayList;
+import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.APOAPSIS;
+import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.PERIAPSIS;
 
 @Data
-@NoArgsConstructor
 public class HohmannTransfer {
-  private Keplerian orbitA = new Keplerian();
-  private Keplerian orbitB = new Keplerian();
+  private Orbit initialOrbit;
+  private TangentialBurn firstBurn;
+  private double firstBurnDV;
+  private Kepler.KeplerEnums apsisOfFirstBurn;
+  private Orbit transferOrbit;
+  private TangentialBurn secondBurn;
+  private double secondBurnDV;
+  private Orbit finalOrbit;
+  private double totalBurnDV;
+  private Kepler.KeplerEnums apsisOfSecondBurn;
 
-  private Velocity[] velocities1 = {new Velocity(), new Velocity()};
-  private Keplerian transferOrbit1 = new Keplerian();
-  private Velocity[] velocities2 = {new Velocity(), new Velocity()};
-  private Keplerian transferOrbit2 = new Keplerian();
+  public HohmannTransfer(Orbit initialOrbit, Orbit finalOrbit) {
+    this.initialOrbit = initialOrbit;
+    this.finalOrbit = finalOrbit;
+    findEfficientTransfers();
+  }
 
-  private double[] tangentialNormalVelocityChange;
-  private boolean withInclinationChange = false;
-  private boolean incChangeOnFirstBurn;
+  private void findEfficientTransfers() {
+    double finalPE = finalOrbit.getDataFor(PERIAPSIS);
+    double finalAP = finalOrbit.getDataFor(APOAPSIS);
 
-  private boolean transfer1IsMoreEfficient;
+    TangentialBurn tangentialBurnToTransfer1 = new TangentialBurn(initialOrbit, finalPE);
+    TangentialBurn tangentialBurnToTransfer2 = new TangentialBurn(initialOrbit, finalAP);
 
-  public HohmannTransfer(
-      KeplerianMethod orbitAMethod, KeplerianMethod orbitBMethod, double inclinationChangeDegs) {
-    withInclinationChange = true;
-    standardHohmann(orbitAMethod, orbitBMethod);
-    double inclinationChangeRads = Math.toRadians(inclinationChangeDegs);
+    Orbit transfer1 = tangentialBurnToTransfer1.getNewOrbit();
+    Orbit transfer2 = tangentialBurnToTransfer2.getNewOrbit();
 
-    double burnTangential = 0;
-    double burnNormal = 0;
-    if (transfer1IsMoreEfficient) {
-      this.tangentialNormalVelocityChange =
-          calculateTangentialNormal(transferOrbit1, orbitB, inclinationChangeRads);
-      velocities1[1].set(magnitude(tangentialNormalVelocityChange));
-      incChangeOnFirstBurn = false;
+    TangentialBurn tangentialBurnToFinal1 = new TangentialBurn(transfer1, finalOrbit);
+    TangentialBurn tangentialBurnToFinal2 = new TangentialBurn(transfer2, finalOrbit);
+
+    double burn1Mags =
+        tangentialBurnToTransfer1.getDeltaVMagnitude()
+            + tangentialBurnToFinal1.getDeltaVMagnitude();
+    double burn2Mags =
+        tangentialBurnToTransfer2.getDeltaVMagnitude()
+            + tangentialBurnToFinal2.getDeltaVMagnitude();
+
+    if (burn2Mags < burn1Mags) {
+      firstBurn = tangentialBurnToTransfer2;
+      firstBurnDV = tangentialBurnToTransfer2.getDeltaV();
+      apsisOfFirstBurn = tangentialBurnToTransfer2.getBurnApsisEnum();
+      transferOrbit = transfer2;
+
+      secondBurn = tangentialBurnToFinal2;
+      secondBurnDV = tangentialBurnToFinal2.getDeltaV();
+      apsisOfSecondBurn = tangentialBurnToFinal2.getBurnApsisEnum();
+      totalBurnDV = burn2Mags;
     } else {
-      this.tangentialNormalVelocityChange =
-          calculateTangentialNormal(orbitA, transferOrbit2, inclinationChangeRads);
-      velocities2[0].set(magnitude(tangentialNormalVelocityChange));
-      incChangeOnFirstBurn = true;
+      firstBurn = tangentialBurnToTransfer1;
+      firstBurnDV = tangentialBurnToTransfer1.getDeltaV();
+      apsisOfFirstBurn = tangentialBurnToTransfer1.getBurnApsisEnum();
+      transferOrbit = transfer1;
+
+      secondBurn = tangentialBurnToFinal1;
+      secondBurnDV = tangentialBurnToFinal1.getDeltaV();
+      apsisOfSecondBurn = tangentialBurnToFinal1.getBurnApsisEnum();
+      totalBurnDV = burn1Mags;
     }
-  }
-
-  private Double magnitude(double[] vels) {
-    return Math.sqrt((vels[0] * vels[0]) + (vels[1] * vels[1]));
-  }
-
-  private double[] calculateTangentialNormal(
-      Keplerian orbit1, Keplerian orbit2, double inclinationChangeRads) {
-    double[] velocityComponentsOrbit1 = velocityComponents(orbit1, 0);
-    double[] velocityComponentsOrbit2 = velocityComponents(orbit2, inclinationChangeRads);
-
-    double[] differenceInVelocity =
-        new double[] {
-          (velocityComponentsOrbit2[0] - velocityComponentsOrbit1[0]),
-          (velocityComponentsOrbit2[1] - velocityComponentsOrbit1[1])
-        };
-
-    return differenceInVelocity;
-  }
-
-  private double[] velocityComponents(Keplerian orbit, double inclinationChangeRads) {
-    double tangential = orbit.getVelocityApoapsis().get() * Math.cos(inclinationChangeRads);
-    double normal = orbit.getVelocityApoapsis().get() * Math.sin(inclinationChangeRads);
-
-    return new double[] {tangential, normal};
-  }
-
-  public HohmannTransfer(KeplerianMethod orbitAMethod, KeplerianMethod orbitBMethod) {
-    standardHohmann(orbitAMethod, orbitBMethod);
-  }
-
-  private void standardHohmann(KeplerianMethod orbitAMethod, KeplerianMethod orbitBMethod) {
-    this.orbitA = orbitAMethod.getKeplerian();
-    this.orbitB = orbitBMethod.getKeplerian();
-
-    this.transferOrbit1.setPeriapsis(this.orbitA.getPeriapsis());
-    this.transferOrbit1.setApoapsis(this.orbitB.getApoapsis());
-    this.transferOrbit2.setPeriapsis(this.orbitB.getPeriapsis());
-    this.transferOrbit2.setApoapsis(this.orbitA.getApoapsis());
-
-    KeplerianMethod transferOrbit1Method =
-        new KeplerianMethod(
-            transferOrbit1.getApoapsis().get(), transferOrbit1.getPeriapsis().get());
-    this.transferOrbit1 = transferOrbit1Method.getKeplerian();
-
-    velocities1[0].set(
-        this.transferOrbit1.getVelocityPeriapsis().get()
-            - this.orbitA.getVelocityPeriapsis().get());
-    velocities1[1].set(
-        this.orbitB.getVelocityApoapsis().get() - this.transferOrbit1.getVelocityApoapsis().get());
-
-    KeplerianMethod transferOrbit2Method =
-        new KeplerianMethod(
-            transferOrbit2.getApoapsis().get(), transferOrbit2.getPeriapsis().get());
-    this.transferOrbit2 = transferOrbit2Method.getKeplerian();
-
-    velocities2[0].set(
-        this.transferOrbit1.getVelocityApoapsis().get() - this.orbitA.getVelocityApoapsis().get());
-    velocities2[1].set(
-        this.orbitB.getVelocityPeriapsis().get()
-            - this.transferOrbit1.getVelocityPeriapsis().get());
-
-    this.transfer1IsMoreEfficient = calculateMags(velocities1) <= calculateMags(velocities2);
-  }
-
-  public Velocity[] getMostEfficientVelocity() {
-    if (transfer1IsMoreEfficient) {
-      return velocities1;
-    } else {
-      return velocities2;
-    }
-  }
-
-  public Keplerian getMostEfficientTransferOrbit() {
-    if (transfer1IsMoreEfficient) {
-      return transferOrbit1;
-    } else {
-      return transferOrbit2;
-    }
-  }
-
-  private double calculateMags(Velocity[] velocities) {
-    return Math.abs(velocities[0].get()) + Math.abs(velocities[1].get());
-  }
-
-  public ArrayList<ArrayList<String>> hohmannStringOutput() {
-    Velocity[] mostEfficient = getMostEfficientVelocity();
-
-    ArrayList<String> firstBurnString = new ArrayList<>();
-    ArrayList<String> secondBurnString = new ArrayList<>();
-    ArrayList<String> transferOrbitStrings = new ArrayList<>();
-    if (transfer1IsMoreEfficient) {
-      firstBurnString.add(orbitA.getPeriapsis().getAsString());
-      firstBurnString.add(mostEfficient[0].getAsString());
-      secondBurnString.add(orbitB.getApoapsis().getAsString());
-      secondBurnString.add(mostEfficient[1].getAsString());
-      if (withInclinationChange) {
-        Velocity velocityTangentDouble = new Velocity();
-        Velocity velocityNormalDouble = new Velocity();
-
-        velocityTangentDouble.set(tangentialNormalVelocityChange[0]);
-        velocityNormalDouble.set(tangentialNormalVelocityChange[1]);
-
-        String velocityTangential = velocityTangentDouble.getAsString();
-        String velocityNormal = velocityNormalDouble.getAsString();
-        String formattedString = String.format("[T:%s\t|N:%s]", velocityTangential, velocityNormal);
-
-        if(incChangeOnFirstBurn){
-          firstBurnString.add(formattedString);
-        } else {
-          secondBurnString.add(formattedString);
-        }
-      }
-      transferOrbitStrings.add("Periapsis\t\t: " + transferOrbit1.getPeriapsis().getAsString());
-      transferOrbitStrings.add("Apoapsis\t\t: " + transferOrbit1.getApoapsis().getAsString());
-      transferOrbitStrings.add(
-          "Orbit Period\t: " + transferOrbit1.getOrbitalPeriod().getAsString());
-    } else {
-      firstBurnString.add(orbitB.getPeriapsis().getAsString());
-      firstBurnString.add(mostEfficient[0].getAsString());
-      secondBurnString.add(orbitA.getApoapsis().getAsString());
-      secondBurnString.add(mostEfficient[1].getAsString());
-      transferOrbitStrings.add("Periapsis%t%t: " + transferOrbit2.getPeriapsis().getAsString());
-      transferOrbitStrings.add("Apoapsis%t%t: " + transferOrbit2.getApoapsis().getAsString());
-      transferOrbitStrings.add(
-          "Orbit Period%t: " + transferOrbit2.getOrbitalPeriod().getAsString());
-    }
-
-    ArrayList<ArrayList<String>> hohmannStringsOutput = new ArrayList<>();
-    hohmannStringsOutput.add(firstBurnString);
-    hohmannStringsOutput.add(transferOrbitStrings);
-    hohmannStringsOutput.add(secondBurnString);
-
-    return hohmannStringsOutput;
   }
 }

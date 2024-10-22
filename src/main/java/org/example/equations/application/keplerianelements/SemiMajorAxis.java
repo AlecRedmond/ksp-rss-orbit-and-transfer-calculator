@@ -2,31 +2,25 @@ package org.example.equations.application.keplerianelements;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.formatting.StringUnitParser;
+import org.example.stringformatting.StringUnitParser;
 
 @Data
 @NoArgsConstructor
-public class SemiMajorAxis extends KeplerElement<Double> {
+public class SemiMajorAxis extends KeplerBase {
   private double data;
 
   public SemiMajorAxis(double data) {
     this.data = data;
-    this.setHold(false);
   }
 
   @Override
-  public void set(Double data) {
-    this.data = data;
-  }
-
-  @Override
-  public Double get() {
-    return this.data;
+  public KeplerEnums getType() {
+    return KeplerEnums.SEMI_MAJOR_AXIS;
   }
 
   @Override
   public String getAsString() {
-    return StringUnitParser.doubleToString(this.data,unitSI(),true,3,"");
+    return StringUnitParser.doubleToString(this.data, unitSI(), true, 3, "");
   }
 
   @Override

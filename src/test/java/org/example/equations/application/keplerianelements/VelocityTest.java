@@ -18,13 +18,13 @@ class VelocityTest {
 
   @Test
   void set() {
-    velocity.set(testData);
-    assertEquals(testData, velocity.get());
+    velocity.setData(testData);
+    assertEquals(testData, velocity.getData());
   }
 
   @Test
   void getAsString() {
-    velocity.set(testData);
+    velocity.setData(testData);
     String test = velocity.getAsString();
     assertEquals(testString, test);
   }
@@ -32,6 +32,6 @@ class VelocityTest {
   @Test
   void setFromString() {
     velocity.setFromString(testString);
-    assertEquals(testData, velocity.get());
+    assertEquals(testData, velocity.getData());
   }
 }
