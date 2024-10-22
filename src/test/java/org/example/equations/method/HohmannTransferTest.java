@@ -43,8 +43,8 @@ class HohmannTransferTest {
         System.out.println("BURN AT: " + hohmannTransfer.getApsisOfFirstBurn());
         System.out.println("PERIAPSIS " + transferOrbit.getDataFor(PERIAPSIS));
         System.out.println("APOAPSIS " + transferOrbit.getDataFor(APOAPSIS));
-        System.out.println("FIRST BURN: " + hohmannTransfer.getFirstBurn());
-        System.out.println("SECOND BURN: " + hohmannTransfer.getSecondBurn());
+        System.out.println("FIRST BURN: " + hohmannTransfer.getFirstBurnDV());
+        System.out.println("SECOND BURN: " + hohmannTransfer.getSecondBurnDV());
         System.out.println("TOTAL DV: " + hohmannTransfer.getTotalBurnDV());
     }
 

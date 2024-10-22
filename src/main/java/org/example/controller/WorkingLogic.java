@@ -4,12 +4,9 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.equations.application.Orbit;
-import org.example.equations.application.OrbitalParameterHolds;
-import org.example.equations.application.keplerianelements.Kepler;
 import org.example.equations.method.HohmannTransfer;
+import org.example.equations.method.InclinationBurn;
 import org.example.equations.method.OrbitBuilder;
-
-import java.util.HashMap;
 
 @Data
 public class WorkingLogic {
@@ -25,6 +22,9 @@ public class WorkingLogic {
     @Getter
     @Setter
     private static Orbit[] orbits;
+    @Getter
+    @Setter
+    private static InclinationBurn inclinationBurn;
 
     public static void doVisVivaTransfer() {
         orbits = new Orbit[]{orbitBuilders[0].getOrbit(),orbitBuilders[1].getOrbit()};
@@ -32,4 +32,8 @@ public class WorkingLogic {
 
     }
 
+    public static void doInclinationChange(double inclinationDegs) {
+        doVisVivaTransfer();
+        inclinationBurn = new InclinationBurn(hohmannTransfer,inclinationDegs);
+    }
 }

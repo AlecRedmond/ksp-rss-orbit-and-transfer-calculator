@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import org.example.equations.application.Orbit;
 import org.example.equations.application.keplerianelements.Kepler;
 import org.example.equations.application.keplerianelements.Kepler.KeplerEnums;
 import org.example.equations.method.HohmannTransfer;
+import org.example.equations.method.InclinationBurn;
 import org.example.gui.nodemethod.OrbitalGridPane;
 import org.example.gui.scenebuilder.NodeFunctions;
 
@@ -38,25 +40,51 @@ public class OutputLogic {
     HohmannTransfer hohmannTransfer = WorkingLogic.getHohmannTransfer();
     String firstBurnString =
         "First Burn: "
-            + Math.round(hohmannTransfer.getFirstBurn())
+            + Math.round(hohmannTransfer.getFirstBurnDV())
             + " m/s at "
             + hohmannTransfer.getApsisOfFirstBurn().toString()
             + "\n";
-    String orbitString = "Transfer Orbit: "
+    String orbitString =
+        "Transfer Orbit: "
             + hohmannTransfer.getTransferOrbit().getAsString(KeplerEnums.APOAPSIS)
             + " X "
             + hohmannTransfer.getTransferOrbit().getAsString(KeplerEnums.PERIAPSIS)
             + "\n";
-    String secondBurnString = "Second Burn: "
-            + Math.round(hohmannTransfer.getSecondBurn())
+    String secondBurnString =
+        "Second Burn: "
+            + Math.round(hohmannTransfer.getSecondBurnDV())
             + " m/s at "
             + hohmannTransfer.getApsisOfSecondBurn().toString()
             + "\n";
-    String totalBurn = "Total Burn: "
-            + Math.round(hohmannTransfer.getTotalBurnDV())
-            + " m/s";
+    String totalBurn = "Total Burn: " + Math.round(hohmannTransfer.getTotalBurnDV()) + " m/s";
 
     String output = firstBurnString + orbitString + secondBurnString + totalBurn;
+
+    NodeFunctions.setText(output);
+  }
+
+  public static void writeInclinationChangeResults() {
+    InclinationBurn inclinationBurn = WorkingLogic.getInclinationBurn();
+    HohmannTransfer hohmannTransfer = WorkingLogic.getHohmannTransfer();
+
+    String inclinationChangeString = Arrays.toString(inclinationBurn.getVectorDV()) + "\n";
+    String otherBurnString = Arrays.toString(inclinationBurn.getOtherBurnDV()) + "\n";
+    String orbitString =
+            "Transfer Orbit: "
+                    + hohmannTransfer.getTransferOrbit().getAsString(KeplerEnums.APOAPSIS)
+                    + " X "
+                    + hohmannTransfer.getTransferOrbit().getAsString(KeplerEnums.PERIAPSIS)
+                    + "\n";
+    String totalBurn =
+        "Total Burn: "
+            + (Math.round(
+                inclinationBurn.getMagnitudeDV() + inclinationBurn.getMagnitudeOtherBurnDV()))
+            + " m/s";
+
+    String output =
+        (inclinationBurn.isFirstBurn())
+            ? (inclinationChangeString + orbitString + otherBurnString + totalBurn)
+            : (otherBurnString + orbitString + inclinationChangeString + totalBurn);
 
     NodeFunctions.setText(output);
   }

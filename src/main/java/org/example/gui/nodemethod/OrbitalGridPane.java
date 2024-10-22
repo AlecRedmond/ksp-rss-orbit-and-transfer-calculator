@@ -3,7 +3,6 @@ package org.example.gui.nodemethod;
 import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 import static org.example.gui.nodemethod.OrbitalGridPane.GridColumns.*;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import javafx.scene.Node;

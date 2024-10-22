@@ -19,4 +19,11 @@ public class CourierController {
     public static void clearAll() {
         OutputLogic.clearFields();
     }
+
+    public static void calculateInclinationChange(double inclinationDegs) {
+        InputLogic.parseVisVivaData();
+        WorkingLogic.doInclinationChange(inclinationDegs);
+        OutputLogic.writeVisVivaResults();
+        OutputLogic.writeInclinationChangeResults();
+    }
 }

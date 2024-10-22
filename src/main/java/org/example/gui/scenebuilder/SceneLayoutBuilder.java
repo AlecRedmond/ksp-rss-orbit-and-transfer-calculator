@@ -29,7 +29,8 @@ public class SceneLayoutBuilder {
         new HBox(
             GuiButtons.getCalculateButton(),
             GuiButtons.getClearButton(),
-            GuiButtons.getDeBugButton());
+            GuiButtons.getInclinationChangeButton(),
+            GuiButtons.getInclinationField());
     vBox.getChildren().addAll(TopNodeGroup.getGridPane(), guiButtons, TopNodeGroup.getOutputText());
     ButtonActions.allButtons();
     return vBox;

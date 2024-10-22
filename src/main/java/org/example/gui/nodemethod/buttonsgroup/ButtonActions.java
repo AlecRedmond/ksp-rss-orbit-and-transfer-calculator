@@ -1,6 +1,5 @@
 package org.example.gui.nodemethod.buttonsgroup;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,26 +11,25 @@ import org.example.gui.nodemethod.OrbitalGridPane;
 public class ButtonActions {
 
   public static void allButtons() {
-    debugButton();
     calculateButton();
     clearButton();
+    calulateWithInclinationButton();
     toggleButton();
   }
+
+    private static void calulateWithInclinationButton() {
+
+      GuiButtons.getInclinationChangeButton().setOnAction(actionEvent -> {
+          String inclinationString = GuiButtons.getInclinationField().getText();
+          double inclinationDegs = Double.parseDouble(inclinationString);
+          CourierController.calculateInclinationChange(inclinationDegs);
+      });
+    }
 
     private static void toggleButton() {
 
     }
 
-    public static void debugButton() {
-    GuiButtons.getDeBugButton()
-        .setOnAction(
-            actionEvent -> {
-              HashMap<Kepler.KeplerEnums, Boolean> currentHolds = OrbitalGridPane.getHolds(true);
-              for (Map.Entry<Kepler.KeplerEnums, Boolean> entry : currentHolds.entrySet()) {
-                System.out.println(entry);
-              }
-            });
-  }
 
   public static void calculateButton() {
     GuiButtons.getCalculateButton()

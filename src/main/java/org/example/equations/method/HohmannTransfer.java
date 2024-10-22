@@ -9,60 +9,63 @@ import static org.example.equations.application.keplerianelements.Kepler.KeplerE
 
 @Data
 public class HohmannTransfer {
-    private Orbit initialOrbit;
-    private double firstBurn;
-    private Kepler.KeplerEnums apsisOfFirstBurn;
-    private Orbit transferOrbit;
-    private double secondBurn;
-    private Orbit finalOrbit;
-    private double totalBurnDV;
-    private Kepler.KeplerEnums apsisOfSecondBurn;
+  private Orbit initialOrbit;
+  private TangentialBurn firstBurn;
+  private double firstBurnDV;
+  private Kepler.KeplerEnums apsisOfFirstBurn;
+  private Orbit transferOrbit;
+  private TangentialBurn secondBurn;
+  private double secondBurnDV;
+  private Orbit finalOrbit;
+  private double totalBurnDV;
+  private Kepler.KeplerEnums apsisOfSecondBurn;
 
-    public HohmannTransfer(Orbit initialOrbit,Orbit finalOrbit){
-        this.initialOrbit = initialOrbit;
-        this.finalOrbit = finalOrbit;
-        findEfficientTransfers();
+  public HohmannTransfer(Orbit initialOrbit, Orbit finalOrbit) {
+    this.initialOrbit = initialOrbit;
+    this.finalOrbit = finalOrbit;
+    findEfficientTransfers();
+  }
+
+  private void findEfficientTransfers() {
+    double finalPE = finalOrbit.getDataFor(PERIAPSIS);
+    double finalAP = finalOrbit.getDataFor(APOAPSIS);
+
+    TangentialBurn tangentialBurnToTransfer1 = new TangentialBurn(initialOrbit, finalPE);
+    TangentialBurn tangentialBurnToTransfer2 = new TangentialBurn(initialOrbit, finalAP);
+
+    Orbit transfer1 = tangentialBurnToTransfer1.getNewOrbit();
+    Orbit transfer2 = tangentialBurnToTransfer2.getNewOrbit();
+
+    TangentialBurn tangentialBurnToFinal1 = new TangentialBurn(transfer1, finalOrbit);
+    TangentialBurn tangentialBurnToFinal2 = new TangentialBurn(transfer2, finalOrbit);
+
+    double burn1Mags =
+        tangentialBurnToTransfer1.getDeltaVMagnitude()
+            + tangentialBurnToFinal1.getDeltaVMagnitude();
+    double burn2Mags =
+        tangentialBurnToTransfer2.getDeltaVMagnitude()
+            + tangentialBurnToFinal2.getDeltaVMagnitude();
+
+    if (burn2Mags < burn1Mags) {
+      firstBurn = tangentialBurnToTransfer2;
+      firstBurnDV = tangentialBurnToTransfer2.getDeltaV();
+      apsisOfFirstBurn = tangentialBurnToTransfer2.getBurnApsisEnum();
+      transferOrbit = transfer2;
+
+      secondBurn = tangentialBurnToFinal2;
+      secondBurnDV = tangentialBurnToFinal2.getDeltaV();
+      apsisOfSecondBurn = tangentialBurnToFinal2.getBurnApsisEnum();
+      totalBurnDV = burn2Mags;
+    } else {
+      firstBurn = tangentialBurnToTransfer1;
+      firstBurnDV = tangentialBurnToTransfer1.getDeltaV();
+      apsisOfFirstBurn = tangentialBurnToTransfer1.getBurnApsisEnum();
+      transferOrbit = transfer1;
+
+      secondBurn = tangentialBurnToFinal1;
+      secondBurnDV = tangentialBurnToFinal1.getDeltaV();
+      apsisOfSecondBurn = tangentialBurnToFinal1.getBurnApsisEnum();
+      totalBurnDV = burn1Mags;
     }
-
-    private void findEfficientTransfers() {
-        double finalPE = finalOrbit.getDataFor(PERIAPSIS);
-        double finalAP = finalOrbit.getDataFor(APOAPSIS);
-
-        Burn burnToTransfer1 = new Burn(initialOrbit,finalPE);
-        Burn burnToTransfer2 = new Burn(initialOrbit,finalAP);
-
-        Orbit transfer1 = burnToTransfer1.getNewOrbit();
-        Orbit transfer2 = burnToTransfer2.getNewOrbit();
-
-        Burn burnToFinal1 = new Burn(transfer1,finalOrbit);
-        Burn burnToFinal2 = new Burn(transfer2,finalOrbit);
-
-        double burn1Mags = burnToTransfer1.getDeltaVMagnitude() + burnToFinal1.getDeltaVMagnitude();
-        double burn2Mags = burnToTransfer2.getDeltaVMagnitude() + burnToFinal2.getDeltaVMagnitude();
-
-        if(burn2Mags < burn1Mags){
-            firstBurn = burnToTransfer2.getDeltaV();
-            apsisOfFirstBurn = burnToTransfer2.getBurnApsisEnum();
-            transferOrbit = transfer2;
-            secondBurn = burnToFinal2.getDeltaV();
-            apsisOfSecondBurn = oppositeApsis(apsisOfFirstBurn);
-            totalBurnDV = burn2Mags;
-        } else {
-            firstBurn = burnToTransfer1.getDeltaV();
-            apsisOfFirstBurn = burnToTransfer1.getBurnApsisEnum();
-            transferOrbit = transfer1;
-            secondBurn = burnToFinal1.getDeltaV();
-            apsisOfSecondBurn = oppositeApsis(apsisOfFirstBurn);
-            totalBurnDV = burn1Mags;
-        }
-    }
-
-    private Kepler.KeplerEnums oppositeApsis(Kepler.KeplerEnums apsisOfFirstBurn) {
-        if(apsisOfFirstBurn.equals(PERIAPSIS)){
-            return APOAPSIS;
-        } else {
-            return PERIAPSIS;
-        }
-    }
-
+  }
 }
