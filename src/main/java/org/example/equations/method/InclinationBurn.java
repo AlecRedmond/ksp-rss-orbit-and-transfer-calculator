@@ -1,7 +1,6 @@
 package org.example.equations.method;
 
 import lombok.Data;
-import org.example.equations.application.Orbit;
 import org.example.equations.application.keplerianelements.Kepler.KeplerEnums;
 
 @Data
@@ -17,11 +16,6 @@ public class InclinationBurn {
 
   public InclinationBurn(HohmannTransfer hohmannTransfer, double inclinationDegrees) {
     this.hohmannTransfer = hohmannTransfer;
-    doInclinationChange(inclinationDegrees);
-  }
-
-  public InclinationBurn(Orbit firstOrbit, Orbit finalOrbit, double inclinationDegrees) {
-    hohmannTransfer = new HohmannTransfer(firstOrbit, finalOrbit);
     doInclinationChange(inclinationDegrees);
   }
 
