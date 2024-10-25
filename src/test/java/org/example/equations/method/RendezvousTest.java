@@ -1,18 +1,29 @@
 package org.example.equations.method;
 
+import org.example.equations.application.Intercept;
+import org.example.equations.application.Orbit;
+import org.example.equations.application.keplerianelements.Kepler;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class RendezvousTest {
 
-    @Test
-    public void testRendezvous(){
-        double orbitTime = 3600 * 1.4069;
-        Rendezvous rendezvous = new Rendezvous(orbitTime);
-        ArrayList<Integer> myInts = rendezvous.getIntercepts();
-        System.out.println(myInts);
+  @Test
+  void testRendezvous() {
+    OrbitBuilder orbitBuilder = new OrbitBuilder(200000,200000);
+    Orbit orbit = orbitBuilder.getOrbit();
+    double orbitTime = orbit.getDataFor(Kepler.KeplerEnums.ORBITAL_PERIOD);
+    double orbitalProcessionDayRads = Math.toRadians(0);
+    System.out.println(orbitTime);
+    Rendezvous rendezvous = new Rendezvous(orbitTime, orbitalProcessionDayRads);
+    ArrayList<String> interceptTimeStrings = new ArrayList<>();
+    ArrayList<String> leadTimeStrings = new ArrayList<>();
+    for (Intercept intercept : rendezvous.getIntercepts()) {
+      interceptTimeStrings.add(intercept.getInterceptTimeString());
+      leadTimeStrings.add(intercept.getSatelliteLeadTimeString());
     }
+    System.out.println(interceptTimeStrings);
+    System.out.println(leadTimeStrings);
+  }
 }
