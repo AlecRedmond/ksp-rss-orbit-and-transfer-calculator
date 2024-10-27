@@ -10,7 +10,8 @@ public interface Kepler {
     SEMI_MAJOR_AXIS,
     VELOCITY,
     VELOCITY_APOAPSIS,
-    VELOCITY_PERIAPSIS
+    VELOCITY_PERIAPSIS,
+    INCLINATION
   }
 
   KeplerEnums getType();
