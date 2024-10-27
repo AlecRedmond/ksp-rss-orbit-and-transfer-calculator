@@ -11,7 +11,8 @@ public interface Kepler {
     VELOCITY,
     VELOCITY_APOAPSIS,
     VELOCITY_PERIAPSIS,
-    INCLINATION
+    INCLINATION,
+    NODAL_PRECESSION
   }
 
   KeplerEnums getType();

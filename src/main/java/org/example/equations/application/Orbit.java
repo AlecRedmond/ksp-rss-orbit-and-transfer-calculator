@@ -31,13 +31,24 @@ public class Orbit {
   private void buildKeplarianElements() {
     keplarianElements.putAll(
         Map.of(
-            APOAPSIS, new Apoapsis(0.0),
-            PERIAPSIS, new Periapsis(0.0),
-            ECCENTRICITY, new Eccentricity(0.0),
-            SEMI_MAJOR_AXIS, new SemiMajorAxis(0.0),
-            ORBITAL_PERIOD, new OrbitalPeriod(0.0),
-            VELOCITY_APOAPSIS, new VelocityApoapsis(0.0),
-            VELOCITY_PERIAPSIS, new VelocityPeriapsis(0.0)));
+            APOAPSIS,
+            new Apoapsis(0.0),
+            PERIAPSIS,
+            new Periapsis(0.0),
+            ECCENTRICITY,
+            new Eccentricity(0.0),
+            SEMI_MAJOR_AXIS,
+            new SemiMajorAxis(0.0),
+            ORBITAL_PERIOD,
+            new OrbitalPeriod(0.0),
+            VELOCITY_APOAPSIS,
+            new VelocityApoapsis(0.0),
+            VELOCITY_PERIAPSIS,
+            new VelocityPeriapsis(0.0),
+            INCLINATION,
+            new Inclination(0.0),
+            NODAL_PRECESSION,
+            new NodalPrecession(0.0)));
   }
 
   public void setFromString(KeplerEnums keplerEnums, String inputString) {
@@ -56,5 +67,7 @@ public class Orbit {
     keplarianElements.get(keplerEnums).setData(data);
   }
 
-  public String getDisplayName(KeplerEnums keplerEnums){ return keplarianElements.get(keplerEnums).displayName();}
+  public String getDisplayName(KeplerEnums keplerEnums) {
+    return keplarianElements.get(keplerEnums).displayName();
+  }
 }

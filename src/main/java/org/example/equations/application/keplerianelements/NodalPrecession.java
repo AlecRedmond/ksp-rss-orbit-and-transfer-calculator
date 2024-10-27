@@ -3,17 +3,17 @@ package org.example.equations.application.keplerianelements;
 import lombok.Data;
 
 @Data
-public class Inclination implements Kepler {
+public class NodalPrecession implements Kepler {
 
     private double data;
 
-    public Inclination(double data) {
+    public NodalPrecession(double data){
         this.data = data;
     }
 
     @Override
     public KeplerEnums getType() {
-        return KeplerEnums.INCLINATION;
+        return KeplerEnums.NODAL_PRECESSION;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class Inclination implements Kepler {
 
     @Override
     public String displayName() {
-        return "Inclination";
+        return "Nodal Precession";
     }
 
     @Override

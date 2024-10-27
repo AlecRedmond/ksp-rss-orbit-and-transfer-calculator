@@ -23,15 +23,24 @@ public class OrbitBuilder {
         methodFromHolds();
     }
 
+    public OrbitBuilder(double periapsis,double apoapsis, double inclination){
+        buildFromApses(periapsis,apoapsis);
+        orbit.setDataFor(INCLINATION,inclination);
+    }
+
     public OrbitBuilder(double periapsis,double apoapsis){
+        buildFromApses(periapsis, apoapsis);
+    }
+
+    private void buildFromApses(double periapsis, double apoapsis) {
         orbit = new Orbit();
         if(periapsis > apoapsis){
             double temp = periapsis;
             periapsis = apoapsis;
             apoapsis = temp;
         }
-        orbit.setDataFor(PERIAPSIS,periapsis);
-        orbit.setDataFor(APOAPSIS,apoapsis);
+        orbit.setDataFor(PERIAPSIS, periapsis);
+        orbit.setDataFor(APOAPSIS, apoapsis);
         orbitalParameterHolds = new OrbitalParameterHolds(PERIAPSIS,APOAPSIS);
         methodFromHolds();
     }
