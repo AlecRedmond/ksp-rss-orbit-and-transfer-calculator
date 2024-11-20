@@ -11,6 +11,7 @@ import org.example.equations.method.HohmannTransfer;
 import org.example.equations.method.InclinationBurn;
 import org.example.gui.nodemethod.OrbitalGridPane;
 import org.example.gui.scenebuilder.NodeFunctions;
+import org.example.stringformatting.InclinationBurnString;
 
 public class OutputLogic {
   public static void writeVisVivaResults() {
@@ -67,8 +68,10 @@ public class OutputLogic {
     InclinationBurn inclinationBurn = WorkingLogic.getInclinationBurn();
     HohmannTransfer hohmannTransfer = WorkingLogic.getHohmannTransfer();
 
-    String inclinationChangeString = Arrays.toString(inclinationBurn.getVectorDV()) + "\n";
-    String otherBurnString = Arrays.toString(inclinationBurn.getOtherBurnDV()) + "\n";
+    //String inclinationChangeString = Arrays.toString(inclinationBurn.getVectorDV()) + "\n";
+    String inclinationChangeString = InclinationBurnString.getIncChangeBurnString(inclinationBurn);
+    //String otherBurnString = Arrays.toString(inclinationBurn.getOtherBurnDV()) + "\n";
+    String otherBurnString = InclinationBurnString.getOtherBurnString(inclinationBurn);
     String orbitString =
             "Transfer Orbit: "
                     + hohmannTransfer.getTransferOrbit().getAsString(KeplerEnums.APOAPSIS)
