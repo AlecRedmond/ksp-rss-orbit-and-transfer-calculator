@@ -68,9 +68,7 @@ public class OutputLogic {
     InclinationBurn inclinationBurn = WorkingLogic.getInclinationBurn();
     HohmannTransfer hohmannTransfer = WorkingLogic.getHohmannTransfer();
 
-    //String inclinationChangeString = Arrays.toString(inclinationBurn.getVectorDV()) + "\n";
     String inclinationChangeString = InclinationBurnString.getIncChangeBurnString(inclinationBurn);
-    //String otherBurnString = Arrays.toString(inclinationBurn.getOtherBurnDV()) + "\n";
     String otherBurnString = InclinationBurnString.getOtherBurnString(inclinationBurn);
     String orbitString =
             "Transfer Orbit: "

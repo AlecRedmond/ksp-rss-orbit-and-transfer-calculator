@@ -13,7 +13,7 @@ public class InclinationBurnString {
     Velocity totalVelocity = new Velocity();
     totalVelocity.setData(Math.sqrt(vectorDV[0] * vectorDV[0] + vectorDV[1] * vectorDV[1]));
     return String.format(
-        "Prograde: %s%nNormal: %s%nTotal: %s%n",
+        "Pgd: %s || Nml: %s = Mag: %s%n",
         tangentialVelocity.getAsString(),
         normalVelocity.getAsString(),
         totalVelocity.getAsString());
@@ -24,7 +24,7 @@ public class InclinationBurnString {
         Velocity tangentialVelocity = new Velocity();
         tangentialVelocity.setData(vectorDV[0]);
         return String.format(
-                "Prograde: %s%n",
+                "Pgd: %s%n",
                 tangentialVelocity.getAsString());
     }
 }
