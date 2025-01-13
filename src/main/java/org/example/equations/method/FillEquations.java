@@ -8,6 +8,9 @@ import org.example.equations.application.Orbit;
 public class FillEquations {
   private static Body body = Body.EARTH;
 
+  private FillEquations() {
+  }
+
   public static Orbit calculateFromPeriapsisApoapsis(Orbit orbit) {
     FillEquations.body = orbit.getBody();
     double apoapsis = orbit.getDataFor(APOAPSIS);

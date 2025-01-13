@@ -3,6 +3,7 @@ package org.example.equations.application;
 import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.Data;
 import lombok.Getter;
@@ -16,7 +17,7 @@ import org.example.equations.application.keplerianelements.Kepler.KeplerEnums;
 public class Orbit {
   private Body body;
 
-  private Map<KeplerEnums, Kepler> keplarianElements = new HashMap<>();
+  private Map<KeplerEnums, Kepler> keplarianElements = new LinkedHashMap<>();
 
   public Orbit(Body body) {
     this.body = body;
@@ -29,26 +30,15 @@ public class Orbit {
   }
 
   private void buildKeplarianElements() {
-    keplarianElements.putAll(
-        Map.of(
-            APOAPSIS,
-            new Apoapsis(0.0),
-            PERIAPSIS,
-            new Periapsis(0.0),
-            ECCENTRICITY,
-            new Eccentricity(0.0),
-            SEMI_MAJOR_AXIS,
-            new SemiMajorAxis(0.0),
-            ORBITAL_PERIOD,
-            new OrbitalPeriod(0.0),
-            VELOCITY_APOAPSIS,
-            new VelocityApoapsis(0.0),
-            VELOCITY_PERIAPSIS,
-            new VelocityPeriapsis(0.0),
-            INCLINATION,
-            new Inclination(0.0),
-            NODAL_PRECESSION,
-            new NodalPrecession(0.0)));
+    keplarianElements.put(APOAPSIS, new Apoapsis(0.0));
+    keplarianElements.put(PERIAPSIS, new Periapsis(0.0));
+    keplarianElements.put(ECCENTRICITY, new Eccentricity(0.0));
+    keplarianElements.put(SEMI_MAJOR_AXIS, new SemiMajorAxis(0.0));
+    keplarianElements.put(ORBITAL_PERIOD, new OrbitalPeriod(0.0));
+    keplarianElements.put(VELOCITY_APOAPSIS, new VelocityApoapsis(0.0));
+    keplarianElements.put(VELOCITY_PERIAPSIS, new VelocityPeriapsis(0.0));
+    keplarianElements.put(INCLINATION, new Inclination(0.0));
+    keplarianElements.put(NODAL_PRECESSION, new NodalPrecession(0.0));
   }
 
   public void setFromString(KeplerEnums keplerEnums, String inputString) {

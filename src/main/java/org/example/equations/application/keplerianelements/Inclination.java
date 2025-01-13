@@ -30,7 +30,7 @@ public class Inclination implements Kepler {
 
     @Override
     public String displayName() {
-        return "Inclination";
+        return "Inclination (°)";
     }
 
     @Override

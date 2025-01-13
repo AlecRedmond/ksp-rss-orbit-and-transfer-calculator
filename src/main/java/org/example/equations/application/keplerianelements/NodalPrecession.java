@@ -30,7 +30,7 @@ public class NodalPrecession implements Kepler {
 
     @Override
     public String displayName() {
-        return "Nodal Precession";
+        return "Nodal Precession (°/day)";
     }
 
     @Override

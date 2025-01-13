@@ -27,11 +27,11 @@ public class InclinationBurn {
 
     double initialVelocity =
         altitudeBurn.getInitialOrbit().getDataFor(altitudeBurn.getInitialVelocityEnum());
-    double[] initialVelocityVect = vectorise(initialVelocity, 0.0);
+    double[] initialVelocityVector = vectorise(initialVelocity, 0.0);
     double newVelocity = altitudeBurn.getNewOrbit().getDataFor(altitudeBurn.getNewVelocityEnum());
-    double[] newVelocityVect = vectorise(newVelocity, inclination);
+    double[] newVelocityVector = vectorise(newVelocity, inclination);
 
-    vectorDV = vectorDifference(newVelocityVect, initialVelocityVect);
+    vectorDV = vectorDifference(newVelocityVector, initialVelocityVector);
     magnitudeDV = magnitudeFinder(vectorDV);
 
     fillOtherBurns();
@@ -57,11 +57,11 @@ public class InclinationBurn {
     return Math.sqrt(squaredValues);
   }
 
-  private double[] vectorDifference(double[] newVelocityVect, double[] initialVelocityVect) {
-    for (int i = 0; i < newVelocityVect.length; i++) {
-      newVelocityVect[i] = newVelocityVect[i] - initialVelocityVect[i];
+  private double[] vectorDifference(double[] newVelocityVector, double[] initialVelocityVector) {
+    for (int i = 0; i < newVelocityVector.length; i++) {
+      newVelocityVector[i] = newVelocityVector[i] - initialVelocityVector[i];
     }
-    return newVelocityVect;
+    return newVelocityVector;
   }
 
   private double[] vectorise(double initialVelocity, double rads) {

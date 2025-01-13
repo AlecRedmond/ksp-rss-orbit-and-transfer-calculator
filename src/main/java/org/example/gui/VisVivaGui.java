@@ -3,7 +3,7 @@ package org.example.gui;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.example.gui.scenebuilder.SceneLayoutBuilder;
+import org.example.gui.scene.SceneLayout;
 
 public class VisVivaGui extends Application {
   private Stage stage;
@@ -15,8 +15,9 @@ public class VisVivaGui extends Application {
   public void start(Stage stage) throws Exception {
     this.stage = stage;
 
-    Scene scene = SceneLayoutBuilder.buildScene();
-    //scene.getStylesheets().add(getClass().getResource("controlStyle1.css").toExternalForm());
+    SceneLayout sceneLayout = new SceneLayout();
+
+    Scene scene = sceneLayout.buildScene();
     stage.setScene(scene);
     stage.show();
 

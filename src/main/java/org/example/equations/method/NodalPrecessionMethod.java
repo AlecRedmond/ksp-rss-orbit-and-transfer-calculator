@@ -52,6 +52,7 @@ public class NodalPrecessionMethod {
     double inclination;
     double j2 = orbit.getBody().getJ2();
 
+    // omegaP is in rad/s. Convert to rad/day
     omegaP = omegaP / (3600 * 24);
 
     double equationBotHalf = -3 * radiusBody * radiusBody * j2 * omegaSat;

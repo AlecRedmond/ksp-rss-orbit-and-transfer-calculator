@@ -2,8 +2,7 @@ package org.example.equations.application;
 
 import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,35 +11,120 @@ import org.example.equations.application.keplerianelements.Kepler.KeplerEnums;
 @Data
 @AllArgsConstructor
 public class OrbitalParameterHolds {
-    private Map<KeplerEnums, Boolean> orbitalParameterHolds = new HashMap<>();
-    
-    public OrbitalParameterHolds(){
-        buildHolds();
+  private Map<KeplerEnums, Boolean> holdsMap = new HashMap<>();
+  private List<KeplerEnums> lastClicked = new ArrayList<>();
+
+  public OrbitalParameterHolds() {
+    buildHolds();
+  }
+
+  public OrbitalParameterHolds(KeplerEnums keplerEnum1, KeplerEnums keplerEnum2) {
+    buildHolds();
+    setHold(keplerEnum1, true);
+    setHold(keplerEnum2, true);
+  }
+
+  private void buildHolds() {
+    holdsMap.putAll(
+        Map.of(
+            APOAPSIS, false,
+            PERIAPSIS, false,
+            ECCENTRICITY, false,
+            SEMI_MAJOR_AXIS, false,
+            ORBITAL_PERIOD, false,
+            VELOCITY_APOAPSIS, false,
+            VELOCITY_PERIAPSIS, false));
+  }
+
+  public void setHold(KeplerEnums keplerEnum, boolean holdState) {
+    holdsMap.put(keplerEnum, holdState);
+  }
+
+  public boolean getHold(KeplerEnums keplerEnum) {
+    return holdsMap.getOrDefault(keplerEnum, false);
+  }
+
+  // Toggle Button Logic
+
+  public void toggleButtonClicked(KeplerEnums keplerEnums) {
+    boolean wasEnabled;
+    if (lastClicked.contains(keplerEnums)) {
+      releaseToggle(keplerEnums);
+      wasEnabled = false;
+    } else {
+      setHold(keplerEnums, true);
+      lastClicked.add(keplerEnums);
+      wasEnabled = true;
+    }
+    toggleButtonMethod(keplerEnums, wasEnabled);
+  }
+
+  private void toggleButtonMethod(KeplerEnums keplerEnums, boolean wasEnabled) {
+    Optional<KeplerEnums> lastPopped = Optional.empty();
+
+    if (getHold(ORBITAL_PERIOD) && getHold(SEMI_MAJOR_AXIS)) {
+      releaseOlderOfTwoToggle(ORBITAL_PERIOD, SEMI_MAJOR_AXIS);
+    }
+    if (getHold(NODAL_PRECESSION) && getHold(INCLINATION)) {
+      releaseOlderOfTwoToggle(NODAL_PRECESSION, INCLINATION);
+    }
+    if (lastClicked.size() > 2 && thirdToggleNotInclinationOrNodalPrecession()) {
+      lastPopped = releaseOldestNonInclinedToggle();
     }
 
-    public OrbitalParameterHolds(KeplerEnums keplerEnum1, KeplerEnums keplerEnum2){
-        buildHolds();
-        setHold(keplerEnum1,true);
-        setHold(keplerEnum2, true);
-    }
+    velocityToggleComparator(keplerEnums, VELOCITY_PERIAPSIS, PERIAPSIS, wasEnabled, lastPopped);
+    velocityToggleComparator(keplerEnums, VELOCITY_APOAPSIS, APOAPSIS, wasEnabled, lastPopped);
+  }
 
-    private void buildHolds() {
-        orbitalParameterHolds.putAll(
-                Map.of(
-                        APOAPSIS, false,
-                        PERIAPSIS, false,
-                        ECCENTRICITY, false,
-                        SEMI_MAJOR_AXIS, false,
-                        ORBITAL_PERIOD, false,
-                        VELOCITY_APOAPSIS, false,
-                        VELOCITY_PERIAPSIS, false));
+  private boolean thirdToggleNotInclinationOrNodalPrecession() {
+    return !(lastClicked.size() == 3
+        && (lastClicked.contains(NODAL_PRECESSION) || lastClicked.contains(INCLINATION)));
+  }
+
+  @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+  private void velocityToggleComparator(
+      KeplerEnums keplerEnums,
+      KeplerEnums velocity,
+      KeplerEnums apsis,
+      boolean wasEnabled,
+      Optional<KeplerEnums> lastPopped) {
+    if (wasEnabled && (!getHold(SEMI_MAJOR_AXIS) && !getHold(ORBITAL_PERIOD))) {
+      if (keplerEnums.equals(velocity)) {
+        if (lastPopped.isPresent()
+            && (lastPopped.get().equals(SEMI_MAJOR_AXIS)
+                || lastPopped.get().equals(ORBITAL_PERIOD))) {
+          toggleButtonClicked(lastPopped.get());
+        } else {
+          toggleButtonClicked(apsis);
+        }
+      } else if (getHold(velocity) != getHold(apsis)) {
+        releaseToggle(velocity);
+      }
     }
-    
-    public void setHold(KeplerEnums keplerEnum, boolean holdState){
-        orbitalParameterHolds.put(keplerEnum,holdState);
+  }
+
+  private Optional<KeplerEnums> releaseOldestNonInclinedToggle() {
+    Optional<KeplerEnums> valueToPop =
+        lastClicked.stream()
+            .filter(e -> (!e.equals(NODAL_PRECESSION) && !e.equals(INCLINATION)))
+            .findFirst();
+
+    if (valueToPop.isPresent()){
+      releaseToggle(valueToPop.get());
+      return valueToPop;
+    } else {
+      return Optional.empty();
     }
-    
-    public boolean getHold(KeplerEnums keplerEnum){
-        return orbitalParameterHolds.getOrDefault(keplerEnum,false);
-    }
+  }
+
+  private void releaseOlderOfTwoToggle(KeplerEnums enumA, KeplerEnums enumB) {
+    Optional<KeplerEnums> first =
+        lastClicked.stream().filter(e -> e.equals(enumA) || e.equals(enumB)).findFirst();
+    first.ifPresent(this::releaseToggle);
+  }
+
+  private void releaseToggle(KeplerEnums keplerEnums) {
+    lastClicked.remove(keplerEnums);
+    setHold(keplerEnums, false);
+  }
 }
