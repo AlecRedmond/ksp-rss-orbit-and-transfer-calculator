@@ -58,22 +58,6 @@ public class OrbitalGridPane {
             .getTransferOrbit());
   }
 
-  private Orbit getOrbitWithoutHolds() {
-    int row = 0;
-    int textFieldColumn = gridColumns.indexOf(TEXT_FIELD);
-    for (Map.Entry<KeplerEnums, Kepler> entry : orbit.getKeplarianElements().entrySet()) {
-      String string = ((TextField) nodesArray[row][textFieldColumn]).getText();
-      orbit.setFromString(entry.getKey(), string);
-      row++;
-    }
-    orbitalParameterHolds = new OrbitalParameterHolds();
-    orbitalParameterHolds.setHold(KeplerEnums.APOAPSIS, true);
-    orbitalParameterHolds.setHold(KeplerEnums.PERIAPSIS, true);
-    orbit = new OrbitBuilder(orbit, orbitalParameterHolds).getOrbit();
-    orbitalParameterHolds = new OrbitalParameterHolds();
-    return orbit;
-  }
-
   public OrbitalGridPane(boolean isRight) {
     if (isRight) {
       orbit = new OrbitBuilder(35786000, 35786000, 0).getOrbit();

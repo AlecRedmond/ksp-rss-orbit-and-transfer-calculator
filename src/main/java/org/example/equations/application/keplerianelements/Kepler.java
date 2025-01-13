@@ -1,5 +1,9 @@
 package org.example.equations.application.keplerianelements;
 
+import org.example.equations.method.holdlogic.ToggleAction;
+
+import java.util.Map;
+
 public interface Kepler {
 
   enum KeplerEnums {
@@ -28,4 +32,6 @@ public interface Kepler {
   double getData();
 
   void setData(double data);
+
+  Map<KeplerEnums, ToggleAction> toggleCompatibility();
 }

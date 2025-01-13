@@ -2,14 +2,17 @@ package org.example.equations.application.keplerianelements;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.equations.method.holdlogic.ToggleAction;
 import org.example.stringformatting.StringUnitParser;
+
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
 public class Apoapsis extends KeplerBase {
   private double data;
 
-  public Apoapsis(double data){
+  public Apoapsis(double data) {
     this.data = data;
   }
 
@@ -20,7 +23,7 @@ public class Apoapsis extends KeplerBase {
 
   @Override
   public String getAsString() {
-    return StringUnitParser.doubleToString(this.data,unitSI(),true,2,"apsis");
+    return StringUnitParser.doubleToString(this.data, unitSI(), true, 2, "apsis");
   }
 
   @Override
@@ -38,5 +41,16 @@ public class Apoapsis extends KeplerBase {
   @Override
   public String unitSI() {
     return "m";
+  }
+
+  @Override
+  public Map<KeplerEnums, ToggleAction> toggleCompatibility() {
+    return Map.of(
+        KeplerEnums.VELOCITY_PERIAPSIS,
+        ToggleAction.INCOMPATIBLE,
+        KeplerEnums.INCLINATION,
+        ToggleAction.NO_INTERFERENCE,
+        KeplerEnums.NODAL_PRECESSION,
+        ToggleAction.NO_INTERFERENCE);
   }
 }

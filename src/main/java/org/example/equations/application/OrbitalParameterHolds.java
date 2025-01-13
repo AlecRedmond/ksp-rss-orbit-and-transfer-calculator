@@ -12,7 +12,7 @@ import org.example.equations.application.keplerianelements.Kepler.KeplerEnums;
 @AllArgsConstructor
 public class OrbitalParameterHolds {
   private Map<KeplerEnums, Boolean> holdsMap = new HashMap<>();
-  private List<KeplerEnums> lastClicked = new ArrayList<>();
+  private List<KeplerEnums> orderedClickList = new ArrayList<>();
 
   public OrbitalParameterHolds() {
     buildHolds();
@@ -48,12 +48,12 @@ public class OrbitalParameterHolds {
 
   public void toggleButtonClicked(KeplerEnums keplerEnums) {
     boolean wasEnabled;
-    if (lastClicked.contains(keplerEnums)) {
+    if (orderedClickList.contains(keplerEnums)) {
       releaseToggle(keplerEnums);
       wasEnabled = false;
     } else {
       setHold(keplerEnums, true);
-      lastClicked.add(keplerEnums);
+      orderedClickList.add(keplerEnums);
       wasEnabled = true;
     }
     toggleButtonMethod(keplerEnums, wasEnabled);
@@ -68,7 +68,7 @@ public class OrbitalParameterHolds {
     if (getHold(NODAL_PRECESSION) && getHold(INCLINATION)) {
       releaseOlderOfTwoToggle(NODAL_PRECESSION, INCLINATION);
     }
-    if (lastClicked.size() > 2 && thirdToggleNotInclinationOrNodalPrecession()) {
+    if (orderedClickList.size() > 2 && thirdToggleNotInclinationOrNodalPrecession()) {
       lastPopped = releaseOldestNonInclinedToggle();
     }
 
@@ -77,8 +77,8 @@ public class OrbitalParameterHolds {
   }
 
   private boolean thirdToggleNotInclinationOrNodalPrecession() {
-    return !(lastClicked.size() == 3
-        && (lastClicked.contains(NODAL_PRECESSION) || lastClicked.contains(INCLINATION)));
+    return !(orderedClickList.size() == 3
+        && (orderedClickList.contains(NODAL_PRECESSION) || orderedClickList.contains(INCLINATION)));
   }
 
   @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
@@ -105,7 +105,7 @@ public class OrbitalParameterHolds {
 
   private Optional<KeplerEnums> releaseOldestNonInclinedToggle() {
     Optional<KeplerEnums> valueToPop =
-        lastClicked.stream()
+        orderedClickList.stream()
             .filter(e -> (!e.equals(NODAL_PRECESSION) && !e.equals(INCLINATION)))
             .findFirst();
 
@@ -119,12 +119,12 @@ public class OrbitalParameterHolds {
 
   private void releaseOlderOfTwoToggle(KeplerEnums enumA, KeplerEnums enumB) {
     Optional<KeplerEnums> first =
-        lastClicked.stream().filter(e -> e.equals(enumA) || e.equals(enumB)).findFirst();
+        orderedClickList.stream().filter(e -> e.equals(enumA) || e.equals(enumB)).findFirst();
     first.ifPresent(this::releaseToggle);
   }
 
   private void releaseToggle(KeplerEnums keplerEnums) {
-    lastClicked.remove(keplerEnums);
+    orderedClickList.remove(keplerEnums);
     setHold(keplerEnums, false);
   }
 }

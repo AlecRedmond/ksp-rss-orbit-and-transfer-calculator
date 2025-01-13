@@ -2,7 +2,10 @@ package org.example.equations.application.keplerianelements;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.equations.method.holdlogic.ToggleAction;
 import org.example.stringformatting.StringUnitParser;
+
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -34,5 +37,10 @@ public class Velocity extends KeplerBase {
   @Override
   public String unitSI() {
     return "m/s";
+  }
+
+  @Override
+  public Map<KeplerEnums, ToggleAction> toggleCompatibility() {
+    return Map.of();
   }
 }
