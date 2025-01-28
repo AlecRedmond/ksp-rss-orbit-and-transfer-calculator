@@ -2,10 +2,7 @@ package org.example.equations.application.keplerianelements;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.equations.method.holdlogic.ToggleAction;
 import org.example.stringformatting.StringUnitParser;
-
-import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -26,20 +23,7 @@ public class VelocityApoapsis extends KeplerBase {
     return "m/s";
   }
 
-  @Override
-  public Map<KeplerEnums, ToggleAction> toggleCompatibility() {
-    return Map.of(
-            KeplerEnums.PERIAPSIS,
-            ToggleAction.INCOMPATIBLE,
-            KeplerEnums.ECCENTRICITY,
-            ToggleAction.INCOMPATIBLE,
-            KeplerEnums.INCLINATION,
-            ToggleAction.NO_INTERFERENCE,
-            KeplerEnums.NODAL_PRECESSION,
-            ToggleAction.NO_INTERFERENCE);
-  }
-
-  @Override
+    @Override
   public KeplerEnums getType() {
     return KeplerEnums.VELOCITY_APOAPSIS;
   }

@@ -12,7 +12,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.GridPane;
 import lombok.Data;
 import org.example.equations.application.Orbit;
-import org.example.equations.application.OrbitalParameterHolds;
+import org.example.equations.method.holdlogic.OrbitalParameterHolds;
 import org.example.equations.application.keplerianelements.Kepler;
 import org.example.equations.application.keplerianelements.Kepler.KeplerEnums;
 import org.example.equations.method.HohmannTransfer;
@@ -142,7 +142,7 @@ public class OrbitalGridPane {
         ((ToggleButton) nodesArray[row][column])
             .setOnAction(
                 actionEvent -> {
-                  orbitalParameterHolds.toggleButtonClicked(keplerEnum);
+                  orbitalParameterHolds.toggleParameter(keplerEnum);
                   mapHolds();
                 });
       }

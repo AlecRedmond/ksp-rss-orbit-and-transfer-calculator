@@ -1,9 +1,6 @@
 package org.example.equations.application.keplerianelements;
 
 import lombok.Data;
-import org.example.equations.method.holdlogic.ToggleAction;
-
-import java.util.Map;
 
 @Data
 public class Inclination implements Kepler {
@@ -51,9 +48,4 @@ public class Inclination implements Kepler {
         this.data = data;
     }
 
-    @Override
-    public Map<KeplerEnums, ToggleAction> toggleCompatibility() {
-        return Map.of(
-                KeplerEnums.NODAL_PRECESSION,ToggleAction.EITHER_OR);
-    }
 }

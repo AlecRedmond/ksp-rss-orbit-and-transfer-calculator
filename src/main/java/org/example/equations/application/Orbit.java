@@ -2,16 +2,13 @@ package org.example.equations.application;
 
 import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.equations.application.keplerianelements.*;
 import org.example.equations.application.keplerianelements.Kepler.KeplerEnums;
-import org.example.equations.method.holdlogic.ToggleAction;
 
 @Data
 @Getter
@@ -63,7 +60,4 @@ public class Orbit {
     return keplarianElements.get(keplerEnums).displayName();
   }
 
-  public Map<KeplerEnums, ToggleAction> getHoldCompatibility(KeplerEnums keplerEnums){
-    return keplarianElements.get(keplerEnums).toggleCompatibility();
-  }
 }

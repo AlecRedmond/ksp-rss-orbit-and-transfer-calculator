@@ -2,10 +2,7 @@ package org.example.equations.application.keplerianelements;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.equations.method.holdlogic.ToggleAction;
 import org.example.stringformatting.StringUnitParser;
-
-import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -43,14 +40,4 @@ public class Periapsis extends KeplerBase {
     return "m";
   }
 
-  @Override
-  public Map<KeplerEnums, ToggleAction> toggleCompatibility() {
-    return Map.of(
-            KeplerEnums.VELOCITY_APOAPSIS,
-            ToggleAction.INCOMPATIBLE,
-            KeplerEnums.INCLINATION,
-            ToggleAction.NO_INTERFERENCE,
-            KeplerEnums.NODAL_PRECESSION,
-            ToggleAction.NO_INTERFERENCE);
-  }
 }

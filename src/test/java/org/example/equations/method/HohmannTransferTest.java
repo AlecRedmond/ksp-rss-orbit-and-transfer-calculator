@@ -3,7 +3,7 @@ package org.example.equations.method;
 import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
 import org.example.equations.application.Orbit;
-import org.example.equations.application.OrbitalParameterHolds;
+import org.example.equations.method.holdlogic.OrbitalParameterHolds;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
