@@ -32,22 +32,42 @@ public class OrbitalGridPane {
     BLOCKED_TEXT_FIELD
   }
 
+  //Default Grid column layout for the initial orbit's GridPane
   private List<GridColumn> gridColumns = new ArrayList<>(List.of(LABEL, HOLD, TEXT_FIELD));
 
-  // Default to a basic orbit
+  /*
+    -----
+    PUBLIC METHODS
+    -----
+   */
+
+  // Builds the Left (initial Orbit) GridPane
   public OrbitalGridPane() {
     orbit = new OrbitBuilder(250000, 250000, 5.25).getOrbit();
     orbitalParameterHolds = new OrbitalParameterHolds();
-    initialiseGridPane();
+    initialiseGridPaneAndWriteOrbit();
   }
 
+  // Build a blank intermediate transfer orbit GridPane (with greyed out values)
   public OrbitalGridPane(OrbitalGridPane initialOrbitPane, OrbitalGridPane finalOrbitPane) {
     gridColumns = new ArrayList<>(List.of(BLOCKED_TEXT_FIELD));
     orbit =
         new HohmannTransfer(
                 initialOrbitPane.getOrbit(), finalOrbitPane.getOrbit())
             .getTransferOrbit();
-    initialiseGridPane();
+    initialiseGridPaneAndWriteOrbit();
+  }
+
+  // Builds either the Left or Right (initial or final orbit) GridPane
+  public OrbitalGridPane(boolean isRight) {
+    if (isRight) {
+      orbit = new OrbitBuilder(35786000, 35786000, 0).getOrbit();
+      gridColumns = new ArrayList<>(List.of(TEXT_FIELD, HOLD));
+    } else {
+      orbit = new OrbitBuilder(250000, 250000, 5.25).getOrbit();
+    }
+    orbitalParameterHolds = new OrbitalParameterHolds();
+    initialiseGridPaneAndWriteOrbit();
   }
 
   public void setTransferOrbit(OrbitalGridPane initialOrbitPane, OrbitalGridPane finalOrbitPane) {
@@ -58,21 +78,11 @@ public class OrbitalGridPane {
             .getTransferOrbit());
   }
 
-  public OrbitalGridPane(boolean isRight) {
-    if (isRight) {
-      orbit = new OrbitBuilder(35786000, 35786000, 0).getOrbit();
-      gridColumns = new ArrayList<>(List.of(TEXT_FIELD, HOLD));
-    } else {
-      orbit = new OrbitBuilder(250000, 250000, 5.25).getOrbit();
-    }
-    orbitalParameterHolds = new OrbitalParameterHolds();
-    initialiseGridPane();
-  }
-
   public void setOrbit(Orbit orbit) {
     this.orbit = orbit;
-    updateGridPane();
+    writeUpdatedOrbitToGridPane();
   }
+
 
   public Orbit getOrbitFromHolds() {
     int row = 0;
@@ -88,7 +98,13 @@ public class OrbitalGridPane {
     return orbit;
   }
 
-  private void updateGridPane() {
+    /*
+    -----
+    PRIVATE METHODS
+    -----
+   */
+
+  private void writeUpdatedOrbitToGridPane() {
     int row = 0;
     int column;
     if (gridColumns.contains(TEXT_FIELD)) {
@@ -104,7 +120,7 @@ public class OrbitalGridPane {
     }
   }
 
-  private void initialiseGridPane() {
+  private void initialiseGridPaneAndWriteOrbit() {
     buildNodeArrayFromOrbit();
     gridPane = new GridPane();
     for (int row = 0; row < nodesArray.length; row++) {
