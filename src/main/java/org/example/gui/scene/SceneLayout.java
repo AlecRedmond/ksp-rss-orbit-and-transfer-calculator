@@ -44,11 +44,11 @@ public class SceneLayout {
     Button button2 = new Button("Change Orbits From Holds");
     button2.setOnAction(
         actionEvent -> {
-          Orbit orbitA = initialOrbitPane.getOrbitFromHolds();
+          Orbit orbitA = initialOrbitPane.extractOrbitFromHolds();
           initialOrbitPane.setOrbit(orbitA);
-          Orbit orbitB = finalOrbitPane.getOrbitFromHolds();
+          Orbit orbitB = finalOrbitPane.extractOrbitFromHolds();
           finalOrbitPane.setOrbit(orbitB);
-          transferOrbitPane.setTransferOrbit(initialOrbitPane,finalOrbitPane);
+          transferOrbitPane.updateTransferOrbit(initialOrbitPane,finalOrbitPane);
           transferResults.updateText(orbitA,orbitB);
         });
     return new HBox(resetButton, button2);
