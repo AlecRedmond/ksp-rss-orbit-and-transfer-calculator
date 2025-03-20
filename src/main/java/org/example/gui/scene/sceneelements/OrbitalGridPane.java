@@ -91,10 +91,24 @@ public class OrbitalGridPane {
     return new OrbitBuilder(35_786_000, 35_786_000, 0).getOrbit();
   }
 
-  private Orbit createTransferOrbit(
-      OrbitalGridPane initialOrbitPane, OrbitalGridPane finalOrbitPane) {
-    return new HohmannTransfer(initialOrbitPane.getOrbit(), finalOrbitPane.getOrbit())
-        .getTransferOrbit();
+  private Orbit createTransferOrbit(OrbitalGridPane initialOrbitPane, OrbitalGridPane finalOrbitPane) {
+    HohmannTransfer hohmannTransfer = new HohmannTransfer(initialOrbitPane.getOrbit(), finalOrbitPane.getOrbit());
+    Orbit transferOrbit = hohmannTransfer.getTransferOrbit();
+
+    Map<KeplerEnums, Double> burnVelocities = calculateBurnVelocities(hohmannTransfer);
+    burnVelocities.forEach(transferOrbit::setDataFor);
+
+    return transferOrbit;
+  }
+
+  private Map<KeplerEnums, Double> calculateBurnVelocities(HohmannTransfer hohmannTransfer) {
+    KeplerEnums firstBurnApsis = hohmannTransfer.getApsisOfFirstBurn();
+    double firstBurnDV = hohmannTransfer.getFirstBurnDV();
+    double secondBurnDV = hohmannTransfer.getSecondBurnDV();
+
+    return firstBurnApsis == KeplerEnums.PERIAPSIS
+            ? Map.of(KeplerEnums.VELOCITY_PERIAPSIS, firstBurnDV, KeplerEnums.VELOCITY_APOAPSIS, secondBurnDV)
+            : Map.of(KeplerEnums.VELOCITY_APOAPSIS, firstBurnDV, KeplerEnums.VELOCITY_PERIAPSIS, secondBurnDV);
   }
 
   private List<GridColumn> defaultGridColumns() {

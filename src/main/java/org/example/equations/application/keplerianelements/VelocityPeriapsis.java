@@ -8,9 +8,22 @@ import org.example.stringformatting.StringUnitParser;
 @NoArgsConstructor
 public class VelocityPeriapsis extends KeplerBase {
   private double data;
+  private boolean isDeltaV;
+
+  private double tangentialVelocity;
+  private double normalVelocity;
+  private double totalVelocity;
 
   public VelocityPeriapsis(double data) {
     this.data = data;
+    this.isDeltaV = false;
+  }
+
+  public void setToDeltaV(double tangentialVelocity, double normalVelocity, double totalVelocity){
+    isDeltaV = true;
+    this.tangentialVelocity = tangentialVelocity;
+    this.normalVelocity = normalVelocity;
+    this.totalVelocity = totalVelocity;
   }
 
   @Override
