@@ -6,7 +6,7 @@ import org.example.equations.application.Orbit;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class FillEquationsTest {
+class TrajectoryEquationsTest {
 
   static double orbitalPeriod = 60*60*1.5;
   static Orbit orbit;
@@ -19,7 +19,7 @@ class FillEquationsTest {
 
   @Test
   void convertOrbitalPeriod() {
-    FillEquations.convertOrbitalPeriodToSMA(orbit);
+    TrajectoryEquations.convertOrbitalPeriodToSMA(orbit);
     System.out.println(orbit.getDataFor(SEMI_MAJOR_AXIS));
   }
 }

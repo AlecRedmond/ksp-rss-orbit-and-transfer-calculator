@@ -1,42 +1,66 @@
 package org.example.referenceframes;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
+import static org.apache.commons.math3.geometry.euclidean.threed.RotationConvention.*;
+import static org.apache.commons.math3.geometry.euclidean.threed.RotationOrder.*;
+import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
-import org.apache.commons.math3.linear.MatrixUtils;
-import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.geometry.euclidean.threed.Line;
+import org.apache.commons.math3.geometry.euclidean.threed.Plane;
+import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.example.equations.application.Orbit;
 
 public class AngleTransform {
+  private static final double TOLERANCE = 1e-6;
 
-  public RealMatrix toOrbitalFrame(
-      RealMatrix vector, double rightAscension, double inclination, double argumentPE) {
-    return zxzTransform(rightAscension, inclination, argumentPE).multiply(vector);
+  /** rotates the vector to its equivalent in a plane where all Z values in the orbit equal 0 */
+  public Vector3D toOrbitalFrame(Vector3D vector, Orbit orbit) {
+    return toOrbitalFrame(
+        vector,
+        orbit.getDataFor(RIGHT_ASCENSION),
+        orbit.getDataFor(INCLINATION),
+        orbit.getDataFor(ARGUMENT_PE));
   }
 
-  public RealMatrix toInertialFrame(
-          RealMatrix vector, double rightAscension, double inclination, double argumentPE) {
-    return zxzTransform(-argumentPE, -inclination, -rightAscension).multiply(vector);
+  protected Vector3D toOrbitalFrame(
+      Vector3D vector, double rightAscension, double inclination, double argumentPE) {
+    Rotation rotation = new Rotation(ZXZ, FRAME_TRANSFORM, rightAscension, inclination, argumentPE);
+    return rotation.applyTo(vector);
   }
 
-  protected RealMatrix zxzTransform(double angle1, double angle2, double angle3) {
-    return zRotate(angle1).multiply(xRotate(angle2)).multiply(zRotate(angle3));
+  /** rotates the vector from the orbital to the body-centric (e.g. Earth-Centred) frame. */
+  public Vector3D toInertialFrame(Vector3D vector, Orbit orbit) {
+    return toInertialFrame(
+        vector,
+        orbit.getDataFor(RIGHT_ASCENSION),
+        orbit.getDataFor(INCLINATION),
+        orbit.getDataFor(ARGUMENT_PE));
   }
 
-  protected RealMatrix zRotate(double angle) {
-    double[][] data = {
-      {cos(angle), sin(angle), 0},
-      {-sin(angle), cos(angle), 0},
-      {0, 0, 1}
-    };
-    return MatrixUtils.createRealMatrix(data);
+  protected Vector3D toInertialFrame(
+      Vector3D vector, double rightAscension, double inclination, double argumentPE) {
+    Rotation rotation =
+        new Rotation(ZXZ, FRAME_TRANSFORM, -argumentPE, -inclination, -rightAscension);
+    return rotation.applyTo(vector);
   }
 
-  protected RealMatrix xRotate(double angle) {
-    double[][] data = {
-      {1, 0, 0},
-      {0, cos(angle), sin(angle)},
-      {0, -sin(angle), cos(angle)}
-    };
-    return MatrixUtils.createRealMatrix(data);
+  public Line intercept(Orbit orbitA, Orbit orbitB) {
+    Plane planeA = orbitalPlane(orbitA);
+    Plane planeB = orbitalPlane(orbitB);
+    return planeA.intersection(planeB);
+  }
+
+  protected Plane orbitalPlane(Orbit orbit) {
+    return orbitalPlane(
+        orbit.getDataFor(RIGHT_ASCENSION),
+        orbit.getDataFor(INCLINATION),
+        orbit.getDataFor(ARGUMENT_PE));
+  }
+
+  protected Plane orbitalPlane(double rightAscension, double inclination, double argumentPE) {
+    Vector3D normalVector =
+        toInertialFrame(
+            new Vector3D(new double[] {0, 0, 1}), rightAscension, inclination, argumentPE);
+    return new Plane(normalVector, TOLERANCE);
   }
 }

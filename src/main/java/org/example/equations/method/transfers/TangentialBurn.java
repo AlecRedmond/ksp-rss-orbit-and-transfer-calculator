@@ -1,4 +1,4 @@
-package org.example.equations.method;
+package org.example.equations.method.transfers;
 
 import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.equations.application.Orbit;
 import org.example.equations.application.keplerianelements.Kepler.KeplerEnums;
+import org.example.equations.method.OrbitBuilder;
 
 @Data
 @NoArgsConstructor

@@ -13,9 +13,9 @@ import lombok.Data;
 import org.example.equations.application.Orbit;
 import org.example.equations.application.keplerianelements.Kepler;
 import org.example.equations.application.keplerianelements.Kepler.KeplerEnums;
-import org.example.equations.method.HohmannTransfer;
+import org.example.equations.method.transfers.HohmannTransfer;
 import org.example.equations.method.OrbitBuilder;
-import org.example.equations.method.holdlogic.OrbitalParameterHolds;
+import org.example.controller.holdlogic.OrbitalParameterHolds;
 
 @Data
 public class OrbitalGridPane {

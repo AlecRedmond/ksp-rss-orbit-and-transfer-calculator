@@ -3,7 +3,7 @@ package org.example.equations.method;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.equations.application.Orbit;
-import org.example.equations.method.holdlogic.OrbitalParameterHolds;
+import org.example.controller.holdlogic.OrbitalParameterHolds;
 import org.example.equations.application.keplerianelements.Kepler;
 import org.example.equations.application.keplerianelements.Kepler.KeplerEnums;
 
@@ -53,21 +53,21 @@ public class OrbitBuilder {
       return;
     }
     if (held(ORBITAL_PERIOD)) {
-      FillEquations.convertOrbitalPeriodToSMA(orbit);
+      TrajectoryEquations.convertOrbitalPeriodToSMA(orbit);
       orbitalParameterHolds.setHold(SEMI_MAJOR_AXIS, true);
     }
 
     if (held(APOAPSIS) || held(PERIAPSIS)) {
       if (held(APOAPSIS) && held(PERIAPSIS)) {
-        FillEquations.calculateFromPeriapsisApoapsis(orbit);
+        TrajectoryEquations.calculateFromPeriapsisApoapsis(orbit);
       } else if (held(ECCENTRICITY)) {
-        FillEquations.calculateFromApsisEccentricity(orbit, held(PERIAPSIS));
+        TrajectoryEquations.calculateFromApsisEccentricity(orbit, held(PERIAPSIS));
       } else if (held(SEMI_MAJOR_AXIS)) {
-        FillEquations.calculateFromApsisSemiMajorAxis(orbit, held(PERIAPSIS));
+        TrajectoryEquations.calculateFromApsisSemiMajorAxis(orbit, held(PERIAPSIS));
       } else if (held(VELOCITY_PERIAPSIS) && held(PERIAPSIS)
           || held(VELOCITY_APOAPSIS) && held(APOAPSIS)) {
-        FillEquations.calculateSMAFromVelocityAndAltitude(orbit, held(PERIAPSIS));
-        FillEquations.calculateFromApsisSemiMajorAxis(orbit, held(PERIAPSIS));
+        TrajectoryEquations.calculateSMAFromVelocityAndAltitude(orbit, held(PERIAPSIS));
+        TrajectoryEquations.calculateFromApsisSemiMajorAxis(orbit, held(PERIAPSIS));
       } else {
         setAllToZero();
       }
@@ -76,7 +76,7 @@ public class OrbitBuilder {
 
     if (held(ECCENTRICITY)) {
       if (held(SEMI_MAJOR_AXIS)) {
-        FillEquations.calculateFromEccentricitySemiMajorAxis(orbit);
+        TrajectoryEquations.calculateFromEccentricitySemiMajorAxis(orbit);
       } else {
         setAllToZero();
       }
@@ -85,8 +85,8 @@ public class OrbitBuilder {
 
     if (held(SEMI_MAJOR_AXIS)) {
       if (held(VELOCITY_APOAPSIS) || held(VELOCITY_PERIAPSIS)) {
-        FillEquations.calculateAltitudeFromVelocityAndSMA(orbit, held(VELOCITY_PERIAPSIS));
-        FillEquations.calculateFromApsisSemiMajorAxis(orbit, held(VELOCITY_PERIAPSIS));
+        TrajectoryEquations.calculateAltitudeFromVelocityAndSMA(orbit, held(VELOCITY_PERIAPSIS));
+        TrajectoryEquations.calculateFromApsisSemiMajorAxis(orbit, held(VELOCITY_PERIAPSIS));
       } else {
         setAllToZero();
       }

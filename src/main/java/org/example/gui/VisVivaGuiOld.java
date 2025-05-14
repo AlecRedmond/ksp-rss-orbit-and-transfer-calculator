@@ -17,7 +17,7 @@
 //import lombok.Getter;
 //import lombok.Setter;
 //import org.example.equations.application.keplerianelements.*;
-//import org.example.equations.method.HohmannTransfer;
+//import org.example.equations.method.transfers.HohmannTransfer;
 //import org.example.equations.method.KeplerianMethod;
 //import org.example.gui.method.VisVivaGuiMethods;
 //

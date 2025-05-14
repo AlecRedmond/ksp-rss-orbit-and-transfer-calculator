@@ -1,4 +1,4 @@
-package org.example.equations.method;
+package org.example.equations.method.transfers;
 
 import lombok.Data;
 import org.example.equations.application.keplerianelements.Kepler.KeplerEnums;

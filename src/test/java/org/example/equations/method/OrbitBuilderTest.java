@@ -4,7 +4,7 @@ import static org.example.equations.application.keplerianelements.Kepler.KeplerE
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.example.equations.application.Orbit;
-import org.example.equations.method.holdlogic.OrbitalParameterHolds;
+import org.example.controller.holdlogic.OrbitalParameterHolds;
 import org.example.equations.application.keplerianelements.Kepler.KeplerEnums;
 import org.junit.jupiter.api.Test;
 

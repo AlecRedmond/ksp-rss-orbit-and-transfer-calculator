@@ -1,7 +1,7 @@
 package org.example.stringformatting;
 
 import org.example.equations.application.keplerianelements.Velocity;
-import org.example.equations.method.InclinationBurn;
+import org.example.equations.method.transfers.InclinationBurn;
 
 public class InclinationBurnString {
   public static String getIncChangeBurnString(InclinationBurn inclinationBurn) {

@@ -6,8 +6,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import lombok.Data;
 import org.example.equations.application.Orbit;
-import org.example.equations.method.HohmannTransfer;
-import org.example.equations.method.InclinationBurn;
+import org.example.equations.method.transfers.HohmannTransfer;
 import org.example.equations.method.utility.TransferStringWriter;
 import org.example.gui.scene.SceneConfig;
 

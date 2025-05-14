@@ -1,4 +1,4 @@
-package org.example.equations.method.holdlogic;
+package org.example.controller.holdlogic;
 
 import java.util.*;
 import lombok.AllArgsConstructor;

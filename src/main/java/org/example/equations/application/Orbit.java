@@ -5,14 +5,10 @@ import static org.example.equations.application.keplerianelements.Kepler.KeplerE
 import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.example.equations.application.keplerianelements.*;
 import org.example.equations.application.keplerianelements.Kepler.KeplerEnums;
 
 @Data
-@Getter
-@Setter
 public class Orbit {
   private Body body;
 
@@ -20,11 +16,6 @@ public class Orbit {
 
   public Orbit(Body body) {
     this.body = body;
-    buildKeplarianElements();
-  }
-
-  public Orbit() {
-    this.body = Body.EARTH;
     buildKeplarianElements();
   }
 
@@ -37,7 +28,14 @@ public class Orbit {
     keplarianElements.put(VELOCITY_APOAPSIS, new VelocityApoapsis(0.0));
     keplarianElements.put(VELOCITY_PERIAPSIS, new VelocityPeriapsis(0.0));
     keplarianElements.put(INCLINATION, new Inclination(0.0));
+    keplarianElements.put(RIGHT_ASCENSION, new RightAscension(0.0));
+    keplarianElements.put(ARGUMENT_PE,new ArgumentPE(0.0));
     keplarianElements.put(NODAL_PRECESSION, new NodalPrecession(0.0));
+  }
+
+  public Orbit() {
+    this.body = Body.EARTH;
+    buildKeplarianElements();
   }
 
   public void setFromString(KeplerEnums keplerEnums, String inputString) {
