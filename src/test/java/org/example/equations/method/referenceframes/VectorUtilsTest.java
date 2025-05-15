@@ -1,4 +1,4 @@
-package org.example.equations.method.utility;
+package org.example.equations.method.referenceframes;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.example.equations.application.Body;

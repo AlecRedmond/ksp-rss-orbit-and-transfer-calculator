@@ -2,10 +2,8 @@ package org.example.equations.method;
 
 import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.example.equations.application.Body;
 import org.example.equations.application.Orbit;
-import org.example.referenceframes.AngleTransform;
 
 public class TrajectoryEquations {
   private static Body body = Body.EARTH;

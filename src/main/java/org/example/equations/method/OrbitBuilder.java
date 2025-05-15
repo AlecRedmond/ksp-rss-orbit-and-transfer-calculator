@@ -1,15 +1,14 @@
 package org.example.equations.method;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.example.equations.application.Orbit;
-import org.example.controller.holdlogic.OrbitalParameterHolds;
-import org.example.equations.application.keplerianelements.Kepler;
-import org.example.equations.application.keplerianelements.Kepler.KeplerEnums;
+import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
 import java.util.Map;
-
-import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.example.controller.holdlogic.OrbitalParameterHolds;
+import org.example.equations.application.Orbit;
+import org.example.equations.application.keplerianelements.Kepler;
+import org.example.equations.application.keplerianelements.Kepler.KeplerEnums;
 
 @Data
 @NoArgsConstructor
@@ -20,29 +19,6 @@ public class OrbitBuilder {
   public OrbitBuilder(Orbit orbit, OrbitalParameterHolds orbitalParameterHolds) {
     this.orbit = orbit;
     this.orbitalParameterHolds = orbitalParameterHolds;
-    methodFromHolds();
-  }
-
-  public OrbitBuilder(double periapsis, double apoapsis, double inclinationDegrees) {
-    double inclination = Math.toRadians(inclinationDegrees);
-    buildFromApses(periapsis, apoapsis);
-    orbit.setDataFor(INCLINATION, inclination);
-  }
-
-  public OrbitBuilder(double periapsis, double apoapsis) {
-    buildFromApses(periapsis, apoapsis);
-  }
-
-  private void buildFromApses(double periapsis, double apoapsis) {
-    orbit = new Orbit();
-    if (periapsis > apoapsis) {
-      double temp = periapsis;
-      periapsis = apoapsis;
-      apoapsis = temp;
-    }
-    orbit.setDataFor(PERIAPSIS, periapsis);
-    orbit.setDataFor(APOAPSIS, apoapsis);
-    orbitalParameterHolds = new OrbitalParameterHolds(PERIAPSIS, APOAPSIS);
     methodFromHolds();
   }
 
@@ -96,16 +72,6 @@ public class OrbitBuilder {
     setAllToZero();
   }
 
-  private boolean held(KeplerEnums keplerEnums) {
-    return orbitalParameterHolds.getHold(keplerEnums);
-  }
-
-  private void setAllToZero() {
-    for (Map.Entry<KeplerEnums, Kepler> entry : orbit.getKeplarianElements().entrySet()) {
-      entry.getValue().setData(0.0);
-    }
-  }
-
   private int countHolds(OrbitalParameterHolds orbitalParameterHolds) {
     int holds = 0;
     for (Map.Entry<KeplerEnums, Boolean> entry : orbitalParameterHolds.getHoldsMap().entrySet()) {
@@ -114,5 +80,48 @@ public class OrbitBuilder {
       }
     }
     return holds;
+  }
+  
+  private void setAllToZero() {
+    for (Map.Entry<KeplerEnums, Kepler> entry : orbit.getKeplarianElements().entrySet()) {
+      entry.getValue().setData(0.0);
+    }
+  }
+
+  private boolean held(KeplerEnums keplerEnums) {
+    return orbitalParameterHolds.getHold(keplerEnums);
+  }
+
+  public OrbitBuilder(double periapsis, double apoapsis, double inclinationDegrees) {
+    double inclination = Math.toRadians(inclinationDegrees);
+    buildFromApses(periapsis, apoapsis);
+    orbit.setDataFor(INCLINATION, inclination);
+  }
+
+  private void buildFromApses(double periapsis, double apoapsis) {
+    orbit = new Orbit();
+    if (periapsis > apoapsis) {
+      double temp = periapsis;
+      periapsis = apoapsis;
+      apoapsis = temp;
+    }
+    orbit.setDataFor(PERIAPSIS, periapsis);
+    orbit.setDataFor(APOAPSIS, apoapsis);
+    orbitalParameterHolds = new OrbitalParameterHolds(PERIAPSIS, APOAPSIS);
+    methodFromHolds();
+  }
+
+  public OrbitBuilder(double periapsis, double apoapsis) {
+    buildFromApses(periapsis, apoapsis);
+  }
+
+  public OrbitBuilder(double periapsis, double apoapsis, double rightAscensionDegrees, double inclinationDegrees, double argumentPEDegrees){
+    var rightAscension = Math.toRadians(rightAscensionDegrees);
+    var inclination = Math.toRadians(inclinationDegrees);
+    var argumentPE = Math.toRadians(argumentPEDegrees);
+    buildFromApses(periapsis,apoapsis);
+    orbit.setDataFor(RIGHT_ASCENSION,rightAscension);
+    orbit.setDataFor(INCLINATION,inclination);
+    orbit.setDataFor(ARGUMENT_PE,argumentPE);
   }
 }

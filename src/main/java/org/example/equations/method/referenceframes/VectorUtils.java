@@ -1,4 +1,4 @@
-package org.example.equations.method.utility;
+package org.example.equations.method.referenceframes;
 
 import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
@@ -39,7 +39,7 @@ public class VectorUtils {
     return semiLatusRectum(orbit.getDataFor(SEMI_MAJOR_AXIS), orbit.getDataFor(ECCENTRICITY));
   }
 
-  protected double semiLatusRectum(double semiMajorAxis, double eccentricity) {
+  private double semiLatusRectum(double semiMajorAxis, double eccentricity) {
     return semiMajorAxis * (1 - Math.pow(eccentricity, 2));
   }
 }
