@@ -14,28 +14,36 @@ public class VectorUtils {
   private Body body = Body.EARTH;
 
   public Vector3D velocityVector(Orbit orbit, double trueAnomaly) {
-    double verticalVelocity = tangentialVelocity(orbit, trueAnomaly);
-    double tangentialVelocity = verticalVelocity(orbit, trueAnomaly);
+    var verticalVelocity = verticalVelocity(orbit, trueAnomaly);
+    var tangentialVelocity = tangentialVelocity(orbit, trueAnomaly);
     return new Vector3D(new double[] {verticalVelocity, tangentialVelocity, 0});
   }
 
+  public Vector3D radiusVector(Orbit orbit, double trueAnomaly) {
+    var a = orbit.getDataFor(SEMI_MAJOR_AXIS);
+    var e = orbit.getDataFor(ECCENTRICITY);
+    var f = trueAnomaly;
+    var radius = a * (1 - Math.pow(e, 2)) / (1 + e * Math.cos(f));
+    return new Vector3D(new double[] {radius, 0, 0});
+  }
+
   private double tangentialVelocity(Orbit orbit, double trueAnomaly) {
-    double mu = body.getMu();
-    double p = semiLatusRectum(orbit);
-    double e = orbit.getDataFor(ECCENTRICITY);
-    double f = trueAnomaly;
+    var mu = body.getMu();
+    var p = semiLatusRectum(orbit);
+    var e = orbit.getDataFor(ECCENTRICITY);
+    var f = trueAnomaly;
     return Math.sqrt(mu / p) * (1 + e * Math.cos(f));
   }
 
   private double verticalVelocity(Orbit orbit, double trueAnomaly) {
-    double mu = body.getMu();
-    double p = semiLatusRectum(orbit);
-    double e = orbit.getDataFor(ECCENTRICITY);
-    double f = trueAnomaly;
+    var mu = body.getMu();
+    var p = semiLatusRectum(orbit);
+    var e = orbit.getDataFor(ECCENTRICITY);
+    var f = trueAnomaly;
     return Math.sqrt(mu / p) * (e * Math.sin(f));
   }
 
-  protected double semiLatusRectum(Orbit orbit) {
+  private double semiLatusRectum(Orbit orbit) {
     return semiLatusRectum(orbit.getDataFor(SEMI_MAJOR_AXIS), orbit.getDataFor(ECCENTRICITY));
   }
 

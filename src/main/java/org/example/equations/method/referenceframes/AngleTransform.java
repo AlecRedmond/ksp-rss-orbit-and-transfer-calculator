@@ -34,17 +34,10 @@ public class AngleTransform {
     return rotation.applyTo(vector);
   }
 
-  /** Returns the craft-oriented radius vector in the Perifocal frame. */
-  public Vector3D perifocalRadiusVector(double radius, double trueAnomaly) {
-    Vector3D radiusVector = X_AXIS.scalarMultiply(radius);
+  /** Transforms a vector from the Craft-oriented to the Perifocal frame. */
+  public Vector3D craftToPerifocalTransform(Vector3D craftVector, double trueAnomaly) {
     Rotation rotation = new Rotation(Z_AXIS, -trueAnomaly, FRAME_TRANSFORM);
-    return rotation.applyTo(radiusVector);
-  }
-
-  /** Transforms the velocity vector from the Craft-oriented to the Perifocal frame. */
-  public Vector3D perifocalVelocityVector(Vector3D velocityVector, double trueAnomaly) {
-    Rotation rotation = new Rotation(Z_AXIS, -trueAnomaly, FRAME_TRANSFORM);
-    return rotation.applyTo(velocityVector);
+    return rotation.applyTo(craftVector);
   }
 
   /**

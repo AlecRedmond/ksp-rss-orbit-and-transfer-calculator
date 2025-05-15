@@ -60,15 +60,6 @@ class AngleTransformTest {
   }
 
   @Test
-  void perifocalRadiusVector() {
-    double radius = 1;
-    double trueAnomaly = Math.toRadians(90);
-    Vector3D actual = test.perifocalRadiusVector(radius, trueAnomaly);
-    //90° from the X axis should be the Y axis
-    assertVectorsEqual(yAxisVector, actual);
-  }
-
-  @Test
   void intersectTrueAnomaly() {
     Orbit orbitA = equatorialOrbit();
     Orbit orbitB = equatorialOrbit();
