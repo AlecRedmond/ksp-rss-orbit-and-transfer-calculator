@@ -13,22 +13,27 @@ import org.example.equations.application.Orbit;
 public class AngleTransform {
   private static final double TOLERANCE = 1e-6;
 
-  /** rotates the vector to its equivalent in a plane where all Z values in the orbit equal 0 */
-  public Vector3D toOrbitalFrame(Vector3D vector, Orbit orbit) {
-    return toOrbitalFrame(
+  /**
+   * rotates the vector to its equivalent in the Perifocal frame, where X is positive in the
+   * direction of periapsis and Z is normal to the orbit.
+   */
+  public Vector3D toPerifocalFrame(Vector3D vector, Orbit orbit) {
+    return toPerifocalFrame(
         vector,
         orbit.getDataFor(RIGHT_ASCENSION),
         orbit.getDataFor(INCLINATION),
         orbit.getDataFor(ARGUMENT_PE));
   }
 
-  protected Vector3D toOrbitalFrame(
+  protected Vector3D toPerifocalFrame(
       Vector3D vector, double rightAscension, double inclination, double argumentPE) {
     Rotation rotation = new Rotation(ZXZ, FRAME_TRANSFORM, rightAscension, inclination, argumentPE);
     return rotation.applyTo(vector);
   }
 
-  /** rotates the vector from the orbital to the body-centric (e.g. Earth-Centred) frame. */
+  /**
+   * rotates the vector from the Peri-Focal to the Body-centric (e.g. Earth-Centred) Inertial frame.
+   */
   public Vector3D toInertialFrame(Vector3D vector, Orbit orbit) {
     return toInertialFrame(
         vector,
@@ -44,6 +49,23 @@ public class AngleTransform {
     return rotation.applyTo(vector);
   }
 
+  /** Returns the radius vector in the Perifocal frame. */
+  public Vector3D perifocalRadiusVector(double radius, double trueAnomaly) {
+    Vector3D radiusVector = new Vector3D(new double[] {radius, 0, 0});
+    Vector3D zAxis = new Vector3D(new double[] {0, 0, 1});
+    Rotation rotation = new Rotation(zAxis, -trueAnomaly, FRAME_TRANSFORM);
+    return rotation.applyTo(radiusVector);
+  }
+
+  /** Returns the velocity vector in the Perifocal frame. */
+  public Vector3D perifocalVelocityVector(Vector3D velocityVector, double trueAnomaly){
+    Vector3D zAxis = new Vector3D(new double[] {0, 0, 1});
+    Rotation rotation = new Rotation(zAxis, -trueAnomaly, FRAME_TRANSFORM);
+    return rotation.applyTo(velocityVector);
+  }
+
+
+  /** Returns the line at which two orbits intercept each other. */
   public Line intercept(Orbit orbitA, Orbit orbitB) {
     Plane planeA = orbitalPlane(orbitA);
     Plane planeB = orbitalPlane(orbitB);

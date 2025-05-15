@@ -20,9 +20,9 @@ class AngleTransformTest {
   double argumentPE = Math.toRadians(0);
 
   @Test
-  void toOrbitalFrame() {
+  void toPerifocalFrame() {
     Vector3D newVector =
-        test.toOrbitalFrame(inertialVector, rightAscension, inclination, argumentPE);
+        test.toPerifocalFrame(inertialVector, rightAscension, inclination, argumentPE);
     System.out.println(newVector);
     assertVectorsEqual(newVector, planarVector);
   }
@@ -67,5 +67,14 @@ class AngleTransformTest {
     var xCoord = radius * Math.cos(angle);
     var yCoord = radius * Math.sin(angle);
     return new Vector3D(new double[] {xCoord, yCoord, 0});
+  }
+
+  @Test
+  void perifocalRadiusVector() {
+    double radius = 1;
+    double trueAnomaly = Math.toRadians(90);
+    Vector3D expected = new Vector3D(new double[]{0,1,0});
+    Vector3D actual = test.perifocalRadiusVector(radius,trueAnomaly);
+    assertVectorsEqual(expected,actual);
   }
 }
