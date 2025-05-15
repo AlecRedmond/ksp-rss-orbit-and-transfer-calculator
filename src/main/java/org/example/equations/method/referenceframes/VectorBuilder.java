@@ -2,16 +2,12 @@ package org.example.equations.method.referenceframes;
 
 import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.example.equations.application.Body;
 import org.example.equations.application.Orbit;
 
-@AllArgsConstructor
 @NoArgsConstructor
-public class VectorUtils {
-  private Body body = Body.EARTH;
+public class VectorBuilder {
 
   public Vector3D velocityVector(Orbit orbit, double trueAnomaly) {
     var verticalVelocity = verticalVelocity(orbit, trueAnomaly);
@@ -28,7 +24,7 @@ public class VectorUtils {
   }
 
   private double tangentialVelocity(Orbit orbit, double trueAnomaly) {
-    var mu = body.getMu();
+    var mu = orbit.getBody().getMu();
     var p = semiLatusRectum(orbit);
     var e = orbit.getDataFor(ECCENTRICITY);
     var f = trueAnomaly;
@@ -36,7 +32,7 @@ public class VectorUtils {
   }
 
   private double verticalVelocity(Orbit orbit, double trueAnomaly) {
-    var mu = body.getMu();
+    var mu = orbit.getBody().getMu();
     var p = semiLatusRectum(orbit);
     var e = orbit.getDataFor(ECCENTRICITY);
     var f = trueAnomaly;

@@ -11,8 +11,8 @@ import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class VectorUtilsTest {
-  VectorUtils test = new VectorUtils(Body.EARTH);
+class VectorBuilderTest {
+  VectorBuilder test = new VectorBuilder();
 
   @Test
   void velocityVector() {
