@@ -56,13 +56,13 @@ public class AngleTransform {
     if (intersectLine.isEmpty()) {
       return Optional.empty();
     }
-    var inertialIntersectDirection = intersectLine.get().getDirection();
-    var perifocalIntersectDirection = toPerifocalFrame(inertialIntersectDirection, base);
-    var firstTrueAnomaly = Vector3D.angle(X_AXIS, perifocalIntersectDirection);
+    var inertialDirection = intersectLine.get().getDirection();
+    var perifocalDirection = toPerifocalFrame(inertialDirection, base);
     // Vector3D.angle is ||absolute||; negative Y values mean anomaly is negative
-    if (perifocalIntersectDirection.getY() < 0) {
-      firstTrueAnomaly = (Math.PI - firstTrueAnomaly) % (2 * Math.PI);
-    }
+    var firstTrueAnomaly =
+        perifocalDirection.getY() >= 0
+            ? Vector3D.angle(X_AXIS, perifocalDirection)
+            : Math.PI - Vector3D.angle(X_AXIS, perifocalDirection);
     var secondTrueAnomaly = (firstTrueAnomaly + Math.PI) % (2 * Math.PI);
     return Optional.of(new double[] {firstTrueAnomaly, secondTrueAnomaly});
   }

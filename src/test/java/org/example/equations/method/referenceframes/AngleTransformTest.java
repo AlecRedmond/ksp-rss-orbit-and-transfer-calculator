@@ -71,9 +71,9 @@ class AngleTransformTest {
   @Test
   void intersectTrueAnomaly() {
     Orbit orbitA = equatorialOrbit();
-    Orbit orbitB = molniyaOrbit();
+    Orbit orbitB = equatorialOrbit();
     setArguments(orbitA, 0, 5.25, 0);
-    setArguments(orbitB, 45, 63.4, 270);
+    setArguments(orbitB, 10, 63.4, 0);
     var anomaliesOptional = test.intersectTrueAnomaly(orbitA, orbitB);
     if (anomaliesOptional.isEmpty()) {
       System.out.println("Coplanar");
