@@ -90,10 +90,20 @@ class AngleTransformTest {
   @Test
   void craftToPerifocalTransform() {
     var orbit = molniyaOrbit();
-    var vectors = new CraftVectorController()
-            .buildVectors(orbit,0)
-            .changeFrame(ReferenceFrame.INERTIAL)
+    var cvc = new CraftVectorController();
+    var vectors = cvc
+            .buildVectors(orbit,10)
             .getVectors();
+    System.out.println("Craft");
+    System.out.println(vectors);
+    vectors = cvc.changeFrame(ReferenceFrame.INERTIAL).getVectors();
+    System.out.println("Inertial");
+    System.out.println(vectors);
+    vectors = cvc.changeFrame(ReferenceFrame.PLANAR).getVectors();
+    System.out.println("Planar");
+    System.out.println(vectors);
+    vectors = cvc.changeFrame(ReferenceFrame.CRAFT).getVectors();
+    System.out.println("Craft");
     System.out.println(vectors);
   }
 }

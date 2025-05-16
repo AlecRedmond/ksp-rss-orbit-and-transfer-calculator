@@ -73,7 +73,7 @@ public class AngleTransform {
       }
       case INERTIAL -> {
         return rotateByTrueAnomaly(-trueAnomaly)
-            .compose(rotateInertialToPlanar(orbit, false), FRAME_TRANSFORM);
+            .compose(rotateInertialToPlanar(orbit, false), VECTOR_OPERATOR);
       }
     }
     return null;
@@ -100,7 +100,7 @@ public class AngleTransform {
     switch (initialFrame) {
       case CRAFT -> {
         return rotateInertialToPlanar(orbit, true)
-            .compose(rotateByTrueAnomaly(trueAnomaly), FRAME_TRANSFORM);
+            .compose(rotateByTrueAnomaly(trueAnomaly), VECTOR_OPERATOR);
       }
       case PLANAR -> {
         return rotateInertialToPlanar(orbit, true);
@@ -113,7 +113,7 @@ public class AngleTransform {
   }
 
   private Rotation rotateByTrueAnomaly(double trueAnomaly) {
-    return new Rotation(Z_AXIS, trueAnomaly, FRAME_TRANSFORM);
+    return new Rotation(Z_AXIS, trueAnomaly, VECTOR_OPERATOR);
   }
 
   private Rotation rotateInertialToPlanar(Orbit orbit, boolean reversed) {
