@@ -24,14 +24,17 @@ public class CraftVectorController {
             .position(position)
             .velocity(velocity)
             .momentum(momentum)
+            .orbit(orbit)
+            .trueAnomaly(trueAnomaly)
             .frame(CRAFT)
             .build();
     return this;
   }
 
-  public CraftVectorController changeFrame(Orbit orbit, ReferenceFrame newFrame, double trueAnomaly) {
+  public CraftVectorController changeFrame(
+      ReferenceFrame newFrame) {
     AngleTransform transform = new AngleTransform();
-    vectors = transform.rotateCraftVectors(vectors,newFrame,orbit,trueAnomaly);
+    vectors = transform.rotateCraftVectors(vectors, newFrame);
     return this;
   }
 

@@ -4,6 +4,7 @@ import static org.apache.commons.math3.geometry.euclidean.threed.RotationConvent
 import static org.apache.commons.math3.geometry.euclidean.threed.RotationOrder.*;
 import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
+import java.util.Objects;
 import java.util.Optional;
 import org.apache.commons.math3.geometry.euclidean.threed.Line;
 import org.apache.commons.math3.geometry.euclidean.threed.Plane;
@@ -18,13 +19,17 @@ public class AngleTransform {
   private static final Vector3D X_AXIS = Vector3D.PLUS_I;
   private static final Vector3D Z_AXIS = Vector3D.PLUS_K;
 
-  public CraftVectors rotateCraftVectors(
-      CraftVectors craftVectors, ReferenceFrame finalFrame, Orbit orbit, double trueAnomaly) {
+  public CraftVectors rotateCraftVectors(CraftVectors craftVectors, ReferenceFrame finalFrame) {
     if (craftVectors.getFrame().equals(finalFrame)) {
       return craftVectors;
     }
-    var rotation = getRotationTransform(craftVectors.getFrame(), finalFrame, orbit, trueAnomaly);
-    return rotateAll(craftVectors, rotation, finalFrame);
+    var rotation =
+        getRotationTransform(
+            craftVectors.getFrame(),
+            finalFrame,
+            craftVectors.getOrbit(),
+            craftVectors.getTrueAnomaly());
+    return rotateAll(craftVectors, Objects.requireNonNull(rotation), finalFrame);
   }
 
   private Rotation getRotationTransform(

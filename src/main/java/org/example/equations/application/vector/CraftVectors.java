@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import org.apache.commons.math3.geometry.euclidean.threed.Plane;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.example.equations.application.Orbit;
 
 @Data
 @Builder
@@ -12,4 +13,6 @@ public class CraftVectors {
     private Vector3D velocity;
     private Vector3D momentum;
     private ReferenceFrame frame;
+    private Orbit orbit;
+    private double trueAnomaly;
 }

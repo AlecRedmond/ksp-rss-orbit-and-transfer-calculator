@@ -92,7 +92,7 @@ class AngleTransformTest {
     var orbit = molniyaOrbit();
     var vectors = new CraftVectorController()
             .buildVectors(orbit,0)
-            .changeFrame(orbit, ReferenceFrame.INERTIAL,0)
+            .changeFrame(ReferenceFrame.INERTIAL)
             .getVectors();
     System.out.println(vectors);
   }
