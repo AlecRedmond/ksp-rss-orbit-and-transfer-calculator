@@ -1,10 +1,11 @@
-package org.example.equations.method.referenceframes;
+package org.example.equations.method.vector;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.example.equations.application.Orbit;
 import org.example.equations.application.keplerianelements.Kepler;
+import org.example.equations.application.vector.ReferenceFrame;
 import org.example.equations.method.OrbitBuilder;
 import org.junit.jupiter.api.Test;
 
@@ -84,5 +85,15 @@ class AngleTransformTest {
     orbit.setDataFor(Kepler.KeplerEnums.RIGHT_ASCENSION, Math.toRadians(rightAscensionDegrees));
     orbit.setDataFor(Kepler.KeplerEnums.INCLINATION, Math.toRadians(inclinationDegrees));
     orbit.setDataFor(Kepler.KeplerEnums.ARGUMENT_PE, Math.toRadians(argumentPEDegrees));
+  }
+
+  @Test
+  void craftToPerifocalTransform() {
+    var orbit = molniyaOrbit();
+    var vectors = new CraftVectorController()
+            .buildVectors(orbit,0)
+            .changeFrame(orbit, ReferenceFrame.INERTIAL,0)
+            .getVectors();
+    System.out.println(vectors);
   }
 }

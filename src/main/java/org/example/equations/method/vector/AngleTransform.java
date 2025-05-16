@@ -1,4 +1,4 @@
-package org.example.equations.method.referenceframes;
+package org.example.equations.method.vector;
 
 import static org.apache.commons.math3.geometry.euclidean.threed.RotationConvention.*;
 import static org.apache.commons.math3.geometry.euclidean.threed.RotationOrder.*;
@@ -10,11 +10,117 @@ import org.apache.commons.math3.geometry.euclidean.threed.Plane;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.example.equations.application.Orbit;
+import org.example.equations.application.vector.CraftVectors;
+import org.example.equations.application.vector.ReferenceFrame;
 
 public class AngleTransform {
   private static final double TOLERANCE = 1e-6;
   private static final Vector3D X_AXIS = Vector3D.PLUS_I;
   private static final Vector3D Z_AXIS = Vector3D.PLUS_K;
+
+  public CraftVectors rotateCraftVectors(
+      CraftVectors craftVectors, ReferenceFrame finalFrame, Orbit orbit, double trueAnomaly) {
+    if (craftVectors.getFrame().equals(finalFrame)) {
+      return craftVectors;
+    }
+    var rotation = getRotationTransform(craftVectors.getFrame(), finalFrame, orbit, trueAnomaly);
+    return rotateAll(craftVectors, rotation, finalFrame);
+  }
+
+  private Rotation getRotationTransform(
+      ReferenceFrame initialFrame, ReferenceFrame finalFrame, Orbit orbit, double trueAnomaly) {
+
+    switch (finalFrame) {
+      case CRAFT -> {
+        return rotateToCraftFrame(initialFrame, orbit, trueAnomaly);
+      }
+      case PLANAR -> {
+        return rotateToPlanarFrame(initialFrame, orbit, trueAnomaly);
+      }
+      case INERTIAL -> {
+        return rotateToInertialFrame(initialFrame, orbit, trueAnomaly);
+      }
+    }
+
+    return null;
+  }
+
+  private CraftVectors rotateAll(
+      CraftVectors craftVectors, Rotation rotation, ReferenceFrame finalFrame) {
+    var velocity = craftVectors.getVelocity();
+    var position = craftVectors.getPosition();
+    var momentum = craftVectors.getMomentum();
+    craftVectors.setVelocity(rotation.applyTo(velocity));
+    craftVectors.setPosition(rotation.applyTo(position));
+    craftVectors.setMomentum(rotation.applyTo(momentum));
+    craftVectors.setFrame(finalFrame);
+    return craftVectors;
+  }
+
+  private Rotation rotateToCraftFrame(
+      ReferenceFrame initialFrame, Orbit orbit, double trueAnomaly) {
+    switch (initialFrame) {
+      case CRAFT -> {
+        return null;
+      }
+      case PLANAR -> {
+        return rotateByTrueAnomaly(-trueAnomaly);
+      }
+      case INERTIAL -> {
+        return rotateByTrueAnomaly(-trueAnomaly)
+            .compose(rotateInertialToPlanar(orbit, false), FRAME_TRANSFORM);
+      }
+    }
+    return null;
+  }
+
+  private Rotation rotateToPlanarFrame(
+      ReferenceFrame initialFrame, Orbit orbit, double trueAnomaly) {
+    switch (initialFrame) {
+      case CRAFT -> {
+        return rotateByTrueAnomaly(trueAnomaly);
+      }
+      case PLANAR -> {
+        return null;
+      }
+      case INERTIAL -> {
+        return rotateInertialToPlanar(orbit, false);
+      }
+    }
+    return null;
+  }
+
+  private Rotation rotateToInertialFrame(
+      ReferenceFrame initialFrame, Orbit orbit, double trueAnomaly) {
+    switch (initialFrame) {
+      case CRAFT -> {
+        return rotateInertialToPlanar(orbit, true)
+            .compose(rotateByTrueAnomaly(trueAnomaly), FRAME_TRANSFORM);
+      }
+      case PLANAR -> {
+        return rotateInertialToPlanar(orbit, true);
+      }
+      case INERTIAL -> {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  private Rotation rotateByTrueAnomaly(double trueAnomaly) {
+    return new Rotation(Z_AXIS, trueAnomaly, FRAME_TRANSFORM);
+  }
+
+  private Rotation rotateInertialToPlanar(Orbit orbit, boolean reversed) {
+
+    var rightAscension = orbit.getDataFor(RIGHT_ASCENSION);
+    var inclination = orbit.getDataFor(INCLINATION);
+    var argumentPE = orbit.getDataFor(ARGUMENT_PE);
+
+    return reversed
+        ? new Rotation(ZXZ, FRAME_TRANSFORM, -argumentPE, -inclination, -rightAscension)
+        : new Rotation(ZXZ, FRAME_TRANSFORM, rightAscension, inclination, argumentPE);
+  }
 
   /**
    * rotates the vector from the Peri-Focal to the Body-centric (e.g. Earth-Centred) Inertial frame.

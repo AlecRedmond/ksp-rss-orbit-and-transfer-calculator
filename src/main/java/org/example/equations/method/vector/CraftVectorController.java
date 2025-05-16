@@ -1,21 +1,47 @@
-package org.example.equations.method.referenceframes;
+package org.example.equations.method.vector;
 
 import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
+import static org.example.equations.application.vector.ReferenceFrame.CRAFT;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.example.equations.application.Orbit;
+import org.example.equations.application.vector.CraftVectors;
+import org.example.equations.application.vector.ReferenceFrame;
 
+@Getter
 @NoArgsConstructor
-public class VectorBuilder {
+public class CraftVectorController {
+  private CraftVectors vectors;
 
-  public Vector3D velocityVector(Orbit orbit, double trueAnomaly) {
+  public CraftVectorController buildVectors(Orbit orbit, double trueAnomaly) {
+    var position = radiusVector(orbit, trueAnomaly);
+    var velocity = velocityVector(orbit, trueAnomaly);
+    var momentum = position.crossProduct(velocity);
+    vectors =
+        CraftVectors.builder()
+            .position(position)
+            .velocity(velocity)
+            .momentum(momentum)
+            .frame(CRAFT)
+            .build();
+    return this;
+  }
+
+  public CraftVectorController changeFrame(Orbit orbit, ReferenceFrame newFrame, double trueAnomaly) {
+    AngleTransform transform = new AngleTransform();
+    vectors = transform.rotateCraftVectors(vectors,newFrame,orbit,trueAnomaly);
+    return this;
+  }
+
+  protected Vector3D velocityVector(Orbit orbit, double trueAnomaly) {
     var verticalVelocity = verticalVelocity(orbit, trueAnomaly);
     var tangentialVelocity = tangentialVelocity(orbit, trueAnomaly);
     return new Vector3D(new double[] {verticalVelocity, tangentialVelocity, 0});
   }
 
-  public Vector3D radiusVector(Orbit orbit, double trueAnomaly) {
+  protected Vector3D radiusVector(Orbit orbit, double trueAnomaly) {
     var a = orbit.getDataFor(SEMI_MAJOR_AXIS);
     var e = orbit.getDataFor(ECCENTRICITY);
     var f = trueAnomaly;
