@@ -8,11 +8,11 @@ import org.example.equations.application.Orbit;
 
 @Data
 @Builder
-public class CraftVectors {
+public class OrbitalVectors {
     private Vector3D position;
     private Vector3D velocity;
     private Vector3D momentum;
-    private ReferenceFrame frame;
     private Orbit orbit;
     private double trueAnomaly;
+    private ReferenceFrame frame;
 }

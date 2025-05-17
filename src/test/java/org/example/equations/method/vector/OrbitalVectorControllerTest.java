@@ -10,8 +10,8 @@ import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CraftVectorControllerTest {
-  CraftVectorController test = new CraftVectorController();
+class OrbitalVectorControllerTest {
+  OrbitalVectorController test = new OrbitalVectorController();
 
   @Test
   void velocityVector() {
@@ -41,5 +41,12 @@ class CraftVectorControllerTest {
             getRadiusVector(orbit, 0).getNorm(),
             1e-6);
     IntStream.range(0,361).filter(i -> i % 45 == 0).forEach(i -> System.out.println(getRadiusVector(orbit,i)));
+    }
+
+    @Test
+  void eccentricityVector(){
+      Orbit orbit = new OrbitBuilder(250000, 35786000).getOrbit();
+      var vectors = test.buildVectors(orbit,Math.toRadians(180));
+      System.out.println(vectors.getVectors());
     }
 }

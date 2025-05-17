@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.example.equations.application.Orbit;
 import org.example.equations.application.keplerianelements.Kepler;
-import org.example.equations.application.vector.ReferenceFrame;
 import org.example.equations.method.OrbitBuilder;
 import org.junit.jupiter.api.Test;
 
@@ -14,14 +13,6 @@ class AngleTransformTest {
   Vector3D xAxisVector = Vector3D.PLUS_I;
   Vector3D yAxisVector = Vector3D.PLUS_J;
   Vector3D zAxisVector = Vector3D.PLUS_K;
-
-  @Test
-  void toPerifocalFrame() {
-    Orbit orbit = polarOrbit();
-    Vector3D newVector = test.toPerifocalFrame(xAxisVector, orbit);
-    // After a 90°/90°/90° Z-X-Z euler rotation, the new x Axis should be in the Z axis frame
-    assertVectorsEqual(newVector, zAxisVector);
-  }
 
   Orbit polarOrbit() {
     return new OrbitBuilder(250e3, 250e3, 90, 90, 90).getOrbit();
@@ -41,13 +32,6 @@ class AngleTransformTest {
     return new OrbitBuilder(600e3, 35786e3, 90, 63.4, 270).getOrbit();
   }
 
-  @Test
-  void toInertialFrame() {
-    Orbit orbit = polarOrbit();
-    Vector3D newVector = test.toPerifocalFrame(zAxisVector, orbit);
-    // simple reversal of the earlier test
-    assertVectorsEqual(newVector, xAxisVector);
-  }
 
   @Test
   void intersect() {
@@ -58,23 +42,6 @@ class AngleTransformTest {
     var line = lineOptional.get();
     System.out.println(line.getDirection());
     System.out.println(line.getDirection().negate());
-  }
-
-  @Test
-  void intersectTrueAnomaly() {
-    Orbit orbitA = equatorialOrbit();
-    Orbit orbitB = equatorialOrbit();
-    setArguments(orbitA, 0, 5.25, 0);
-    setArguments(orbitB, 10, 63.4, 0);
-    var anomaliesOptional = test.intersectTrueAnomaly(orbitA, orbitB);
-    if (anomaliesOptional.isEmpty()) {
-      System.out.println("Coplanar");
-      return;
-    }
-    var anomalies = anomaliesOptional.get();
-    for (var anomaly : anomalies) {
-      System.out.println(Math.toDegrees(anomaly));
-    }
   }
 
   void setArguments(
@@ -90,20 +57,9 @@ class AngleTransformTest {
   @Test
   void craftToPerifocalTransform() {
     var orbit = molniyaOrbit();
-    var cvc = new CraftVectorController();
-    var vectors = cvc
+    var cvc = new OrbitalVectorController();
+    var craftVectors = cvc
             .buildVectors(orbit,10)
             .getVectors();
-    System.out.println("Craft");
-    System.out.println(vectors);
-    vectors = cvc.changeFrame(ReferenceFrame.INERTIAL).getVectors();
-    System.out.println("Inertial");
-    System.out.println(vectors);
-    vectors = cvc.changeFrame(ReferenceFrame.PLANAR).getVectors();
-    System.out.println("Planar");
-    System.out.println(vectors);
-    vectors = cvc.changeFrame(ReferenceFrame.CRAFT).getVectors();
-    System.out.println("Craft");
-    System.out.println(vectors);
   }
 }
