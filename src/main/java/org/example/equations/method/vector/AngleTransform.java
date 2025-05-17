@@ -21,9 +21,9 @@ public class AngleTransform {
     private static final Vector3D X_AXIS = Vector3D.PLUS_I;
     private static final Vector3D Y_AXIS = Vector3D.PLUS_J;
     private static final Vector3D Z_AXIS = Vector3D.PLUS_K;
-    private static final Plane XY_PLANE = new Plane(Z_AXIS,TOLERANCE);
+    private static final Plane XY_PLANE = new Plane(Z_AXIS, TOLERANCE);
 
-    public OrbitalVectors rotateCraftVectors(OrbitalVectors orbitalVectors, Orbit orbit, double trueAnomaly, ReferenceFrame finalFrame) {
+    public OrbitalVectors rotateCraftVectors(OrbitalVectors orbitalVectors, ReferenceFrame finalFrame) {
         if (orbitalVectors.getFrame().equals(finalFrame)) {
             return orbitalVectors;
         }
@@ -31,8 +31,8 @@ public class AngleTransform {
                 getRotationTransform(
                         orbitalVectors.getFrame(),
                         finalFrame,
-                        orbit,
-                        trueAnomaly);
+                        orbitalVectors.getOrbit(),
+                        orbitalVectors.getTrueAnomaly());
         return rotateAll(orbitalVectors, Objects.requireNonNull(rotation), finalFrame);
     }
 

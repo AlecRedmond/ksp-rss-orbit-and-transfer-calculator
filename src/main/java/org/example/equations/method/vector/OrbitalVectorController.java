@@ -31,9 +31,9 @@ public class OrbitalVectorController {
         return this;
     }
 
-    public OrbitalVectorController changeFrame(Orbit orbit, double trueAnomaly, ReferenceFrame newFrame) {
+    public OrbitalVectorController changeFrame(ReferenceFrame newFrame) {
         AngleTransform transform = new AngleTransform();
-        vectors = transform.rotateCraftVectors(vectors, orbit, trueAnomaly, newFrame);
+        vectors = transform.rotateCraftVectors(vectors,newFrame);
         return this;
     }
 
