@@ -4,6 +4,8 @@ import static org.example.equations.application.keplerianelements.Kepler.KeplerE
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import lombok.Builder;
 import lombok.Data;
 import org.example.equations.application.keplerianelements.*;
 import org.example.equations.application.keplerianelements.Kepler.KeplerEnums;

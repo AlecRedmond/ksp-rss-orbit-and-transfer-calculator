@@ -16,6 +16,14 @@ class VelocityChangeControllerTest {
         Orbit orbitB = new OrbitBuilder(250000,1000000,90,90,0).getOrbit();
         var anomaly = test.intersectionAnomaly(orbitA,orbitB);
         assertTrue(anomaly.isPresent());
-        System.out.println(Math.toDegrees(anomaly.get()));
     }
+
+    @Test
+    void bestInclinationChange() {
+        test = new VelocityChangeController();
+        Orbit orbitA = new OrbitBuilder(250000,250000).getOrbit();
+        Orbit orbitB = new OrbitBuilder(250000,1000000,90,90,0).getOrbit();
+        var bestChange = test.bestInclinationChange(orbitA,orbitB).getVelocityChange();
+        System.out.println(bestChange);
+      }
 }

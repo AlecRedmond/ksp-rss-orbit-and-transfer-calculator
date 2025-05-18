@@ -12,7 +12,8 @@ public class OrbitalVectors {
     private Vector3D position;
     private Vector3D velocity;
     private Vector3D momentum;
-    private Orbit orbit;
+    private Vector3D eccentricity;
+    private Vector3D ascendingNode;
     private double trueAnomaly;
-    private ReferenceFrame frame;
+    private Orbit orbit;
 }
