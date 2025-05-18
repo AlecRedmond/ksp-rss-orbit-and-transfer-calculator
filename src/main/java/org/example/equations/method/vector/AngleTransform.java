@@ -8,7 +8,6 @@ import org.example.equations.application.Orbit;
 import org.example.equations.application.vector.OrbitalVectors;
 import org.example.equations.application.vector.ReferenceFrame;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import static org.apache.commons.math3.geometry.euclidean.threed.RotationConvention.FRAME_TRANSFORM;
@@ -24,34 +23,31 @@ public class AngleTransform {
     private static final Plane XY_PLANE = new Plane(Z_AXIS, TOLERANCE);
 
     public OrbitalVectors rotateCraftVectors(OrbitalVectors orbitalVectors, ReferenceFrame finalFrame) {
-        if (orbitalVectors.getFrame().equals(finalFrame)) {
-            return orbitalVectors;
-        }
         var rotation =
                 getRotationTransform(
                         orbitalVectors.getFrame(),
                         finalFrame,
                         orbitalVectors.getOrbit(),
                         orbitalVectors.getTrueAnomaly());
-        return rotateAll(orbitalVectors, Objects.requireNonNull(rotation), finalFrame);
+        return rotation.map(value -> rotateAll(orbitalVectors, value, finalFrame)).orElse(orbitalVectors);
     }
 
-    private Rotation getRotationTransform(
+    public Optional<Vector3D> transformToFrame(Vector3D vector, ReferenceFrame initialFrame, OrbitalVectors orbitalVectors) {
+        var rotation = getRotationTransform(initialFrame, orbitalVectors.getFrame(), orbitalVectors.getOrbit(), orbitalVectors.getTrueAnomaly());
+        return rotation.map(rot -> rot.applyTo(vector));
+    }
+
+    private Optional<Rotation> getRotationTransform(
             ReferenceFrame initialFrame, ReferenceFrame finalFrame, Orbit orbit, double trueAnomaly) {
 
+        Rotation rotation = null;
         switch (finalFrame) {
-            case CRAFT -> {
-                return rotateToCraftFrame(initialFrame, orbit, trueAnomaly);
-            }
-            case PLANAR -> {
-                return rotateToPlanarFrame(initialFrame, orbit, trueAnomaly);
-            }
-            case INERTIAL -> {
-                return rotateToInertialFrame(initialFrame, orbit, trueAnomaly);
-            }
+            case CRAFT -> rotation = rotateToCraftFrame(initialFrame, orbit, trueAnomaly);
+            case PLANAR -> rotation = rotateToPlanarFrame(initialFrame, orbit, trueAnomaly);
+            case INERTIAL -> rotation = rotateToInertialFrame(initialFrame, orbit, trueAnomaly);
         }
 
-        return null;
+        return Optional.ofNullable(rotation);
     }
 
     private OrbitalVectors rotateAll(
@@ -139,7 +135,7 @@ public class AngleTransform {
     }
 
     /**
-     * Returns the line at which two orbits in the same frame intersect each other.
+     * Returns the line at which two orbits in the same frame intersect each other. Will return the line in inertial frame.
      */
     public Optional<Line> intersect(Orbit orbitA, Orbit orbitB) {
         Plane planeA = orbitalPlane(orbitA);
