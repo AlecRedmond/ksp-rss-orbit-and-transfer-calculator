@@ -24,7 +24,7 @@ public class CraftVectorController {
     var radius = radiusVector(orbit, trueAnomaly);
     var rotation =
         new AngleTransform()
-            .inertialFromCraft(
+            .getInertialFromCraft(
                 orbit.getDataFor(RIGHT_ASCENSION),
                 orbit.getDataFor(INCLINATION),
                 orbit.getDataFor(ARGUMENT_PE),
@@ -32,7 +32,6 @@ public class CraftVectorController {
     craftVectorsMap.putData(new CraftVectors(body, velocity, radius, rotation));
     return this;
   }
-
 
   public Optional<CraftVectors> getSOIVectors() {
     var body = getSphereOfInfluence();

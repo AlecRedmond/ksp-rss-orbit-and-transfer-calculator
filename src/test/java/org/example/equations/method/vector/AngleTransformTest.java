@@ -53,13 +53,4 @@ class AngleTransformTest {
     orbit.setDataFor(Kepler.KeplerEnums.INCLINATION, Math.toRadians(inclinationDegrees));
     orbit.setDataFor(Kepler.KeplerEnums.ARGUMENT_PE, Math.toRadians(argumentPEDegrees));
   }
-
-  @Test
-  void craftToPerifocalTransform() {
-    var orbit = molniyaOrbit();
-    var cvc = new OrbitalVectorController();
-    var craftVectors = cvc
-            .buildVectors(orbit,10)
-            .getVectors();
-  }
 }

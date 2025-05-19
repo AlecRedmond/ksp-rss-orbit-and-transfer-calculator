@@ -4,15 +4,10 @@ import org.apache.commons.math3.geometry.euclidean.threed.Line;
 import org.apache.commons.math3.geometry.euclidean.threed.Plane;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.example.equations.application.Body;
 import org.example.equations.application.Orbit;
-import org.example.equations.application.vector.CraftVectors;
-import org.example.equations.application.vector.OrbitalVectors;
-import org.example.equations.application.vector.ReferenceFrame;
 
 import java.util.Optional;
 
-import static org.apache.commons.math3.geometry.euclidean.threed.RotationConvention.FRAME_TRANSFORM;
 import static org.apache.commons.math3.geometry.euclidean.threed.RotationConvention.VECTOR_OPERATOR;
 import static org.apache.commons.math3.geometry.euclidean.threed.RotationOrder.ZXZ;
 import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
@@ -24,10 +19,18 @@ public class AngleTransform {
     private static final Vector3D Z_AXIS = Vector3D.PLUS_K;
     private static final Plane XY_PLANE = new Plane(Z_AXIS, TOLERANCE);
 
-    public Rotation inertialFromCraft(double rightAscension,double inclination,double argumentPE,double trueAnomaly){
-        Rotation toPlanar = new Rotation(Z_AXIS,-trueAnomaly,VECTOR_OPERATOR);
-        Rotation planarToInertial = new Rotation(ZXZ,VECTOR_OPERATOR,-argumentPE,-inclination,-rightAscension);
-        return planarToInertial.compose(toPlanar,VECTOR_OPERATOR);
+    public Rotation getInertialFromCraft(double rightAscension, double inclination, double argumentPE, double trueAnomaly){
+        Rotation craftToPlanar = getPlanarFromCraft(trueAnomaly);
+        Rotation planarToInertial = getInertialFromPlanar(rightAscension, inclination, argumentPE);
+        return planarToInertial.compose(craftToPlanar,VECTOR_OPERATOR);
+    }
+
+    private static Rotation getPlanarFromCraft(double trueAnomaly) {
+        return new Rotation(Z_AXIS, -trueAnomaly, VECTOR_OPERATOR);
+    }
+
+    private static Rotation getInertialFromPlanar(double rightAscension, double inclination, double argumentPE) {
+        return new Rotation(ZXZ, VECTOR_OPERATOR, -argumentPE, -inclination, -rightAscension);
     }
 
     /**
@@ -47,7 +50,8 @@ public class AngleTransform {
     }
 
     protected Plane orbitalPlane(double rightAscension, double inclination, double argumentPE) {
-        Vector3D normalVector = toInertialFrame(Z_AXIS, rightAscension, inclination, argumentPE);
+        Rotation planarToInertial = getInertialFromPlanar(rightAscension,inclination,argumentPE);
+        Vector3D normalVector = planarToInertial.applyTo(Z_AXIS);
         return new Plane(normalVector, TOLERANCE);
     }
 }

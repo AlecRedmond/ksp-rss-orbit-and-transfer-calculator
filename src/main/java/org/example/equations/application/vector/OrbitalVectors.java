@@ -14,6 +14,7 @@ public class OrbitalVectors {
     private Vector3D velocity;
     private Vector3D momentum;
     private Vector3D eccentricity;
+    private double semiMajorAxis;
     private double rightAscension;
     private double inclination;
     private double argumentPE;
