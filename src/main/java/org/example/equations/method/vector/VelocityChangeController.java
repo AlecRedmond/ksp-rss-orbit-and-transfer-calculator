@@ -1,17 +1,13 @@
 package org.example.equations.method.vector;
 
-import java.util.LinkedHashMap;
 import java.util.Optional;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.example.equations.application.Orbit;
-import org.example.equations.application.keplerianelements.Kepler;
 import org.example.equations.application.vector.OrbitalVectors;
 import org.example.equations.application.vector.ReferenceFrame;
 import org.example.equations.application.vector.VelocityChange;
-
-import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
 @NoArgsConstructor
 @Getter
@@ -62,10 +58,10 @@ public class VelocityChangeController {
   private void buildVelocityChange(OrbitalVectors initialVectors, OrbitalVectors finalVectors) {
     if (!initialVectors.getFrame().equals(ReferenceFrame.INERTIAL)) {
       initialVectors =
-          new AngleTransform().rotateCraftVectors(initialVectors, ReferenceFrame.INERTIAL);
+          new AngleTransform().craftToInertial(initialVectors, ReferenceFrame.INERTIAL);
     }
     if (!finalVectors.getFrame().equals(ReferenceFrame.INERTIAL)) {
-      finalVectors = new AngleTransform().rotateCraftVectors(finalVectors, ReferenceFrame.INERTIAL);
+      finalVectors = new AngleTransform().craftToInertial(finalVectors, ReferenceFrame.INERTIAL);
     }
     if (!positionsEqual(initialVectors, finalVectors)) {
       return;
@@ -76,7 +72,7 @@ public class VelocityChangeController {
     var velocityFinal = finalVectors.getVelocity();
     var deltaVelocityInertial = velocityFinal.subtract(velocityInitial);
 
-    initialVectors = new AngleTransform().rotateCraftVectors(initialVectors, ReferenceFrame.CRAFT);
+    initialVectors = new AngleTransform().craftToInertial(initialVectors, ReferenceFrame.CRAFT);
 
     var deltaVelocityCraft =
         new AngleTransform()

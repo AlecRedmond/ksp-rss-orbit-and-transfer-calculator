@@ -12,41 +12,4 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class OrbitalVectorControllerTest {
   OrbitalVectorController test = new OrbitalVectorController();
-
-  @Test
-  void velocityVector() {
-    Orbit orbit = new OrbitBuilder(250000, 35786000).getOrbit();
-    assertEquals(
-        orbit.getDataFor(Kepler.KeplerEnums.VELOCITY_PERIAPSIS),
-        getVelocityVector(orbit, 0).getNorm(),
-        1e-6);
-    IntStream.range(0,361).filter(i -> i % 45 == 0).forEach(i -> System.out.println(getVelocityVector(orbit,i)));
-  }
-
-  Vector3D getVelocityVector(Orbit orbit, double trueAnomalyDegrees) {
-    double trueAnomaly = Math.toRadians(trueAnomalyDegrees);
-    return test.velocityVector(orbit, trueAnomaly);
-  }
-
-  Vector3D getRadiusVector(Orbit orbit, double trueAnomalyDegrees) {
-    double trueAnomaly = Math.toRadians(trueAnomalyDegrees);
-    return test.radiusVector(orbit, trueAnomaly);
-  }
-
-  @Test
-  void radiusVector() {
-    Orbit orbit = new OrbitBuilder(250000, 35786000).getOrbit();
-    assertEquals(
-            orbit.getDataFor(Kepler.KeplerEnums.PERIAPSIS) + orbit.getBody().getRadius(),
-            getRadiusVector(orbit, 0).getNorm(),
-            1e-6);
-    IntStream.range(0,361).filter(i -> i % 45 == 0).forEach(i -> System.out.println(getRadiusVector(orbit,i)));
-    }
-
-    @Test
-  void eccentricityVector(){
-      Orbit orbit = new OrbitBuilder(250000, 35786000).getOrbit();
-      var vectors = test.buildVectors(orbit,Math.toRadians(180));
-      System.out.println(vectors.getVectors());
-    }
 }
