@@ -20,7 +20,7 @@ public class OrbitalVectorController {
     Body body = craftVectors.getBody();
     Rotation rotation = craftVectors.getRotationToInertial();
     Vector3D velocity = rotation.applyTo(new Vector3D(1, craftVectors.getVelocity()));
-    Vector3D position = rotation.applyTo(new Vector3D(1, craftVectors.getRadius()));
+    Vector3D position = rotation.applyTo(new Vector3D(1, craftVectors.getBodyDistance()));
     Vector3D momentum = position.crossProduct(velocity);
     Vector3D eccentricity = getEccentricity(velocity, momentum, body, position);
     Vector3D ascendingNodeVector = Vector3D.PLUS_K.crossProduct(momentum);

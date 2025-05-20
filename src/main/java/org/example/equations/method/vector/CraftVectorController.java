@@ -20,16 +20,16 @@ public class CraftVectorController {
 
   public CraftVectorController buildVectors(Orbit orbit, double trueAnomaly) {
     Body body = orbit.getBody();
-    var velocity = velocityVector(orbit, trueAnomaly);
-    var radius = radiusVector(orbit, trueAnomaly);
-    var rotation =
-        new AngleTransform()
-            .getInertialFromCraft(
-                orbit.getDataFor(RIGHT_ASCENSION),
-                orbit.getDataFor(INCLINATION),
-                orbit.getDataFor(ARGUMENT_PE),
-                trueAnomaly);
-    craftVectorsMap.putData(new CraftVectors(body, velocity, radius, rotation));
+    var at = new AngleTransform();
+    var velocityAnomaly = velocityVector(orbit, trueAnomaly);
+    var radiusAnomaly = getRadius(orbit, trueAnomaly);
+    var anomalyToMotion = at.getMotionFrameFromAnomalyFrame(velocityAnomaly, radiusAnomaly);
+    var bodyDistanceMotion = anomalyToMotion.applyTo(radiusAnomaly.negate());
+    var velocityMotion = anomalyToMotion.applyTo(velocityAnomaly);
+    var motionToInertial =
+        at.getInertialFrameFromMotionFrame(velocityMotion, bodyDistanceMotion, orbit, trueAnomaly);
+    craftVectorsMap.putData(
+        new CraftVectors(body, velocityMotion, bodyDistanceMotion, motionToInertial));
     return this;
   }
 
@@ -54,7 +54,7 @@ public class CraftVectorController {
     return new Vector3D(new double[] {verticalVelocity, tangentialVelocity, 0});
   }
 
-  private Vector3D radiusVector(Orbit orbit, double trueAnomaly) {
+  private Vector3D getRadius(Orbit orbit, double trueAnomaly) {
     var a = orbit.getDataFor(SEMI_MAJOR_AXIS);
     var e = orbit.getDataFor(ECCENTRICITY);
     var f = trueAnomaly;

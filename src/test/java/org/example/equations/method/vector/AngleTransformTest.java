@@ -53,4 +53,11 @@ class AngleTransformTest {
     orbit.setDataFor(Kepler.KeplerEnums.INCLINATION, Math.toRadians(inclinationDegrees));
     orbit.setDataFor(Kepler.KeplerEnums.ARGUMENT_PE, Math.toRadians(argumentPEDegrees));
   }
+
+  @Test
+  void invert() {
+    var inverted = Vector3D.MINUS_I;
+    inverted = test.invert(inverted);
+    assertVectorsEqual(Vector3D.PLUS_I,inverted);
+  }
 }
