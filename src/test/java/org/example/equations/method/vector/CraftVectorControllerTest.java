@@ -15,7 +15,7 @@ class CraftVectorControllerTest {
       double trueAnomaly = Math.toRadians(0);
       test.buildVectors(orbit,trueAnomaly);
       System.out.println(test.getSOIVectors());
-      var firstRadius = test.getSOIVectors().get().getRadius();
+      var firstRadius = test.getSOIVectors().get().getBodyDistance();
       var firstVelocity = test.getSOIVectors().get().getVelocity();
       System.out.println(firstRadius);
       System.out.println(firstVelocity);
