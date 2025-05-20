@@ -44,46 +44,8 @@ public class AngleTransform {
   }
 
   public Rotation getInertialFromMotion(){
-    var finalZAngle = argumentPE + anomalyAngle + velocityAngle;
+    var finalZAngle = argumentPE + anomalyAngle - velocityAngle;
     return new Rotation(ZXZ,VECTOR_OPERATOR,-finalZAngle,-inclination,-rightAscension);
-  }
-
-  public Rotation getMotionFrameFromAnomalyFrame(Vector3D velocity, Vector3D radius) {
-    boolean belowPI = velocity.getY() >= 0;
-    double angle =
-        belowPI ? Vector3D.angle(velocity, radius) : 2 * Math.PI - Vector3D.angle(velocity, radius);
-    return new Rotation(Z_AXIS, -angle, VECTOR_OPERATOR);
-  }
-
-  public Rotation getInertialFrameFromMotionFrame(
-      Vector3D velocity, Vector3D bodyDistance, Orbit orbit, double trueAnomaly) {
-    var motionToAnomaly = getAnomalyFrameFromMotionFrame(velocity, bodyDistance);
-    var anomalyToInertial =
-        getInertialFromAnomalyFrame(
-            orbit.getDataFor(RIGHT_ASCENSION),
-            orbit.getDataFor(INCLINATION),
-            orbit.getDataFor(ARGUMENT_PE),
-            trueAnomaly);
-    return anomalyToInertial.compose(motionToAnomaly,VECTOR_OPERATOR);
-  }
-
-  public Rotation getAnomalyFrameFromMotionFrame(Vector3D velocity, Vector3D bodyDistance) {
-    var radius = bodyDistance.negate();
-    boolean belowPI = radius.getY() <= 0;
-    double angle =
-        belowPI ? Vector3D.angle(velocity, radius) : 2 * Math.PI - Vector3D.angle(velocity, radius);
-    return new Rotation(Z_AXIS, angle, VECTOR_OPERATOR);
-  }
-
-  public Rotation getInertialFromAnomalyFrame(
-      double rightAscension, double inclination, double argumentPE, double trueAnomaly) {
-    Rotation craftToPlanar = getPlanarFromAnomalyFrame(trueAnomaly);
-    Rotation planarToInertial = getInertialFromPlanar(rightAscension, inclination, argumentPE);
-    return planarToInertial.compose(craftToPlanar, VECTOR_OPERATOR);
-  }
-
-  private static Rotation getPlanarFromAnomalyFrame(double trueAnomaly) {
-    return new Rotation(Z_AXIS, -trueAnomaly, VECTOR_OPERATOR);
   }
 
   private static Rotation getInertialFromPlanar(
