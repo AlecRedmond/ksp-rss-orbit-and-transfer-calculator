@@ -8,6 +8,7 @@ import org.example.equations.application.Orbit;
 
 import java.util.Optional;
 
+import static org.apache.commons.math3.geometry.euclidean.threed.RotationConvention.FRAME_TRANSFORM;
 import static org.apache.commons.math3.geometry.euclidean.threed.RotationConvention.VECTOR_OPERATOR;
 import static org.apache.commons.math3.geometry.euclidean.threed.RotationOrder.ZXZ;
 import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
@@ -40,17 +41,17 @@ public class AngleTransform {
   }
 
   public Rotation getToMotionInitializer(){
-    return new Rotation(Z_AXIS,-velocityAngle,VECTOR_OPERATOR);
+    return new Rotation(Z_AXIS,velocityAngle,FRAME_TRANSFORM);
   }
 
   public Rotation getInertialFromMotion(){
-    var finalZAngle = argumentPE + anomalyAngle - velocityAngle;
-    return new Rotation(ZXZ,VECTOR_OPERATOR,-finalZAngle,-inclination,-rightAscension);
+    var finalZAngle = argumentPE + anomalyAngle + velocityAngle;
+    return new Rotation(ZXZ,FRAME_TRANSFORM,-finalZAngle,-inclination,-rightAscension);
   }
 
   private static Rotation getInertialFromPlanar(
       double rightAscension, double inclination, double argumentPE) {
-    return new Rotation(ZXZ, VECTOR_OPERATOR, -argumentPE, -inclination, -rightAscension);
+    return new Rotation(ZXZ, FRAME_TRANSFORM, -argumentPE, -inclination, -rightAscension);
   }
 
   /**
