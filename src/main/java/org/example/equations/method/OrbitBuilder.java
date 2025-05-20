@@ -9,6 +9,7 @@ import org.example.controller.holdlogic.OrbitalParameterHolds;
 import org.example.equations.application.Orbit;
 import org.example.equations.application.keplerianelements.Kepler;
 import org.example.equations.application.keplerianelements.Kepler.KeplerEnums;
+import org.example.equations.application.vector.OrbitalVectors;
 
 @Data
 @NoArgsConstructor
@@ -96,6 +97,18 @@ public class OrbitBuilder {
     double inclination = Math.toRadians(inclinationDegrees);
     buildFromApses(periapsis, apoapsis);
     orbit.setDataFor(INCLINATION, inclination);
+  }
+
+  public OrbitBuilder buildFromVectors(OrbitalVectors orbitalVectors){
+    orbit = new Orbit(orbitalVectors.getCentralBody());
+      orbit.setDataFor(SEMI_MAJOR_AXIS, orbitalVectors.getSemiMajorAxis());
+    orbit.setDataFor(ECCENTRICITY, orbitalVectors.getEccentricity().getNorm());
+    orbitalParameterHolds = new OrbitalParameterHolds(SEMI_MAJOR_AXIS,ECCENTRICITY);
+    methodFromHolds();
+    orbit.setDataFor(RIGHT_ASCENSION,orbitalVectors.getRightAscension());
+    orbit.setDataFor(INCLINATION,orbitalVectors.getInclination());
+    orbit.setDataFor(ARGUMENT_PE, orbitalVectors.getArgumentPE());
+    return this;
   }
 
   private void buildFromApses(double periapsis, double apoapsis) {

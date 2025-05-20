@@ -1,6 +1,5 @@
 package org.example.equations.method.vector;
 
-import lombok.Getter;
 import org.apache.commons.math3.geometry.euclidean.threed.Line;
 import org.apache.commons.math3.geometry.euclidean.threed.Plane;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
@@ -15,20 +14,38 @@ import static org.example.equations.application.keplerianelements.Kepler.KeplerE
 
 public class AngleTransform {
   private static final double TOLERANCE = 1e-6;
-  private static final Vector3D X_AXIS = Vector3D.PLUS_I;
-  private static final Vector3D Y_AXIS = Vector3D.PLUS_J;
   private static final Vector3D Z_AXIS = Vector3D.PLUS_K;
-  private static final Plane XY_PLANE = new Plane(Z_AXIS, TOLERANCE);
-  @Getter private Rotation rotation;
+  private double velocityAngle = 0;
+  private double anomalyAngle = 0;
+  private double argumentPE = 0;
+  private double inclination = 0;
+  private double rightAscension = 0;
+  private Rotation rotation;
 
-  public AngleTransform setVectorsToVelocityFrame(Vector3D velocity, Vector3D radius) {
-    rotation = getMotionFrameFromAnomalyFrame(velocity, radius);
-    radius = invert(radius);
+  public AngleTransform setVelocityAngle(Vector3D velocity, Vector3D radius){
+    velocityAngle = Vector3D.angle(velocity,radius);
     return this;
   }
 
-  public Vector3D invert(Vector3D vector) {
-    return vector.negate();
+  public AngleTransform setAnomalyAngle(double trueAnomaly){
+    anomalyAngle = trueAnomaly;
+    return this;
+  }
+
+  public AngleTransform setOrbitAngles(Orbit orbit){
+    rightAscension = orbit.getDataFor(RIGHT_ASCENSION);
+    inclination = orbit.getDataFor(INCLINATION);
+    argumentPE = orbit.getDataFor(ARGUMENT_PE);
+    return this;
+  }
+
+  public Rotation getToMotionInitializer(){
+    return new Rotation(Z_AXIS,-velocityAngle,VECTOR_OPERATOR);
+  }
+
+  public Rotation getInertialFromMotion(){
+    var finalZAngle = argumentPE + anomalyAngle + velocityAngle;
+    return new Rotation(ZXZ,VECTOR_OPERATOR,-finalZAngle,-inclination,-rightAscension);
   }
 
   public Rotation getMotionFrameFromAnomalyFrame(Vector3D velocity, Vector3D radius) {

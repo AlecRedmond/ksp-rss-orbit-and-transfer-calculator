@@ -8,8 +8,10 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.example.equations.application.Body;
+import org.example.equations.application.Orbit;
 import org.example.equations.application.vector.CraftVectors;
 import org.example.equations.application.vector.OrbitalVectors;
+import org.example.equations.method.OrbitBuilder;
 
 @Getter
 @NoArgsConstructor
@@ -20,7 +22,7 @@ public class OrbitalVectorController {
     Body body = craftVectors.getBody();
     Rotation rotation = craftVectors.getRotationToInertial();
     Vector3D velocity = rotation.applyTo(new Vector3D(1, craftVectors.getVelocity()));
-    Vector3D position = rotation.applyTo(new Vector3D(1, craftVectors.getBodyDistance()));
+    Vector3D position = rotation.applyTo(new Vector3D(1, craftVectors.getRadius()));
     Vector3D momentum = position.crossProduct(velocity);
     Vector3D eccentricity = getEccentricity(velocity, momentum, body, position);
     Vector3D ascendingNodeVector = Vector3D.PLUS_K.crossProduct(momentum);
@@ -45,6 +47,10 @@ public class OrbitalVectorController {
             .meanAnomaly(meanAnomaly)
             .build();
     return this;
+  }
+
+  public Orbit getAsOrbit(){
+    return new OrbitBuilder().buildFromVectors(vectors).getOrbit();
   }
 
   private double getMeanAnomaly(double eccentricAnomaly, Vector3D eccentricityVector) {
@@ -82,14 +88,15 @@ public class OrbitalVectorController {
   }
 
   private double getRightAscension(Vector3D ascendingNodeVector) {
-    var cosOmega = Vector3D.PLUS_I.dotProduct(ascendingNodeVector) / ascendingNodeVector.getNorm();
-    var omega = Math.acos(cosOmega);
-    return ascendingNodeVector.getY() >= 0 ? omega : 2 * Math.PI - omega;
+    var nodeI = Vector3D.PLUS_I.dotProduct(ascendingNodeVector) / ascendingNodeVector.getNorm();
+    var omega = Math.acos(nodeI);
+    var nodeJ = Vector3D.PLUS_J.dotProduct(ascendingNodeVector) / ascendingNodeVector.getNorm();
+    return nodeJ >= 0 ? omega : 2 * Math.PI - omega;
   }
 
   private double getInclination(Vector3D momentum) {
     var cosI = Vector3D.PLUS_K.dotProduct(momentum) / momentum.getNorm();
-    return Math.acos(cosI) % 2 * Math.PI;
+    return Math.acos(cosI);
   }
 
   private double getSemiMajorAxis(Vector3D momentumVector, Body body, Vector3D eccentricityVector) {

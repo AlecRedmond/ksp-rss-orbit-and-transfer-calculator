@@ -27,4 +27,8 @@ public class CraftVectors {
     var radiusUnitVector = bodyDistance.normalize();
     acceleration = radiusUnitVector.scalarMultiply(mu / radiusSquared);
   }
+
+  public Vector3D getRadius() {
+    return bodyDistance.negate();
+  }
 }

@@ -20,14 +20,17 @@ public class CraftVectorController {
 
   public CraftVectorController buildVectors(Orbit orbit, double trueAnomaly) {
     Body body = orbit.getBody();
-    var at = new AngleTransform();
     var velocityAnomaly = velocityVector(orbit, trueAnomaly);
     var radiusAnomaly = getRadius(orbit, trueAnomaly);
-    var anomalyToMotion = at.getMotionFrameFromAnomalyFrame(velocityAnomaly, radiusAnomaly);
-    var bodyDistanceMotion = anomalyToMotion.applyTo(radiusAnomaly.negate());
-    var velocityMotion = anomalyToMotion.applyTo(velocityAnomaly);
-    var motionToInertial =
-        at.getInertialFrameFromMotionFrame(velocityMotion, bodyDistanceMotion, orbit, trueAnomaly);
+    var transform =
+        new AngleTransform()
+            .setAnomalyAngle(trueAnomaly)
+            .setOrbitAngles(orbit)
+            .setVelocityAngle(velocityAnomaly, radiusAnomaly);
+    var toMotion = transform.getToMotionInitializer();
+    var bodyDistanceMotion = toMotion.applyTo(radiusAnomaly).negate();
+    var velocityMotion = toMotion.applyTo(velocityAnomaly);
+    var motionToInertial = transform.getInertialFromMotion();
     craftVectorsMap.putData(
         new CraftVectors(body, velocityMotion, bodyDistanceMotion, motionToInertial));
     return this;
