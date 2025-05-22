@@ -2,6 +2,7 @@ package org.example.equations.method.vector;
 
 import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
+import java.time.Instant;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
@@ -15,10 +16,10 @@ import org.example.equations.application.vector.MotionVectorsMap;
 
 @Getter
 @NoArgsConstructor
-public class MotionVectorController {
+public class MotionVectorBuilder {
   private final MotionVectorsMap motionVectorsMap = new MotionVectorsMap();
 
-  public MotionVectorController buildVectors(Orbit orbit, double trueAnomaly) {
+  public MotionVectorBuilder buildVectors(Orbit orbit, double trueAnomaly, Instant epoch) {
     Body body = orbit.getBody();
     var velocityAnomaly = velocityVector(orbit, trueAnomaly);
     var radiusAnomaly = getRadius(orbit, trueAnomaly);
@@ -32,13 +33,13 @@ public class MotionVectorController {
     var velocityMotion = toMotion.applyTo(velocityAnomaly);
     var motionToInertial = transform.getInertialFromMotion();
     motionVectorsMap.putData(
-        new MotionVectors(body, velocityMotion, bodyDistanceMotion, motionToInertial));
+        new MotionVectors(body, velocityMotion, bodyDistanceMotion, motionToInertial, epoch));
     return this;
   }
 
   public Optional<MotionVectors> getSOIVectors() {
     var body = getSphereOfInfluence();
-    return body.isPresent() ? motionVectorsMap.getCraftVectors(body.get()) : Optional.empty();
+    return body.isPresent() ? motionVectorsMap.getMotionVectors(body.get()) : Optional.empty();
   }
 
   public Optional<Body> getSphereOfInfluence() {
@@ -71,14 +72,14 @@ public class MotionVectorController {
     var mu = orbit.getBody().getMu();
     var semiLatusRectum = semiLatusRectum(orbit);
     var eccentricity = orbit.getDataFor(ECCENTRICITY);
-      return Math.sqrt(mu / semiLatusRectum) * (1 + eccentricity * Math.cos(trueAnomaly));
+    return Math.sqrt(mu / semiLatusRectum) * (1 + eccentricity * Math.cos(trueAnomaly));
   }
 
   private double verticalVelocity(Orbit orbit, double trueAnomaly) {
     var mu = orbit.getBody().getMu();
     var semiLatusRectum = semiLatusRectum(orbit);
     var eccentricity = orbit.getDataFor(ECCENTRICITY);
-      return Math.sqrt(mu / semiLatusRectum) * (eccentricity * Math.sin(trueAnomaly));
+    return Math.sqrt(mu / semiLatusRectum) * (eccentricity * Math.sin(trueAnomaly));
   }
 
   private double semiLatusRectum(Orbit orbit) {

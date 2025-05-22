@@ -60,4 +60,10 @@ public class Orbit {
     return keplarianElements.get(keplerEnums).displayName();
   }
 
+  public void printAll(){
+    keplarianElements.keySet().forEach(key -> {
+      System.out.println(getDisplayName(key) + " : " + getAsString(key));
+    });
+  }
+
 }

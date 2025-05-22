@@ -12,10 +12,10 @@ public class MotionVectorsMap {
     private final Map<Body, MotionVectors> map = new EnumMap<>(Body.class);
 
     public void putData(MotionVectors motionVectors){
-        map.put(motionVectors.getBody(), motionVectors);
+        map.put(motionVectors.getCentralBody(), motionVectors);
     }
 
-    public Optional<MotionVectors> getCraftVectors(Body body){
+    public Optional<MotionVectors> getMotionVectors(Body body){
         return Optional.ofNullable(map.get(body));
     }
 }

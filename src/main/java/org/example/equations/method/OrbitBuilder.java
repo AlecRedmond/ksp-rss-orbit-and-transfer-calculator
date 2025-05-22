@@ -6,6 +6,7 @@ import java.util.Map;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.controller.holdlogic.OrbitalParameterHolds;
+import org.example.equations.application.Body;
 import org.example.equations.application.Orbit;
 import org.example.equations.application.keplerianelements.Kepler;
 import org.example.equations.application.keplerianelements.Kepler.KeplerEnums;
@@ -97,6 +98,18 @@ public class OrbitBuilder {
     double inclination = Math.toRadians(inclinationDegrees);
     buildFromApses(periapsis, apoapsis);
     orbit.setDataFor(INCLINATION, inclination);
+  }
+
+  public OrbitBuilder buildFromHorizonsData(double sma, double e, double rightAscensionDegs, double inclinationDegs,double argumentPEdegs){
+    orbit = new Orbit(Body.SUN);
+    orbit.setDataFor(SEMI_MAJOR_AXIS, sma);
+    orbit.setDataFor(ECCENTRICITY, e);
+    orbitalParameterHolds = new OrbitalParameterHolds(SEMI_MAJOR_AXIS,ECCENTRICITY);
+    methodFromHolds();
+    orbit.setDataFor(RIGHT_ASCENSION,Math.toRadians(rightAscensionDegs));
+    orbit.setDataFor(INCLINATION,Math.toRadians(inclinationDegs));
+    orbit.setDataFor(ARGUMENT_PE,Math.toRadians(argumentPEdegs));
+    return this;
   }
 
   public OrbitBuilder buildFromVectors(OrbitalVectors orbitalVectors){

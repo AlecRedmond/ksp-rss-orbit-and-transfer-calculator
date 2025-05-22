@@ -1,13 +1,19 @@
 package org.example.equations.application.vector;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.example.equations.application.Body;
 import org.example.equations.application.Orbit;
 
+import java.time.Instant;
+
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrbitalVectors {
     private Body centralBody;
     private Vector3D position;
@@ -21,4 +27,5 @@ public class OrbitalVectors {
     private double trueAnomaly;
     private double eccentricAnomaly;
     private double meanAnomaly;
+    private Instant epoch;
 }

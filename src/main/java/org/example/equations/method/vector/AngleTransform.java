@@ -19,7 +19,6 @@ public class AngleTransform {
   private double argumentPE = 0;
   private double inclination = 0;
   private double rightAscension = 0;
-  private Rotation rotation;
 
   public AngleTransform setVelocityAngle(Vector3D velocity, Vector3D radius) {
     velocityAngle = Vector3D.angle(velocity, radius);
