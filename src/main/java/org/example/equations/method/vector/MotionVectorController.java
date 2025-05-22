@@ -10,15 +10,15 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.example.equations.application.Body;
 import org.example.equations.application.Orbit;
-import org.example.equations.application.vector.CraftVectors;
-import org.example.equations.application.vector.CraftVectorsMap;
+import org.example.equations.application.vector.MotionVectors;
+import org.example.equations.application.vector.MotionVectorsMap;
 
 @Getter
 @NoArgsConstructor
-public class CraftVectorController {
-  private CraftVectorsMap craftVectorsMap = new CraftVectorsMap();
+public class MotionVectorController {
+  private final MotionVectorsMap motionVectorsMap = new MotionVectorsMap();
 
-  public CraftVectorController buildVectors(Orbit orbit, double trueAnomaly) {
+  public MotionVectorController buildVectors(Orbit orbit, double trueAnomaly) {
     Body body = orbit.getBody();
     var velocityAnomaly = velocityVector(orbit, trueAnomaly);
     var radiusAnomaly = getRadius(orbit, trueAnomaly);
@@ -31,23 +31,23 @@ public class CraftVectorController {
     var bodyDistanceMotion = toMotion.applyTo(radiusAnomaly).negate();
     var velocityMotion = toMotion.applyTo(velocityAnomaly);
     var motionToInertial = transform.getInertialFromMotion();
-    craftVectorsMap.putData(
-        new CraftVectors(body, velocityMotion, bodyDistanceMotion, motionToInertial));
+    motionVectorsMap.putData(
+        new MotionVectors(body, velocityMotion, bodyDistanceMotion, motionToInertial));
     return this;
   }
 
-  public Optional<CraftVectors> getSOIVectors() {
+  public Optional<MotionVectors> getSOIVectors() {
     var body = getSphereOfInfluence();
-    return body.isPresent() ? craftVectorsMap.getCraftVectors(body.get()) : Optional.empty();
+    return body.isPresent() ? motionVectorsMap.getCraftVectors(body.get()) : Optional.empty();
   }
 
   public Optional<Body> getSphereOfInfluence() {
-    return craftVectorsMap.getMap().entrySet().stream()
+    return motionVectorsMap.getMap().entrySet().stream()
         .max(Comparator.comparing(this::accelerationMagnitude))
         .map(Map.Entry::getKey);
   }
 
-  private double accelerationMagnitude(Map.Entry<Body, CraftVectors> entry) {
+  private double accelerationMagnitude(Map.Entry<Body, MotionVectors> entry) {
     return entry.getValue().getAcceleration().getNorm();
   }
 
@@ -58,27 +58,27 @@ public class CraftVectorController {
   }
 
   private Vector3D getRadius(Orbit orbit, double trueAnomaly) {
-    var a = orbit.getDataFor(SEMI_MAJOR_AXIS);
-    var e = orbit.getDataFor(ECCENTRICITY);
-    var f = trueAnomaly;
-    var radius = a * (1 - Math.pow(e, 2)) / (1 + e * Math.cos(f));
+    var semiMajorAxis = orbit.getDataFor(SEMI_MAJOR_AXIS);
+    var eccentricity = orbit.getDataFor(ECCENTRICITY);
+    var radius =
+        semiMajorAxis
+            * (1 - Math.pow(eccentricity, 2))
+            / (1 + eccentricity * Math.cos(trueAnomaly));
     return new Vector3D(new double[] {radius, 0, 0});
   }
 
   private double tangentialVelocity(Orbit orbit, double trueAnomaly) {
     var mu = orbit.getBody().getMu();
-    var p = semiLatusRectum(orbit);
-    var e = orbit.getDataFor(ECCENTRICITY);
-    var f = trueAnomaly;
-    return Math.sqrt(mu / p) * (1 + e * Math.cos(f));
+    var semiLatusRectum = semiLatusRectum(orbit);
+    var eccentricity = orbit.getDataFor(ECCENTRICITY);
+      return Math.sqrt(mu / semiLatusRectum) * (1 + eccentricity * Math.cos(trueAnomaly));
   }
 
   private double verticalVelocity(Orbit orbit, double trueAnomaly) {
     var mu = orbit.getBody().getMu();
-    var p = semiLatusRectum(orbit);
-    var e = orbit.getDataFor(ECCENTRICITY);
-    var f = trueAnomaly;
-    return Math.sqrt(mu / p) * (e * Math.sin(f));
+    var semiLatusRectum = semiLatusRectum(orbit);
+    var eccentricity = orbit.getDataFor(ECCENTRICITY);
+      return Math.sqrt(mu / semiLatusRectum) * (eccentricity * Math.sin(trueAnomaly));
   }
 
   private double semiLatusRectum(Orbit orbit) {

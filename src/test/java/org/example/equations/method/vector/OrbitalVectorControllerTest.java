@@ -14,7 +14,7 @@ class OrbitalVectorControllerTest {
 
   @Test
   void buildVectors() {
-    var motionVectors = new CraftVectorController().buildVectors(molniyaOrbit,0).getSOIVectors();
+    var motionVectors = new MotionVectorController().buildVectors(molniyaOrbit,0).getSOIVectors();
     var vectors = test.buildVectors(motionVectors.get()).getVectors();
     System.out.println(vectors);
     assertEquals(molniyaOrbit.getDataFor(Kepler.KeplerEnums.RIGHT_ASCENSION),vectors.getRightAscension(),1e-3);
@@ -24,7 +24,7 @@ class OrbitalVectorControllerTest {
 
   @Test
   void getAsOrbit() {
-    var motionVectors = new CraftVectorController().buildVectors(polarOrbit,0).getSOIVectors();
+    var motionVectors = new MotionVectorController().buildVectors(polarOrbit,0).getSOIVectors();
     Orbit testOrbit = test.buildVectors(motionVectors.get()).getAsOrbit();
     testOrbit.getKeplarianElements().entrySet().forEach(entry -> {
       var key = entry.getKey();

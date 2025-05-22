@@ -9,7 +9,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.example.equations.application.Body;
 import org.example.equations.application.Orbit;
-import org.example.equations.application.vector.CraftVectors;
+import org.example.equations.application.vector.MotionVectors;
 import org.example.equations.application.vector.OrbitalVectors;
 import org.example.equations.method.OrbitBuilder;
 
@@ -18,11 +18,11 @@ import org.example.equations.method.OrbitBuilder;
 public class OrbitalVectorController {
   private OrbitalVectors vectors;
 
-  public OrbitalVectorController buildVectors(CraftVectors craftVectors) {
-    Body body = craftVectors.getBody();
-    Rotation rotation = craftVectors.getRotationToInertial();
-    Vector3D velocity = rotation.applyTo(new Vector3D(1, craftVectors.getVelocity()));
-    Vector3D position = rotation.applyTo(new Vector3D(1, craftVectors.getRadius()));
+  public OrbitalVectorController buildVectors(MotionVectors motionVectors) {
+    Body body = motionVectors.getBody();
+    Rotation rotation = motionVectors.getRotationToInertial();
+    Vector3D velocity = rotation.applyTo(new Vector3D(1, motionVectors.getVelocity()));
+    Vector3D position = rotation.applyTo(new Vector3D(1, motionVectors.getRadius()));
     Vector3D momentum = position.crossProduct(velocity);
     Vector3D eccentricity = getEccentricity(velocity, momentum, body, position);
     Vector3D ascendingNodeVector = Vector3D.PLUS_K.crossProduct(momentum);

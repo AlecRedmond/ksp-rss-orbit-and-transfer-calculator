@@ -4,10 +4,8 @@ import org.example.equations.application.Orbit;
 import org.example.equations.method.OrbitBuilder;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class CraftVectorControllerTest {
-    CraftVectorController test = new CraftVectorController();
+class MotionVectorControllerTest {
+    MotionVectorController test = new MotionVectorController();
 
   @Test
   void buildVectors() {
