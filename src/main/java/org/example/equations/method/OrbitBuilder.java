@@ -100,8 +100,8 @@ public class OrbitBuilder {
     orbit.setDataFor(INCLINATION, inclination);
   }
 
-  public OrbitBuilder buildFromHorizonsData(double sma, double e, double rightAscensionDegs, double inclinationDegs,double argumentPEdegs){
-    orbit = new Orbit(Body.SUN);
+  public OrbitBuilder buildFromHorizonsData(double sma, double e, double rightAscensionDegs, double inclinationDegs,double argumentPEdegs, Body body){
+    orbit = new Orbit(body);
     orbit.setDataFor(SEMI_MAJOR_AXIS, sma);
     orbit.setDataFor(ECCENTRICITY, e);
     orbitalParameterHolds = new OrbitalParameterHolds(SEMI_MAJOR_AXIS,ECCENTRICITY);
