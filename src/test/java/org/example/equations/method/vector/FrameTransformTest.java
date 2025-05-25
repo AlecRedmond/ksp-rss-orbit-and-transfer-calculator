@@ -8,8 +8,8 @@ import org.example.equations.application.keplerianelements.Kepler;
 import org.example.equations.method.OrbitBuilder;
 import org.junit.jupiter.api.Test;
 
-class AngleTransformTest {
-  AngleTransform test = new AngleTransform();
+class FrameTransformTest {
+  FrameTransform test = new FrameTransform();
   Vector3D xAxisVector = Vector3D.PLUS_I;
   Vector3D yAxisVector = Vector3D.PLUS_J;
   Vector3D zAxisVector = Vector3D.PLUS_K;

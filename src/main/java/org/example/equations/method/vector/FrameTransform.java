@@ -11,7 +11,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.example.equations.application.Orbit;
 
-public class AngleTransform {
+public class FrameTransform {
   private static final double TOLERANCE = 1e-6;
   private static final Vector3D Z_AXIS = Vector3D.PLUS_K;
   private double velocityAngle = 0;
@@ -20,20 +20,27 @@ public class AngleTransform {
   private double inclination = 0;
   private double rightAscension = 0;
 
-  public AngleTransform setVelocityAngle(Vector3D velocity, Vector3D radius) {
+  public FrameTransform setVelocityAngle(Vector3D velocity, Vector3D radius) {
     velocityAngle = Vector3D.angle(velocity, radius);
     return this;
   }
 
-  public AngleTransform setAnomalyAngle(double trueAnomaly) {
+  public FrameTransform setAnomalyAngle(double trueAnomaly) {
     anomalyAngle = trueAnomaly;
     return this;
   }
 
-  public AngleTransform setOrbitAngles(Orbit orbit) {
+  public FrameTransform setOrbitAngles(Orbit orbit) {
     rightAscension = orbit.getDataFor(RIGHT_ASCENSION);
     inclination = orbit.getDataFor(INCLINATION);
     argumentPE = orbit.getDataFor(ARGUMENT_PE);
+    return this;
+  }
+
+  public FrameTransform setOrbitAngles(double rightAscension, double inclination, double argumentPE){
+    this.rightAscension = rightAscension;
+    this.inclination = inclination;
+    this.argumentPE = argumentPE;
     return this;
   }
 
@@ -42,14 +49,14 @@ public class AngleTransform {
    * direction of the current tangential Velocity. The Y axis will describe the "Radial" direction
    * vector, and the Z axis the Orbital Normal.
    */
-  public Rotation getToMotionInitializer() {
+  public Rotation getRotationToVelocityFromAnomaly() {
     return new Rotation(Z_AXIS, velocityAngle, FRAME_TRANSFORM);
   }
 
   /**
    * Returns the angle to the body-centric Inertial frame from the Motion (Velocity-centric) frame.
    */
-  public Rotation getInertialFromMotion() {
+  public Rotation getRotationToInertialFromVelocity() {
     var finalZAngle = argumentPE + anomalyAngle + velocityAngle;
     return new Rotation(ZXZ, FRAME_TRANSFORM, -finalZAngle, -inclination, -rightAscension);
   }

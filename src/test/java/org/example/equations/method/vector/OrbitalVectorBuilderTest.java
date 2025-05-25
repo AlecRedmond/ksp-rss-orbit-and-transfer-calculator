@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 
+import static org.example.equations.application.vector.MotionVectors.Frame.BODY_INERTIAL_FRAME;
 import static org.junit.jupiter.api.Assertions.*;
 
 class OrbitalVectorBuilderTest {
@@ -19,7 +20,7 @@ class OrbitalVectorBuilderTest {
 
   @Test
   void buildVectors() {
-    var motionVectors = new MotionVectorBuilder().buildVectors(molniyaOrbit,0,epoch).getSOIVectors();
+    var motionVectors = new MotionVectorBuilder().buildVectors(molniyaOrbit,0,epoch, BODY_INERTIAL_FRAME).getSOIVectors();
     var vectors = test.buildVectors(motionVectors.get()).getVectors();
     System.out.println(vectors);
     assertEquals(molniyaOrbit.getDataFor(Kepler.KeplerEnums.RIGHT_ASCENSION),vectors.getRightAscension(),1e-3);
@@ -35,7 +36,7 @@ class OrbitalVectorBuilderTest {
 
   @Test
   void getAsOrbit() {
-    var motionVectors = new MotionVectorBuilder().buildVectors(polarOrbit,0,epoch).getSOIVectors();
+    var motionVectors = new MotionVectorBuilder().buildVectors(polarOrbit,0,epoch, BODY_INERTIAL_FRAME).getSOIVectors();
     Orbit testOrbit = test.buildVectors(motionVectors.get()).getAsOrbit();
     testOrbit.getKeplarianElements().entrySet().forEach(entry -> {
       var key = entry.getKey();

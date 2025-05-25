@@ -6,7 +6,6 @@ import static org.apache.commons.math3.util.FastMath.sin;
 import java.time.Instant;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.example.equations.application.Body;
 import org.example.equations.application.Orbit;
@@ -20,7 +19,7 @@ import org.example.equations.method.OrbitBuilder;
 public class OrbitalVectorBuilder {
   private OrbitalVectors vectors;
 
-  protected OrbitalVectorBuilder setVectors(OrbitalVectors vectors){
+  protected OrbitalVectorBuilder setVectors(OrbitalVectors vectors) {
     this.vectors = vectors;
     return this;
   }
@@ -28,11 +27,26 @@ public class OrbitalVectorBuilder {
   public OrbitalVectorBuilder buildVectors(MotionVectors motionVectors) {
     Body body = motionVectors.getCentralBody();
     Instant epoch = motionVectors.getEpoch();
-    Rotation rotation = motionVectors.getRotationToInertial();
-    Vector3D velocity = rotation.applyTo(new Vector3D(1, motionVectors.getVelocity()));
-    Vector3D position = rotation.applyTo(new Vector3D(1, motionVectors.getRadius()));
+    Vector3D velocity = getVelocity(motionVectors);
+    Vector3D position = getPosition(motionVectors);
     buildVectors(position, velocity, body, epoch);
     return this;
+  }
+
+  private static Vector3D getVelocity(MotionVectors motionVectors) {
+    Vector3D velocity = new Vector3D(1, motionVectors.getVelocity());
+    if (motionVectors.getFrame().equals(MotionVectors.Frame.VELOCITY_FRAME)) {
+      return velocity;
+    }
+    return motionVectors.getRotationToInertial().applyTo(velocity);
+  }
+
+  private static Vector3D getPosition(MotionVectors motionVectors) {
+    Vector3D radius = new Vector3D(1, motionVectors.getRadius());
+    if (motionVectors.getFrame().equals(MotionVectors.Frame.VELOCITY_FRAME)) {
+      return radius;
+    }
+    return motionVectors.getRotationToInertial().applyTo(radius);
   }
 
   private void buildVectors(Vector3D position, Vector3D velocity, Body body, Instant epoch) {
@@ -126,7 +140,7 @@ public class OrbitalVectorBuilder {
     if (eccentricity >= 1) {
       return 0;
     }
-    return  eccentricAnomaly - (eccentricAnomaly * sin(eccentricAnomaly));
+    return eccentricAnomaly - (eccentricAnomaly * sin(eccentricAnomaly));
   }
 
   public OrbitalVectorBuilder buildVectors(ObservedData data) {

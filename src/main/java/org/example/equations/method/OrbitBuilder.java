@@ -3,6 +3,7 @@ package org.example.equations.method;
 import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
 import java.util.Map;
+import java.util.logging.Logger;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.controller.holdlogic.OrbitalParameterHolds;
@@ -15,6 +16,7 @@ import org.example.equations.application.vector.OrbitalVectors;
 @Data
 @NoArgsConstructor
 public class OrbitBuilder {
+  private static final Logger LOG = Logger.getLogger(OrbitBuilder.class.getName());
   private Orbit orbit;
   private OrbitalParameterHolds orbitalParameterHolds;
 
@@ -25,16 +27,34 @@ public class OrbitBuilder {
   }
 
   private void methodFromHolds() {
+    try {
+      checkTwoHolds();
+      checkHeldPeriod();
+      if (checkHeldApses()) return;
+      if (checkHeldEccentricity()) return;
+      if (checkHeldSemiMajorAxis()) return;
+      throw new IncorrectHoldException("Unable To Build from Any Holds!!");
+    } catch (IncorrectHoldException exception) {
+      LOG.warning(exception.getLocalizedMessage());
+      setAllToZero();
+    }
+  }
+
+  private void checkTwoHolds() throws IncorrectHoldException {
     int holdsPressed = countHolds(orbitalParameterHolds);
     if (holdsPressed != 2) {
-      setAllToZero();
-      return;
+      throw new IncorrectHoldException("More than Two Held Values!");
     }
+  }
+
+  private void checkHeldPeriod() {
     if (held(ORBITAL_PERIOD)) {
       TrajectoryEquations.convertOrbitalPeriodToSMA(orbit);
       orbitalParameterHolds.setHold(SEMI_MAJOR_AXIS, true);
     }
+  }
 
+  private boolean checkHeldApses() throws IncorrectHoldException {
     if (held(APOAPSIS) || held(PERIAPSIS)) {
       if (held(APOAPSIS) && held(PERIAPSIS)) {
         TrajectoryEquations.calculateFromPeriapsisApoapsis(orbit);
@@ -47,31 +67,42 @@ public class OrbitBuilder {
         TrajectoryEquations.calculateSMAFromVelocityAndAltitude(orbit, held(PERIAPSIS));
         TrajectoryEquations.calculateFromApsisSemiMajorAxis(orbit, held(PERIAPSIS));
       } else {
-        setAllToZero();
+        throw new IncorrectHoldException("Unable To Build from Apses!!");
       }
-      return;
+      return true;
     }
+    return false;
+  }
 
+  private boolean checkHeldEccentricity() throws IncorrectHoldException {
     if (held(ECCENTRICITY)) {
       if (held(SEMI_MAJOR_AXIS)) {
         TrajectoryEquations.calculateFromEccentricitySemiMajorAxis(orbit);
       } else {
-        setAllToZero();
+        throw new IncorrectHoldException("Unable To Build from Eccentricity!!");
       }
-      return;
+      return true;
     }
+    return false;
+  }
 
+  private boolean checkHeldSemiMajorAxis() throws IncorrectHoldException {
     if (held(SEMI_MAJOR_AXIS)) {
       if (held(VELOCITY_APOAPSIS) || held(VELOCITY_PERIAPSIS)) {
         TrajectoryEquations.calculateAltitudeFromVelocityAndSMA(orbit, held(VELOCITY_PERIAPSIS));
         TrajectoryEquations.calculateFromApsisSemiMajorAxis(orbit, held(VELOCITY_PERIAPSIS));
       } else {
-        setAllToZero();
+        throw new IncorrectHoldException("Unable To Build from Semi-Major Axis!!");
       }
-      return;
+      return true;
     }
+    return false;
+  }
 
-    setAllToZero();
+  private void setAllToZero() {
+    for (Map.Entry<KeplerEnums, Kepler> entry : orbit.getKeplarianElements().entrySet()) {
+      entry.getValue().setData(0.0);
+    }
   }
 
   private int countHolds(OrbitalParameterHolds orbitalParameterHolds) {
@@ -83,12 +114,6 @@ public class OrbitBuilder {
     }
     return holds;
   }
-  
-  private void setAllToZero() {
-    for (Map.Entry<KeplerEnums, Kepler> entry : orbit.getKeplarianElements().entrySet()) {
-      entry.getValue().setData(0.0);
-    }
-  }
 
   private boolean held(KeplerEnums keplerEnums) {
     return orbitalParameterHolds.getHold(keplerEnums);
@@ -98,30 +123,6 @@ public class OrbitBuilder {
     double inclination = Math.toRadians(inclinationDegrees);
     buildFromApses(periapsis, apoapsis);
     orbit.setDataFor(INCLINATION, inclination);
-  }
-
-  public OrbitBuilder buildFromHorizonsData(double sma, double e, double rightAscensionDegs, double inclinationDegs,double argumentPEdegs, Body body){
-    orbit = new Orbit(body);
-    orbit.setDataFor(SEMI_MAJOR_AXIS, sma);
-    orbit.setDataFor(ECCENTRICITY, e);
-    orbitalParameterHolds = new OrbitalParameterHolds(SEMI_MAJOR_AXIS,ECCENTRICITY);
-    methodFromHolds();
-    orbit.setDataFor(RIGHT_ASCENSION,Math.toRadians(rightAscensionDegs));
-    orbit.setDataFor(INCLINATION,Math.toRadians(inclinationDegs));
-    orbit.setDataFor(ARGUMENT_PE,Math.toRadians(argumentPEdegs));
-    return this;
-  }
-
-  public OrbitBuilder buildFromVectors(OrbitalVectors orbitalVectors){
-    orbit = new Orbit(orbitalVectors.getCentralBody());
-      orbit.setDataFor(SEMI_MAJOR_AXIS, orbitalVectors.getSemiMajorAxis());
-    orbit.setDataFor(ECCENTRICITY, orbitalVectors.getEccentricity().getNorm());
-    orbitalParameterHolds = new OrbitalParameterHolds(SEMI_MAJOR_AXIS,ECCENTRICITY);
-    methodFromHolds();
-    orbit.setDataFor(RIGHT_ASCENSION,orbitalVectors.getRightAscension());
-    orbit.setDataFor(INCLINATION,orbitalVectors.getInclination());
-    orbit.setDataFor(ARGUMENT_PE, orbitalVectors.getArgumentPE());
-    return this;
   }
 
   private void buildFromApses(double periapsis, double apoapsis) {
@@ -141,13 +142,54 @@ public class OrbitBuilder {
     buildFromApses(periapsis, apoapsis);
   }
 
-  public OrbitBuilder(double periapsis, double apoapsis, double rightAscensionDegrees, double inclinationDegrees, double argumentPEDegrees){
+  public OrbitBuilder(
+      double periapsis,
+      double apoapsis,
+      double rightAscensionDegrees,
+      double inclinationDegrees,
+      double argumentPEDegrees) {
     var rightAscension = Math.toRadians(rightAscensionDegrees);
     var inclination = Math.toRadians(inclinationDegrees);
     var argumentPE = Math.toRadians(argumentPEDegrees);
-    buildFromApses(periapsis,apoapsis);
-    orbit.setDataFor(RIGHT_ASCENSION,rightAscension);
-    orbit.setDataFor(INCLINATION,inclination);
-    orbit.setDataFor(ARGUMENT_PE,argumentPE);
+    buildFromApses(periapsis, apoapsis);
+    orbit.setDataFor(RIGHT_ASCENSION, rightAscension);
+    orbit.setDataFor(INCLINATION, inclination);
+    orbit.setDataFor(ARGUMENT_PE, argumentPE);
+  }
+
+  public OrbitBuilder buildFromHorizonsData(
+      double sma,
+      double e,
+      double rightAscensionDegs,
+      double inclinationDegs,
+      double argumentPEdegs,
+      Body body) {
+    orbit = new Orbit(body);
+    orbit.setDataFor(SEMI_MAJOR_AXIS, sma);
+    orbit.setDataFor(ECCENTRICITY, e);
+    orbitalParameterHolds = new OrbitalParameterHolds(SEMI_MAJOR_AXIS, ECCENTRICITY);
+    methodFromHolds();
+    orbit.setDataFor(RIGHT_ASCENSION, Math.toRadians(rightAscensionDegs));
+    orbit.setDataFor(INCLINATION, Math.toRadians(inclinationDegs));
+    orbit.setDataFor(ARGUMENT_PE, Math.toRadians(argumentPEdegs));
+    return this;
+  }
+
+  public OrbitBuilder buildFromVectors(OrbitalVectors orbitalVectors) {
+    orbit = new Orbit(orbitalVectors.getCentralBody());
+    orbit.setDataFor(SEMI_MAJOR_AXIS, orbitalVectors.getSemiMajorAxis());
+    orbit.setDataFor(ECCENTRICITY, orbitalVectors.getEccentricity().getNorm());
+    orbitalParameterHolds = new OrbitalParameterHolds(SEMI_MAJOR_AXIS, ECCENTRICITY);
+    methodFromHolds();
+    orbit.setDataFor(RIGHT_ASCENSION, orbitalVectors.getRightAscension());
+    orbit.setDataFor(INCLINATION, orbitalVectors.getInclination());
+    orbit.setDataFor(ARGUMENT_PE, orbitalVectors.getArgumentPE());
+    return this;
+  }
+
+  public static class IncorrectHoldException extends Exception {
+    public IncorrectHoldException(String errorMessage) {
+      super(errorMessage);
+    }
   }
 }

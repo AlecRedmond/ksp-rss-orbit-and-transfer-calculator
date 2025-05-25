@@ -1,6 +1,8 @@
 package org.example.equations.method.vector;
 
 import static org.example.equations.application.keplerianelements.Kepler.KeplerEnums.*;
+import static org.example.equations.application.vector.MotionVectors.*;
+import static org.example.equations.application.vector.MotionVectors.Frame.*;
 
 import java.time.Instant;
 import java.util.Comparator;
@@ -8,33 +10,56 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.example.equations.application.Body;
 import org.example.equations.application.Orbit;
 import org.example.equations.application.vector.MotionVectors;
 import org.example.equations.application.vector.MotionVectorsMap;
+import org.example.equations.application.vector.OrbitalVectors;
+import org.example.equations.method.OrbitBuilder;
 
 @Getter
 @NoArgsConstructor
 public class MotionVectorBuilder {
   private final MotionVectorsMap motionVectorsMap = new MotionVectorsMap();
 
-  public MotionVectorBuilder buildVectors(Orbit orbit, double trueAnomaly, Instant epoch) {
-    Body body = orbit.getBody();
-    var velocityAnomaly = velocityVector(orbit, trueAnomaly);
-    var radiusAnomaly = getRadius(orbit, trueAnomaly);
-    var transform =
-        new AngleTransform()
-            .setAnomalyAngle(trueAnomaly)
-            .setOrbitAngles(orbit)
-            .setVelocityAngle(velocityAnomaly, radiusAnomaly);
-    var toMotion = transform.getToMotionInitializer();
-    var bodyDistanceMotion = toMotion.applyTo(radiusAnomaly).negate();
-    var velocityMotion = toMotion.applyTo(velocityAnomaly);
-    var motionToInertial = transform.getInertialFromMotion();
+  private static FrameTransform getTransform(
+      Orbit orbit, double trueAnomaly, Vector3D velocityAnomaly, Vector3D radiusAnomaly) {
+    return new FrameTransform()
+        .setAnomalyAngle(trueAnomaly)
+        .setOrbitAngles(orbit)
+        .setVelocityAngle(velocityAnomaly, radiusAnomaly);
+  }
+
+  public MotionVectorBuilder buildVectors(
+      Orbit orbit, double trueAnomaly, Instant epoch, Frame frame) {
+    Vector3D anomalyFrameVelocity = anomalyVelocityVector(orbit, trueAnomaly);
+    Vector3D anomalyFrameRadius = anomalyRadiusVector(orbit, trueAnomaly);
+
+    FrameTransform transform =
+        getTransform(orbit, trueAnomaly, anomalyFrameVelocity, anomalyFrameRadius);
+    Rotation rotationToInertialFromVelocity = transform.getRotationToInertialFromVelocity();
+    Rotation rotationToVelocityFromAnomaly = transform.getRotationToVelocityFromAnomaly();
+
+    Vector3D radius = rotationToVelocityFromAnomaly.applyTo(anomalyFrameRadius);
+    Vector3D velocity = rotationToVelocityFromAnomaly.applyTo(anomalyFrameVelocity);
+
+    if (frame.equals(BODY_INERTIAL_FRAME)) {
+      radius = rotationToInertialFromVelocity.applyTo(radius);
+      velocity = rotationToInertialFromVelocity.applyTo(velocity);
+    }
+
     motionVectorsMap.putData(
-        new MotionVectors(body, velocityMotion, bodyDistanceMotion, motionToInertial, epoch));
+        new MotionVectors(
+            orbit.getBody(), velocity, radius, rotationToInertialFromVelocity, epoch, frame));
     return this;
+  }
+
+  public MotionVectorBuilder buildVectors(OrbitalVectors orbitalVectors) {
+    Orbit orbit = new OrbitBuilder().buildFromVectors(orbitalVectors).getOrbit();
+    return buildVectors(
+        orbit, orbitalVectors.getTrueAnomaly(), orbitalVectors.getEpoch(), BODY_INERTIAL_FRAME);
   }
 
   public Optional<MotionVectors> getSOIVectors() {
@@ -52,13 +77,13 @@ public class MotionVectorBuilder {
     return entry.getValue().getAcceleration().getNorm();
   }
 
-  private Vector3D velocityVector(Orbit orbit, double trueAnomaly) {
-    var verticalVelocity = verticalVelocity(orbit, trueAnomaly);
-    var tangentialVelocity = tangentialVelocity(orbit, trueAnomaly);
+  private Vector3D anomalyVelocityVector(Orbit orbit, double trueAnomaly) {
+    var verticalVelocity = computeVerticalVelocityComponent(orbit, trueAnomaly);
+    var tangentialVelocity = computeTangentialVelocityComponent(orbit, trueAnomaly);
     return new Vector3D(new double[] {verticalVelocity, tangentialVelocity, 0});
   }
 
-  private Vector3D getRadius(Orbit orbit, double trueAnomaly) {
+  private Vector3D anomalyRadiusVector(Orbit orbit, double trueAnomaly) {
     var semiMajorAxis = orbit.getDataFor(SEMI_MAJOR_AXIS);
     var eccentricity = orbit.getDataFor(ECCENTRICITY);
     var radius =
@@ -68,14 +93,14 @@ public class MotionVectorBuilder {
     return new Vector3D(new double[] {radius, 0, 0});
   }
 
-  private double tangentialVelocity(Orbit orbit, double trueAnomaly) {
+  private double computeTangentialVelocityComponent(Orbit orbit, double trueAnomaly) {
     var mu = orbit.getBody().getMu();
     var semiLatusRectum = semiLatusRectum(orbit);
     var eccentricity = orbit.getDataFor(ECCENTRICITY);
     return Math.sqrt(mu / semiLatusRectum) * (1 + eccentricity * Math.cos(trueAnomaly));
   }
 
-  private double verticalVelocity(Orbit orbit, double trueAnomaly) {
+  private double computeVerticalVelocityComponent(Orbit orbit, double trueAnomaly) {
     var mu = orbit.getBody().getMu();
     var semiLatusRectum = semiLatusRectum(orbit);
     var eccentricity = orbit.getDataFor(ECCENTRICITY);
