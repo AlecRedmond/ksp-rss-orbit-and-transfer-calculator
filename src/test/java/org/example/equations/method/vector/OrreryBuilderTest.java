@@ -15,6 +15,9 @@ class OrreryBuilderTest {
 
   @Test
   void initialPositions() {
+    //I wrote this in a rush to make a console visualisation where I could check my positions vs Horizons data
+    //Avert your eyes.
+    //Please.
     test.initialPositions();
     var orrery = test.getOrrery().getMap();
     orrery.remove(Body.NEPTUNE);
