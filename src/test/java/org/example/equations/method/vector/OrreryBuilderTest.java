@@ -1,6 +1,7 @@
 package org.example.equations.method.vector;
 
 import org.example.equations.application.Body;
+import org.example.equations.application.vector.Orrery;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -8,30 +9,31 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class OrreryBuilderTest {
   OrreryBuilder test = new OrreryBuilder();
 
   @Test
-  void initialPositions() {
+  void setTo1951Jan1() {
+    var orrery = test.setTo1951Jan1().getOrrery();
+    printOrrery(orrery);
+  }
+
+  public static void printOrrery(Orrery orrery) {
     //I wrote this in a rush to make a console visualisation where I could check my positions vs Horizons data
     //Avert your eyes.
     //Please.
-    test.initialPositions();
-    var orrery = test.getOrrery().getMap();
-    orrery.remove(Body.NEPTUNE);
-    orrery.remove(Body.URANUS);
-    var xLowest = orrery.values().stream().min(Comparator.comparing(val -> val.getRadius().getX())).get().getRadius().getX();
-    var xHighest = orrery.values().stream().max(Comparator.comparing(val -> val.getRadius().getX())).get().getRadius().getX();
-    var yHighest = orrery.values().stream().max(Comparator.comparing(val -> val.getRadius().getY())).get().getRadius().getY();
+    var orreryMap = orrery.getMap();
+    orreryMap.remove(Body.NEPTUNE);
+    orreryMap.remove(Body.URANUS);
+    var xLowest = orreryMap.values().stream().min(Comparator.comparing(val -> val.getPosition().getX())).get().getPosition().getX();
+    var xHighest = orreryMap.values().stream().max(Comparator.comparing(val -> val.getPosition().getX())).get().getPosition().getX();
+    var yHighest = orreryMap.values().stream().max(Comparator.comparing(val -> val.getPosition().getY())).get().getPosition().getY();
     var xMax = 100;
     var stepSize = (xHighest - xLowest) / xMax;
     Map<Body,int[]> positionMap = new HashMap<>();
-    positionMap.put(Body.SUN,new int[]{(int) ((0 - xLowest) / stepSize),(int)((0 + yHighest) /stepSize)});
-    orrery.forEach((key,val) -> {
-      int xVal = (int) ((val.getRadius().getX() - xLowest) /stepSize);
-      int yVal = (int) ((- val.getRadius().getY() + yHighest) /stepSize);
+    orreryMap.forEach((key, val) -> {
+      int xVal = (int) ((val.getPosition().getX() - xLowest) /stepSize);
+      int yVal = (int) ((- val.getPosition().getY() + yHighest) /stepSize);
       positionMap.put(key,new int[]{xVal,yVal});
     });
     var yMax = positionMap.values().stream().max(Comparator.comparing(ints -> ints[1])).get()[1];

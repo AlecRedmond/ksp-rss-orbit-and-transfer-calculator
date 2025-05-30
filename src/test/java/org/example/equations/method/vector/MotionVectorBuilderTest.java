@@ -18,7 +18,7 @@ class MotionVectorBuilderTest {
       double trueAnomaly = Math.toRadians(15);
       test.buildVectors(orbit,trueAnomaly,epoch, VELOCITY_FRAME);
       System.out.println(test.getSOIVectors());
-      var firstRadius = test.getSOIVectors().get().getRadius();
+      var firstRadius = test.getSOIVectors().get().getPosition();
       var firstVelocity = test.getSOIVectors().get().getVelocity();
       System.out.println(firstRadius);
       System.out.println(firstVelocity);

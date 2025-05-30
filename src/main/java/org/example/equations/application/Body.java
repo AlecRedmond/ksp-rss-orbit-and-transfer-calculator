@@ -13,7 +13,8 @@ public enum Body {
   MARS(3389.5,4.2828372E13,0),
   MERCURY(2439.7,2.203209E13,0),
   MOON(1737.4,4.90486959E12,0),
-  EARTH(6.3781e+3, 3.9860044188E14, 1.08262668e-3);
+  EARTH(6.3781e+3, 3.9860044188E14, 1.08262668e-3),
+  CRAFT(0,0,0);
 
   private final double radius;
   private final double mass;

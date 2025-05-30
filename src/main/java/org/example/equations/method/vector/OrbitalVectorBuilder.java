@@ -42,7 +42,7 @@ public class OrbitalVectorBuilder {
   }
 
   private static Vector3D getPosition(MotionVectors motionVectors) {
-    Vector3D radius = new Vector3D(1, motionVectors.getRadius());
+    Vector3D radius = new Vector3D(1, motionVectors.getPosition());
     if (motionVectors.getFrame().equals(MotionVectors.Frame.VELOCITY_FRAME)) {
       return radius;
     }
