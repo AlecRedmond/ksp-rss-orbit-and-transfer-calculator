@@ -46,14 +46,14 @@ public class OrreryBuilder {
   private void convertAllToHelioCentric() {
     orrery.getMap().entrySet().stream()
         .filter(OrreryBuilder::isNotHelioCentric)
-        .forEach(entry -> changeToCentralBodyFocus(entry.getKey(), entry.getValue()));
+        .forEach(entry -> changeToSolarBodyCentredInertial(entry.getKey(), entry.getValue()));
   }
 
   private static boolean isNotHelioCentric(Map.Entry<Body, MotionVectors> entry) {
     return !entry.getKey().equals(Body.SUN) && !entry.getValue().getCentralBody().equals(Body.SUN);
   }
 
-  private void changeToCentralBodyFocus(Body body, MotionVectors motionVectors) {
+  private void changeToSolarBodyCentredInertial(Body body, MotionVectors motionVectors) {
     MotionVectors centralBodyVectors = orrery.getMotionVectors(motionVectors.getCentralBody());
     new MotionVectorUtils()
         .changeCentralBody(motionVectors, centralBodyVectors)

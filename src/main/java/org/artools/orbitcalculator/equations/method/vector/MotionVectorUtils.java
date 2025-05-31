@@ -10,15 +10,15 @@ public class MotionVectorUtils {
 
   /** Returns a NEW optional */
   public Optional<MotionVectors> changeCentralBody(
-      MotionVectors motionVectors, MotionVectors centralBodyVectors) {
-    if (!motionVectors.getEpoch().equals(centralBodyVectors.getEpoch())) {
+      MotionVectors vectorsInOldBodyFrame, MotionVectors oldBodyInNewBodyFrame) {
+    if (!vectorsInOldBodyFrame.getEpoch().equals(oldBodyInNewBodyFrame.getEpoch())) {
       return Optional.empty();
     }
 
-    var centralBody = centralBodyVectors.getCentralBody();
-    var newVelocity = motionVectors.getVelocity().add(centralBodyVectors.getVelocity());
-    var newRadius = motionVectors.getPosition().add(centralBodyVectors.getPosition());
-    var epoch = centralBodyVectors.getEpoch();
+    var centralBody = oldBodyInNewBodyFrame.getCentralBody();
+    var newVelocity = vectorsInOldBodyFrame.getVelocity().add(oldBodyInNewBodyFrame.getVelocity());
+    var newRadius = vectorsInOldBodyFrame.getPosition().add(oldBodyInNewBodyFrame.getPosition());
+    var epoch = oldBodyInNewBodyFrame.getEpoch();
     return Optional.of(new MotionVectors(centralBody, newVelocity, newRadius, epoch));
   }
 }
