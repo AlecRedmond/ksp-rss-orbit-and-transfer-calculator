@@ -1,6 +1,6 @@
 package org.artools.orbitcalculator.stringformatting;
 
-import org.artools.equations.application.keplerianelements.OrbitalPeriod;
+import org.artools.orbitcalculator.equations.application.keplerianelements.OrbitalPeriod;
 
 public class StringUnitParser {
   static int orderOfMagnitudeCounter = 0;
