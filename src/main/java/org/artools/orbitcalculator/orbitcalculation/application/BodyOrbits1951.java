@@ -1,13 +1,12 @@
 package org.artools.orbitcalculator.orbitcalculation.application;
 
 import java.time.Instant;
-
 import org.artools.orbitcalculator.orbitcalculation.application.vector.MotionVectors;
 import org.artools.orbitcalculator.orbitcalculation.application.vector.OrbitalVectors;
 import org.artools.orbitcalculator.orbitcalculation.application.writeableorbit.Orbit;
-import org.artools.orbitcalculator.orbitcalculation.method.writeableorbit.OrbitBuilder;
 import org.artools.orbitcalculator.orbitcalculation.method.vector.MotionVectorBuilder;
 import org.artools.orbitcalculator.orbitcalculation.method.vector.OrbitalVectorBuilder;
+import org.artools.orbitcalculator.orbitcalculation.method.writeableorbit.OrbitBuilder;
 
 public class BodyOrbits1951 {
 

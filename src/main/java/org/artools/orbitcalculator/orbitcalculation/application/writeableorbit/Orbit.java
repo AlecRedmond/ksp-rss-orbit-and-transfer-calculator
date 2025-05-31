@@ -4,10 +4,8 @@ import static org.artools.orbitcalculator.orbitcalculation.application.writeable
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import lombok.Data;
 import org.artools.orbitcalculator.orbitcalculation.application.Body;
-import org.artools.orbitcalculator.orbitcalculation.application.keplerianelements.*;
 import org.artools.orbitcalculator.orbitcalculation.application.writeableorbit.keplerianelements.*;
 import org.artools.orbitcalculator.orbitcalculation.application.writeableorbit.keplerianelements.Kepler.KeplerEnums;
 

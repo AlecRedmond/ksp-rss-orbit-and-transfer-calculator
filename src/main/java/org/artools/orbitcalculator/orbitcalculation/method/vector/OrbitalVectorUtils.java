@@ -2,8 +2,8 @@ package org.artools.orbitcalculator.orbitcalculation.method.vector;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.artools.orbitcalculator.orbitcalculation.application.writeableorbit.Orbit;
 import org.artools.orbitcalculator.orbitcalculation.application.vector.OrbitalVectors;
+import org.artools.orbitcalculator.orbitcalculation.application.writeableorbit.Orbit;
 import org.artools.orbitcalculator.orbitcalculation.method.writeableorbit.OrbitBuilder;
 
 @Getter

@@ -6,11 +6,11 @@ import java.util.Map;
 import java.util.logging.Logger;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.artools.orbitcalculator.orbitcalculation.application.Body;
+import org.artools.orbitcalculator.orbitcalculation.application.vector.OrbitalVectors;
+import org.artools.orbitcalculator.orbitcalculation.application.writeableorbit.Orbit;
 import org.artools.orbitcalculator.orbitcalculation.application.writeableorbit.keplerianelements.Kepler;
 import org.artools.orbitcalculator.orbitcalculation.application.writeableorbit.keplerianelements.Kepler.KeplerEnums;
-import org.artools.orbitcalculator.orbitcalculation.application.Body;
-import org.artools.orbitcalculator.orbitcalculation.application.writeableorbit.Orbit;
-import org.artools.orbitcalculator.orbitcalculation.application.vector.OrbitalVectors;
 
 @Data
 @NoArgsConstructor
@@ -105,13 +105,10 @@ public class OrbitBuilder {
   }
 
   private int countHolds(OrbitalParameterHolds orbitalParameterHolds) {
-    int holds = 0;
-    for (Map.Entry<KeplerEnums, Boolean> entry : orbitalParameterHolds.getHoldsMap().entrySet()) {
-      if (Boolean.TRUE.equals(entry.getValue())) {
-        holds++;
-      }
-    }
-    return holds;
+    return (int)
+        orbitalParameterHolds.getHoldsMap().entrySet().stream()
+            .filter(entry -> Boolean.TRUE.equals(entry.getValue()))
+            .count();
   }
 
   private boolean held(KeplerEnums keplerEnums) {

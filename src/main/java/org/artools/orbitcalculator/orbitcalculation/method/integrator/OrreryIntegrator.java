@@ -8,9 +8,9 @@ import lombok.Getter;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.ode.FirstOrderIntegrator;
 import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator;
+import org.artools.orbitcalculator.orbitcalculation.application.Body;
 import org.artools.orbitcalculator.orbitcalculation.application.vector.MotionVectors;
 import org.artools.orbitcalculator.orbitcalculation.application.vector.Orrery;
-import org.artools.orbitcalculator.orbitcalculation.application.Body;
 
 public class OrreryIntegrator {
   @Getter private final Orrery orrery;

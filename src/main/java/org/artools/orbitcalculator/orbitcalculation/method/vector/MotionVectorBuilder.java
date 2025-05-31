@@ -5,8 +5,8 @@ import static org.artools.orbitcalculator.orbitcalculation.application.writeable
 import java.time.Instant;
 import lombok.Getter;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.artools.orbitcalculator.orbitcalculation.application.writeableorbit.Orbit;
 import org.artools.orbitcalculator.orbitcalculation.application.vector.MotionVectors;
+import org.artools.orbitcalculator.orbitcalculation.application.writeableorbit.Orbit;
 
 @Getter
 public class MotionVectorBuilder extends MotionVectorUtils {
