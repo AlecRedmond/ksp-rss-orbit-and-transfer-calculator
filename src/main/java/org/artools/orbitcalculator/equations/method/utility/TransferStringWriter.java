@@ -1,7 +1,7 @@
 package org.artools.orbitcalculator.equations.method.utility;
 
 import org.artools.orbitcalculator.equations.application.Orbit;
-import org.artools.equations.application.keplerianelements.Kepler;
+import org.artools.orbitcalculator.equations.application.keplerianelements.Kepler;
 
 import java.util.Map;
 

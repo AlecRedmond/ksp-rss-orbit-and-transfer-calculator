@@ -1,13 +1,13 @@
 package org.artools.orbitcalculator.equations.application;
 
-import static org.artools.equations.application.keplerianelements.Kepler.KeplerEnums.*;
+import static org.artools.orbitcalculator.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import lombok.Data;
-import org.artools.equations.application.keplerianelements.*;
-import org.artools.equations.application.keplerianelements.Kepler.KeplerEnums;
+import org.artools.orbitcalculator.equations.application.keplerianelements.*;
+import org.artools.orbitcalculator.equations.application.keplerianelements.Kepler.KeplerEnums;
 
 @Data
 public class Orbit {

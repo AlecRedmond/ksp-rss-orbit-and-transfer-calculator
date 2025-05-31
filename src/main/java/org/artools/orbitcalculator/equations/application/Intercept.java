@@ -1,7 +1,7 @@
 package org.artools.orbitcalculator.equations.application;
 
 import lombok.Data;
-import org.artools.equations.application.keplerianelements.OrbitalPeriod;
+import org.artools.orbitcalculator.equations.application.keplerianelements.OrbitalPeriod;
 
 @Data
 public class Intercept {

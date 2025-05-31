@@ -2,7 +2,7 @@ package org.artools.orbitcalculator.equations.method.vector;
 
 import static org.apache.commons.math3.geometry.euclidean.threed.RotationConvention.FRAME_TRANSFORM;
 import static org.apache.commons.math3.geometry.euclidean.threed.RotationOrder.ZXZ;
-import static org.artools.equations.application.keplerianelements.Kepler.KeplerEnums.*;
+import static org.artools.orbitcalculator.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
 import java.util.Optional;
 import org.apache.commons.math3.geometry.euclidean.threed.Line;

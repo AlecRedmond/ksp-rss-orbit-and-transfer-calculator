@@ -1,6 +1,6 @@
 package org.artools.orbitcalculator.equations.method;
 
-import static org.artools.equations.application.keplerianelements.Kepler.KeplerEnums.*;
+import static org.artools.orbitcalculator.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
 import org.artools.orbitcalculator.equations.application.Body;
 import org.artools.orbitcalculator.equations.application.Orbit;

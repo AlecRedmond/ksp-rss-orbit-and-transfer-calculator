@@ -3,7 +3,7 @@ package org.artools.orbitcalculator.controller.holdlogic;
 import java.util.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.artools.equations.application.keplerianelements.Kepler.KeplerEnums;
+import org.artools.orbitcalculator.equations.application.keplerianelements.Kepler.KeplerEnums;
 
 @Data
 @AllArgsConstructor

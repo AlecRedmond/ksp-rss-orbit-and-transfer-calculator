@@ -1,7 +1,7 @@
 package org.artools.orbitcalculator.equations.method.transfers;
 
 import lombok.Data;
-import org.artools.equations.application.keplerianelements.Kepler.KeplerEnums;
+import org.artools.orbitcalculator.equations.application.keplerianelements.Kepler.KeplerEnums;
 
 @Data
 public class InclinationBurn {

@@ -3,7 +3,7 @@ package org.artools.orbitcalculator.equations.method;
 import java.util.ArrayList;
 import lombok.Data;
 import org.artools.orbitcalculator.equations.application.Intercept;
-import org.artools.equations.application.keplerianelements.OrbitalPeriod;
+import org.artools.orbitcalculator.equations.application.keplerianelements.OrbitalPeriod;
 
 @Data
 public class Rendezvous {

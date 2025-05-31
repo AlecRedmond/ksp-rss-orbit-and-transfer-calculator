@@ -1,6 +1,6 @@
 package org.artools.orbitcalculator.equations.method.vector;
 
-import static org.artools.equations.application.keplerianelements.Kepler.KeplerEnums.*;
+import static org.artools.orbitcalculator.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
 import java.time.Instant;
 import lombok.Getter;

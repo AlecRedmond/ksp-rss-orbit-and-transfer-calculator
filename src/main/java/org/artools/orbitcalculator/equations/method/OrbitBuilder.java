@@ -1,17 +1,17 @@
 package org.artools.orbitcalculator.equations.method;
 
-import static org.artools.equations.application.keplerianelements.Kepler.KeplerEnums.*;
+import static org.artools.orbitcalculator.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
 import java.util.Map;
 import java.util.logging.Logger;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.artools.orbitcalculator.equations.application.keplerianelements.Kepler;
+import org.artools.orbitcalculator.equations.application.keplerianelements.Kepler.KeplerEnums;
+import org.artools.orbitcalculator.controller.holdlogic.OrbitalParameterHolds;
 import org.artools.orbitcalculator.equations.application.Body;
 import org.artools.orbitcalculator.equations.application.Orbit;
 import org.artools.orbitcalculator.equations.application.vector.OrbitalVectors;
-import org.artools.orbitcalculator.controller.holdlogic.OrbitalParameterHolds;
-import org.artools.equations.application.keplerianelements.Kepler;
-import org.artools.equations.application.keplerianelements.Kepler.KeplerEnums;
 
 @Data
 @NoArgsConstructor
