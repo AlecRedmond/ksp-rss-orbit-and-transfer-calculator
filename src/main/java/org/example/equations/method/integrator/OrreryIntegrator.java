@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.IntStream;
+import lombok.Getter;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.ode.FirstOrderIntegrator;
 import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator;
@@ -12,22 +13,20 @@ import org.example.equations.application.vector.MotionVectors;
 import org.example.equations.application.vector.Orrery;
 
 public class OrreryIntegrator {
-  private Orrery orrery;
-  private double minTimeStep = 1e-6;
-  private double maxTimeStep = 3600 * 24;
+  @Getter private final Orrery orrery;
+  private final double minTimeStep;
+  private final double maxTimeStep;
   private double[] y;
   private List<Body> bodies;
   private Instant epoch;
 
   public OrreryIntegrator(Orrery orrery) {
     this.orrery = orrery;
+    minTimeStep = 1e-6;
+    maxTimeStep = 3600.00 * 24;
     initializeBodies();
     initializeStateVector();
     initializeEpoch();
-  }
-
-  public Orrery getOrrery() {
-    return orrery;
   }
 
   private void initializeBodies() {
@@ -40,7 +39,9 @@ public class OrreryIntegrator {
   }
 
   private void initializeEpoch() {
-    epoch = orrery.getMap().values().stream().findFirst().get().getEpoch();
+    orrery.getMap().values().stream()
+        .findFirst()
+        .ifPresent(motionVectors -> epoch = motionVectors.getEpoch());
   }
 
   private void inputStates(int bodyIndex) {
@@ -82,12 +83,12 @@ public class OrreryIntegrator {
   private void writeNewBodyVectors(int bodyIndex) {
     int yIndex = bodyIndex * 6;
     Body body = bodies.get(bodyIndex);
-    Vector3D position = new Vector3D(new double[]{y[yIndex],y[yIndex+1],y[yIndex+2]});
-    Vector3D velocity = new Vector3D(new double[]{y[yIndex+3],y[yIndex+4],y[yIndex+5]});
+    Vector3D position = new Vector3D(new double[] {y[yIndex], y[yIndex + 1], y[yIndex + 2]});
+    Vector3D velocity = new Vector3D(new double[] {y[yIndex + 3], y[yIndex + 4], y[yIndex + 5]});
     MotionVectors mv = orrery.getMotionVectors(body);
     mv.setEpoch(epoch);
     mv.setPosition(position);
     mv.setVelocity(velocity);
-    orrery.getMap().put(body,mv);
+    orrery.getMap().put(body, mv);
   }
 }

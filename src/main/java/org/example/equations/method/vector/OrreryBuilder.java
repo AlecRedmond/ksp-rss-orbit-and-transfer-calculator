@@ -1,15 +1,12 @@
 package org.example.equations.method.vector;
 
 import static org.example.equations.application.Body.*;
-import static org.example.equations.application.vector.MotionVectors.Frame.BODY_INERTIAL_FRAME;
 
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Map;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
-import org.apache.commons.math3.geometry.euclidean.threed.RotationConvention;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.example.equations.application.Body;
 import org.example.equations.application.BodyOrbits1951;
@@ -22,12 +19,16 @@ public class OrreryBuilder {
   private final Orrery orrery = new Orrery();
 
   public OrreryBuilder setTo1951Jan1() {
-    Arrays.stream(Body.values())
-        .filter(body -> !body.equals(CRAFT) && !body.equals(SUN))
-        .forEach(this::get1951Jan1Positions);
+    initialisePlanetsTo1951Jan1();
     initializeSun();
     convertAllToHelioCentric();
     return this;
+  }
+
+  private void initialisePlanetsTo1951Jan1() {
+    Arrays.stream(Body.values())
+        .filter(body -> !body.equals(CRAFT) && !body.equals(SUN))
+        .forEach(this::get1951Jan1Positions);
   }
 
   private void get1951Jan1Positions(Body body) {
@@ -40,9 +41,7 @@ public class OrreryBuilder {
             SUN,
             Vector3D.ZERO,
             Vector3D.ZERO,
-            new Rotation(Vector3D.PLUS_K, 0, RotationConvention.FRAME_TRANSFORM),
-            Instant.parse("1951-01-01T00:00:00.00Z"),
-            BODY_INERTIAL_FRAME);
+            Instant.parse("1951-01-01T00:00:00.00Z"));
     orrery.putData(SUN, motionVectors);
   }
 

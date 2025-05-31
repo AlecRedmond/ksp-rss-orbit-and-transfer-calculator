@@ -8,21 +8,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.example.equations.application.Body;
-import org.example.equations.application.Orbit;
 import org.example.equations.application.vector.MotionVectors;
-import org.example.equations.application.vector.ObservedData;
 import org.example.equations.application.vector.OrbitalVectors;
-import org.example.equations.method.OrbitBuilder;
 
 @Getter
 @NoArgsConstructor
-public class OrbitalVectorBuilder {
-  private OrbitalVectors vectors;
-
-  protected OrbitalVectorBuilder setVectors(OrbitalVectors vectors) {
-    this.vectors = vectors;
-    return this;
-  }
+public class OrbitalVectorBuilder extends OrbitalVectorUtils {
 
   public OrbitalVectorBuilder buildVectors(MotionVectors motionVectors) {
     Body body = motionVectors.getCentralBody();
@@ -34,19 +25,11 @@ public class OrbitalVectorBuilder {
   }
 
   private static Vector3D getVelocity(MotionVectors motionVectors) {
-    Vector3D velocity = new Vector3D(1, motionVectors.getVelocity());
-    if (motionVectors.getFrame().equals(MotionVectors.Frame.BODY_INERTIAL_FRAME)) {
-      return velocity;
-    }
-    return motionVectors.getRotationToInertial().applyTo(velocity);
+    return new Vector3D(1, motionVectors.getVelocity());
   }
 
   private static Vector3D getPosition(MotionVectors motionVectors) {
-    Vector3D radius = new Vector3D(1, motionVectors.getPosition());
-    if (motionVectors.getFrame().equals(MotionVectors.Frame.BODY_INERTIAL_FRAME)) {
-      return radius;
-    }
-    return motionVectors.getRotationToInertial().applyTo(radius);
+    return new Vector3D(1, motionVectors.getPosition());
   }
 
   private void buildVectors(Vector3D position, Vector3D velocity, Body body, Instant epoch) {
@@ -141,18 +124,5 @@ public class OrbitalVectorBuilder {
       return 0;
     }
     return eccentricAnomaly - (eccentricAnomaly * sin(eccentricAnomaly));
-  }
-
-  public OrbitalVectorBuilder buildVectors(ObservedData data) {
-    var body = data.getBody();
-    var epoch = data.getInstant();
-    var velocity = data.getVelocity();
-    var position = data.getRadius();
-    buildVectors(position, velocity, body, epoch);
-    return this;
-  }
-
-  public Orbit getAsOrbit() {
-    return new OrbitBuilder().buildFromVectors(vectors).getOrbit();
   }
 }

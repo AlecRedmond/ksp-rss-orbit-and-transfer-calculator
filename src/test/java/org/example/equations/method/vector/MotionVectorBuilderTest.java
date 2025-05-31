@@ -1,12 +1,12 @@
 package org.example.equations.method.vector;
 
+import java.time.Instant;
+
 import org.example.equations.application.Orbit;
 import org.example.equations.method.OrbitBuilder;
 import org.junit.jupiter.api.Test;
 
-import java.time.Instant;
-
-import static org.example.equations.application.vector.MotionVectors.Frame.VELOCITY_FRAME;
+import static org.junit.jupiter.api.Assertions.*;
 
 class MotionVectorBuilderTest {
     MotionVectorBuilder test = new MotionVectorBuilder();
@@ -16,10 +16,12 @@ class MotionVectorBuilderTest {
   void buildVectors() {
       Orbit orbit = new OrbitBuilder(500e3,35786e3,90,64.3,270).getOrbit();
       double trueAnomaly = Math.toRadians(15);
-      test.buildVectors(orbit,trueAnomaly,epoch, VELOCITY_FRAME);
-      System.out.println(test.getSOIVectors());
-      var firstRadius = test.getSOIVectors().get().getPosition();
-      var firstVelocity = test.getSOIVectors().get().getVelocity();
+      test.buildVectors(orbit,trueAnomaly,epoch);
+      System.out.println(test.getVectors());
+      var firstRadius = test.getVectors().getPosition();
+      var firstVelocity = test.getVectors().getVelocity();
+      assertNotNull(firstRadius);
+      assertNotNull(firstVelocity);
       System.out.println(firstRadius);
       System.out.println(firstVelocity);
   }

@@ -1,20 +1,17 @@
 package org.example.equations.application.vector;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.example.equations.application.Body;
-import org.example.equations.application.Orbit;
-
 import java.time.Instant;
 
+import lombok.*;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.example.equations.application.Body;
+
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrbitalVectors {
+public class OrbitalVectors extends MotionVectors {
     private Body centralBody;
     private Vector3D position;
     private Vector3D velocity;

@@ -14,16 +14,10 @@ import org.example.equations.application.Orbit;
 public class FrameTransform {
   private static final double TOLERANCE = 1e-6;
   private static final Vector3D Z_AXIS = Vector3D.PLUS_K;
-  private double velocityAngle = 0;
   private double anomalyAngle = 0;
   private double argumentPE = 0;
   private double inclination = 0;
   private double rightAscension = 0;
-
-  public FrameTransform setVelocityAngle(Vector3D velocity, Vector3D radius) {
-    velocityAngle = Vector3D.angle(velocity, radius);
-    return this;
-  }
 
   public FrameTransform setAnomalyAngle(double trueAnomaly) {
     anomalyAngle = trueAnomaly;
@@ -37,27 +31,8 @@ public class FrameTransform {
     return this;
   }
 
-  public FrameTransform setOrbitAngles(double rightAscension, double inclination, double argumentPE){
-    this.rightAscension = rightAscension;
-    this.inclination = inclination;
-    this.argumentPE = argumentPE;
-    return this;
-  }
-
-  /**
-   * Returns a rotation to the Motion (Velocity-Centric) frame, where the X-Axis points in the
-   * direction of the current tangential Velocity. The Y axis will describe the "Radial" direction
-   * vector, and the Z axis the Orbital Normal.
-   */
-  public Rotation getRotationToVelocityFromAnomaly() {
-    return new Rotation(Z_AXIS, velocityAngle, FRAME_TRANSFORM);
-  }
-
-  /**
-   * Returns the angle to the body-centric Inertial frame from the Motion (Velocity-centric) frame.
-   */
-  public Rotation getRotationToInertialFromVelocity() {
-    var finalZAngle = argumentPE + anomalyAngle + velocityAngle;
+  public Rotation getRotationToInertialFromAnomaly() {
+    var finalZAngle = argumentPE + anomalyAngle;
     return new Rotation(ZXZ, FRAME_TRANSFORM, -finalZAngle, -inclination, -rightAscension);
   }
 
