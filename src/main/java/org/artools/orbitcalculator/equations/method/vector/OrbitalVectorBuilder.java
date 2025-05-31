@@ -1,4 +1,4 @@
-package org.artools.equations.method.vector;
+package org.artools.orbitcalculator.equations.method.vector;
 
 import static org.apache.commons.math3.util.FastMath.atan2;
 import static org.apache.commons.math3.util.FastMath.sin;
@@ -7,9 +7,9 @@ import java.time.Instant;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.artools.equations.application.Body;
-import org.artools.equations.application.vector.MotionVectors;
-import org.artools.equations.application.vector.OrbitalVectors;
+import org.artools.orbitcalculator.equations.application.Body;
+import org.artools.orbitcalculator.equations.application.vector.MotionVectors;
+import org.artools.orbitcalculator.equations.application.vector.OrbitalVectors;
 
 @Getter
 @NoArgsConstructor

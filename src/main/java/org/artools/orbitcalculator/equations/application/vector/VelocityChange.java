@@ -1,4 +1,4 @@
-package org.artools.equations.application.vector;
+package org.artools.orbitcalculator.equations.application.vector;
 
 import lombok.Data;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;

@@ -1,4 +1,4 @@
-package org.artools.equations.method.transfers;
+package org.artools.orbitcalculator.equations.method.transfers;
 
 import lombok.Data;
 import org.artools.equations.application.keplerianelements.Kepler.KeplerEnums;

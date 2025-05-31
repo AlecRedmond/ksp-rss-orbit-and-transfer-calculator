@@ -1,9 +1,9 @@
-package org.artools.equations.method;
+package org.artools.orbitcalculator.equations.method;
 
 import static org.artools.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
-import org.artools.equations.application.Body;
-import org.artools.equations.application.Orbit;
+import org.artools.orbitcalculator.equations.application.Body;
+import org.artools.orbitcalculator.equations.application.Orbit;
 
 public class TrajectoryEquations {
   private static Body body = Body.EARTH;

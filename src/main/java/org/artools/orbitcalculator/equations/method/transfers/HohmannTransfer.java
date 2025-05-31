@@ -1,7 +1,7 @@
-package org.artools.equations.method.transfers;
+package org.artools.orbitcalculator.equations.method.transfers;
 
 import lombok.Data;
-import org.artools.equations.application.Orbit;
+import org.artools.orbitcalculator.equations.application.Orbit;
 import org.artools.equations.application.keplerianelements.Kepler;
 
 import static org.artools.equations.application.keplerianelements.Kepler.KeplerEnums.APOAPSIS;

@@ -1,8 +1,8 @@
-package org.artools.equations.method.vector;
+package org.artools.orbitcalculator.equations.method.vector;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.artools.equations.application.vector.VelocityChange;
+import org.artools.orbitcalculator.equations.application.vector.VelocityChange;
 
 @NoArgsConstructor
 @Getter

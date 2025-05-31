@@ -1,4 +1,4 @@
-package org.artools.equations.application.keplerianelements;
+package org.artools.orbitcalculator.equations.application.keplerianelements;
 
 public interface Kepler {
 

@@ -1,6 +1,4 @@
-package org.artools.equations.method.vector;
-
-import static org.artools.equations.application.Body.*;
+package org.artools.orbitcalculator.equations.method.vector;
 
 import java.time.Instant;
 import java.util.Arrays;
@@ -8,10 +6,10 @@ import java.util.Map;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.artools.equations.application.Body;
-import org.artools.equations.application.BodyOrbits1951;
-import org.artools.equations.application.vector.MotionVectors;
-import org.artools.equations.application.vector.Orrery;
+import org.artools.orbitcalculator.equations.application.Body;
+import org.artools.orbitcalculator.equations.application.BodyOrbits1951;
+import org.artools.orbitcalculator.equations.application.vector.MotionVectors;
+import org.artools.orbitcalculator.equations.application.vector.Orrery;
 
 @NoArgsConstructor
 @Getter
@@ -27,7 +25,7 @@ public class OrreryBuilder {
 
   private void initialisePlanetsTo1951Jan1() {
     Arrays.stream(Body.values())
-        .filter(body -> !body.equals(CRAFT) && !body.equals(SUN))
+        .filter(body -> !body.equals(Body.CRAFT) && !body.equals(Body.SUN))
         .forEach(this::get1951Jan1Positions);
   }
 
@@ -38,11 +36,11 @@ public class OrreryBuilder {
   private void initializeSun() {
     MotionVectors motionVectors =
         new MotionVectors(
-            SUN,
+            Body.SUN,
             Vector3D.ZERO,
             Vector3D.ZERO,
             Instant.parse("1951-01-01T00:00:00.00Z"));
-    orrery.putData(SUN, motionVectors);
+    orrery.putData(Body.SUN, motionVectors);
   }
 
   private void convertAllToHelioCentric() {
@@ -52,7 +50,7 @@ public class OrreryBuilder {
   }
 
   private static boolean isNotHelioCentric(Map.Entry<Body, MotionVectors> entry) {
-    return !entry.getKey().equals(SUN) && !entry.getValue().getCentralBody().equals(SUN);
+    return !entry.getKey().equals(Body.SUN) && !entry.getValue().getCentralBody().equals(Body.SUN);
   }
 
   private void changeToCentralBodyFocus(Body body, MotionVectors motionVectors) {

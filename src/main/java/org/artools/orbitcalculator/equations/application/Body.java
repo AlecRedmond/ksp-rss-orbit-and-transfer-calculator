@@ -1,4 +1,4 @@
-package org.artools.equations.application;
+package org.artools.orbitcalculator.equations.application;
 
 import lombok.Getter;
 

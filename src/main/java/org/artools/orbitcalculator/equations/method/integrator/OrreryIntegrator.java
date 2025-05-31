@@ -1,4 +1,4 @@
-package org.artools.equations.method.integrator;
+package org.artools.orbitcalculator.equations.method.integrator;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -8,9 +8,9 @@ import lombok.Getter;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.ode.FirstOrderIntegrator;
 import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator;
-import org.artools.equations.application.Body;
-import org.artools.equations.application.vector.MotionVectors;
-import org.artools.equations.application.vector.Orrery;
+import org.artools.orbitcalculator.equations.application.vector.MotionVectors;
+import org.artools.orbitcalculator.equations.application.vector.Orrery;
+import org.artools.orbitcalculator.equations.application.Body;
 
 public class OrreryIntegrator {
   @Getter private final Orrery orrery;

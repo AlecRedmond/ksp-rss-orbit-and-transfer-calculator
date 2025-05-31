@@ -1,10 +1,10 @@
-package org.artools.equations.application.vector;
+package org.artools.orbitcalculator.equations.application.vector;
 
 import java.util.EnumMap;
 import java.util.Map;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.artools.equations.application.Body;
+import org.artools.orbitcalculator.equations.application.Body;
 
 @Data
 @NoArgsConstructor

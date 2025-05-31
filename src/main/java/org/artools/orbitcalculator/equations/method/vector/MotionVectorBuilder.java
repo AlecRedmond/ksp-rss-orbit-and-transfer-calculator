@@ -1,12 +1,12 @@
-package org.artools.equations.method.vector;
+package org.artools.orbitcalculator.equations.method.vector;
 
 import static org.artools.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
 import java.time.Instant;
 import lombok.Getter;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.artools.equations.application.Orbit;
-import org.artools.equations.application.vector.MotionVectors;
+import org.artools.orbitcalculator.equations.application.Orbit;
+import org.artools.orbitcalculator.equations.application.vector.MotionVectors;
 
 @Getter
 public class MotionVectorBuilder extends MotionVectorUtils {

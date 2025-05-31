@@ -1,4 +1,4 @@
-package org.artools.equations.method.integrator;
+package org.artools.orbitcalculator.equations.method.integrator;
 
 import java.util.List;
 import java.util.Map;
@@ -7,7 +7,7 @@ import org.apache.commons.math3.exception.DimensionMismatchException;
 import org.apache.commons.math3.exception.MaxCountExceededException;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
-import org.artools.equations.application.Body;
+import org.artools.orbitcalculator.equations.application.Body;
 
 public class NBodyODEProblem implements FirstOrderDifferentialEquations {
   private final List<Body> bodies;

@@ -1,7 +1,7 @@
-package org.artools.stringformatting;
+package org.artools.orbitcalculator.stringformatting;
 
-import org.artools.equations.application.keplerianelements.Velocity;
-import org.artools.equations.method.transfers.InclinationBurn;
+import org.artools.orbitcalculator.equations.application.keplerianelements.Velocity;
+import org.artools.orbitcalculator.equations.method.transfers.InclinationBurn;
 
 public class InclinationBurnString {
   public static String getIncChangeBurnString(InclinationBurn inclinationBurn) {

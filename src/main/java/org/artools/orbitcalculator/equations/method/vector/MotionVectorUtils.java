@@ -1,8 +1,8 @@
-package org.artools.equations.method.vector;
+package org.artools.orbitcalculator.equations.method.vector;
 
 import java.util.Optional;
 import lombok.Getter;
-import org.artools.equations.application.vector.MotionVectors;
+import org.artools.orbitcalculator.equations.application.vector.MotionVectors;
 
 @Getter
 public class MotionVectorUtils {

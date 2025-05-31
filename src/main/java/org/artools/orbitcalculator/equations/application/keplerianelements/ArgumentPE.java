@@ -1,9 +1,9 @@
-package org.artools.equations.application.keplerianelements;
+package org.artools.orbitcalculator.equations.application.keplerianelements;
 
 import lombok.Data;
 
 @Data
-public class ArgumentPE implements Kepler{
+public class ArgumentPE implements Kepler {
     private double data;
 
     public ArgumentPE(double data) {

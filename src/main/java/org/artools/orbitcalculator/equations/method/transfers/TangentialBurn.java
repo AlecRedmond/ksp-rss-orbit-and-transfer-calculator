@@ -1,12 +1,12 @@
-package org.artools.equations.method.transfers;
+package org.artools.orbitcalculator.equations.method.transfers;
 
 import static org.artools.equations.application.keplerianelements.Kepler.KeplerEnums.*;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.artools.equations.application.Orbit;
+import org.artools.orbitcalculator.equations.application.Orbit;
 import org.artools.equations.application.keplerianelements.Kepler.KeplerEnums;
-import org.artools.equations.method.OrbitBuilder;
+import org.artools.orbitcalculator.equations.method.OrbitBuilder;
 
 @Data
 @NoArgsConstructor

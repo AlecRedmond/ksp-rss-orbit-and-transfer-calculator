@@ -1,4 +1,4 @@
-package org.artools.equations.method.vector;
+package org.artools.orbitcalculator.equations.method.vector;
 
 import static org.apache.commons.math3.geometry.euclidean.threed.RotationConvention.FRAME_TRANSFORM;
 import static org.apache.commons.math3.geometry.euclidean.threed.RotationOrder.ZXZ;
@@ -9,7 +9,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Line;
 import org.apache.commons.math3.geometry.euclidean.threed.Plane;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.artools.equations.application.Orbit;
+import org.artools.orbitcalculator.equations.application.Orbit;
 
 public class FrameTransform {
   private static final double TOLERANCE = 1e-6;

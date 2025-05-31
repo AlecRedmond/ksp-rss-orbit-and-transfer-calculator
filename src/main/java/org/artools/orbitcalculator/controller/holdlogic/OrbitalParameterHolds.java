@@ -1,4 +1,4 @@
-package org.artools.controller.holdlogic;
+package org.artools.orbitcalculator.controller.holdlogic;
 
 import java.util.*;
 import lombok.AllArgsConstructor;

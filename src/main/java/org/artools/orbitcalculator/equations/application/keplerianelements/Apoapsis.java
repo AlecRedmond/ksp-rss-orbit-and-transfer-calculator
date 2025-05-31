@@ -1,8 +1,8 @@
-package org.artools.equations.application.keplerianelements;
+package org.artools.orbitcalculator.equations.application.keplerianelements;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.artools.stringformatting.StringUnitParser;
+import org.artools.orbitcalculator.stringformatting.StringUnitParser;
 
 @Data
 @NoArgsConstructor

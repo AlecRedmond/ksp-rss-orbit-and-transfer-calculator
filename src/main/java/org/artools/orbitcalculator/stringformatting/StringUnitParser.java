@@ -1,4 +1,4 @@
-package org.artools.stringformatting;
+package org.artools.orbitcalculator.stringformatting;
 
 import org.artools.equations.application.keplerianelements.OrbitalPeriod;
 
