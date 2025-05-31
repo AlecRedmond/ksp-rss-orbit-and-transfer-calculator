@@ -35,7 +35,7 @@ public class OrbitalVectorBuilder {
 
   private static Vector3D getVelocity(MotionVectors motionVectors) {
     Vector3D velocity = new Vector3D(1, motionVectors.getVelocity());
-    if (motionVectors.getFrame().equals(MotionVectors.Frame.VELOCITY_FRAME)) {
+    if (motionVectors.getFrame().equals(MotionVectors.Frame.BODY_INERTIAL_FRAME)) {
       return velocity;
     }
     return motionVectors.getRotationToInertial().applyTo(velocity);
@@ -43,7 +43,7 @@ public class OrbitalVectorBuilder {
 
   private static Vector3D getPosition(MotionVectors motionVectors) {
     Vector3D radius = new Vector3D(1, motionVectors.getPosition());
-    if (motionVectors.getFrame().equals(MotionVectors.Frame.VELOCITY_FRAME)) {
+    if (motionVectors.getFrame().equals(MotionVectors.Frame.BODY_INERTIAL_FRAME)) {
       return radius;
     }
     return motionVectors.getRotationToInertial().applyTo(radius);

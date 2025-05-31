@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class OrbitalVectorBuilderTest {
   OrbitalVectorBuilder test = new OrbitalVectorBuilder();
-  Orbit molniyaOrbit = new OrbitBuilder(600e3,35786e3,0,90,270).getOrbit();
+  Orbit molniyaOrbit = new OrbitBuilder(600e3,35786e3,90,90,270).getOrbit();
   Orbit polarOrbit = new OrbitBuilder(250e3,500e3,0,90,0).getOrbit();
   Instant epoch = Instant.parse("1951-01-01T00:00:00.00Z");
 
