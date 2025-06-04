@@ -8,28 +8,28 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.artools.orbitcalculator.orbitcalculation.application.Body;
-import org.artools.orbitcalculator.orbitcalculation.application.vector.MotionVectors;
-import org.artools.orbitcalculator.orbitcalculation.application.vector.OrbitalVectors;
+import org.artools.orbitcalculator.orbitcalculation.application.vector.MotionState;
+import org.artools.orbitcalculator.orbitcalculation.application.vector.OrbitalState;
 
 @Getter
 @NoArgsConstructor
-public class OrbitalVectorBuilder extends OrbitalVectorUtils {
+public class OrbitalStateBuilder extends OrbitalStateUtils {
 
-  public OrbitalVectorBuilder buildVectors(MotionVectors motionVectors) {
-    Body body = motionVectors.getCentralBody();
-    Instant epoch = motionVectors.getEpoch();
-    Vector3D velocity = getVelocity(motionVectors);
-    Vector3D position = getPosition(motionVectors);
+  public OrbitalStateBuilder buildVectors(MotionState motionState) {
+    Body body = motionState.getCentralBody();
+    Instant epoch = motionState.getEpoch();
+    Vector3D velocity = getVelocity(motionState);
+    Vector3D position = getPosition(motionState);
     buildVectors(position, velocity, body, epoch);
     return this;
   }
 
-  private static Vector3D getVelocity(MotionVectors motionVectors) {
-    return new Vector3D(1, motionVectors.getVelocity());
+  private static Vector3D getVelocity(MotionState motionState) {
+    return new Vector3D(1, motionState.getVelocity());
   }
 
-  private static Vector3D getPosition(MotionVectors motionVectors) {
-    return new Vector3D(1, motionVectors.getPosition());
+  private static Vector3D getPosition(MotionState motionState) {
+    return new Vector3D(1, motionState.getPosition());
   }
 
   private void buildVectors(Vector3D position, Vector3D velocity, Body body, Instant epoch) {
@@ -44,7 +44,7 @@ public class OrbitalVectorBuilder extends OrbitalVectorUtils {
     double eccentricAnomaly = getEccentricAnomaly(eccentricity, trueAnomaly);
     double meanAnomaly = getMeanAnomaly(eccentricAnomaly, eccentricity);
     vectors =
-        OrbitalVectors.builder()
+        OrbitalState.builder()
             .centralBody(body)
             .position(position)
             .velocity(velocity)

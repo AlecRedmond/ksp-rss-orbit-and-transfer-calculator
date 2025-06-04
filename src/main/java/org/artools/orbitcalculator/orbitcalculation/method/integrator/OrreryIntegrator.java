@@ -1,7 +1,7 @@
 package org.artools.orbitcalculator.orbitcalculation.method.integrator;
 
+import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.IntStream;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.ode.FirstOrderIntegrator;
 import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator;
 import org.artools.orbitcalculator.orbitcalculation.application.Body;
-import org.artools.orbitcalculator.orbitcalculation.application.vector.MotionVectors;
+import org.artools.orbitcalculator.orbitcalculation.application.vector.MotionState;
 import org.artools.orbitcalculator.orbitcalculation.application.vector.Orrery;
 
 public class OrreryIntegrator {
@@ -46,7 +46,7 @@ public class OrreryIntegrator {
 
   private void inputStates(int bodyIndex) {
     Body body = bodies.get(bodyIndex);
-    MotionVectors mv = orrery.getMotionVectors(body);
+    MotionState mv = orrery.getMotionVectors(body);
     Vector3D pos = mv.getPosition();
     Vector3D vel = mv.getVelocity();
     int yIndex = bodyIndex * 6;
@@ -58,22 +58,22 @@ public class OrreryIntegrator {
     y[yIndex + 5] = vel.getZ();
   }
 
-  public OrreryIntegrator stepForward(double timeSecs) {
-    setEpoch(timeSecs);
-    integrate(timeSecs);
+  public OrreryIntegrator stepForward(Duration duration) {
+    setEpoch(duration);
+    integrate(duration);
     writeResultsToOrrery();
     return this;
   }
 
-  private void setEpoch(double timeSecs) {
-    epoch = epoch.plus((long) timeSecs, ChronoUnit.SECONDS);
+  private void setEpoch(Duration duration) {
+    epoch = epoch.plus(duration);
   }
 
-  private void integrate(double timeSecs) {
+  private void integrate(Duration duration) {
     FirstOrderIntegrator integrator =
         new DormandPrince853Integrator(minTimeStep, maxTimeStep, 1e-10, 1e-10);
     NBodyODEProblem problem = new NBodyODEProblem(bodies);
-    integrator.integrate(problem, 0, y, timeSecs, y);
+    integrator.integrate(problem, 0, y, duration.getSeconds(), y);
   }
 
   private void writeResultsToOrrery() {
@@ -85,7 +85,7 @@ public class OrreryIntegrator {
     Body body = bodies.get(bodyIndex);
     Vector3D position = new Vector3D(new double[] {y[yIndex], y[yIndex + 1], y[yIndex + 2]});
     Vector3D velocity = new Vector3D(new double[] {y[yIndex + 3], y[yIndex + 4], y[yIndex + 5]});
-    MotionVectors mv = orrery.getMotionVectors(body);
+    MotionState mv = orrery.getMotionVectors(body);
     mv.setEpoch(epoch);
     mv.setPosition(position);
     mv.setVelocity(velocity);

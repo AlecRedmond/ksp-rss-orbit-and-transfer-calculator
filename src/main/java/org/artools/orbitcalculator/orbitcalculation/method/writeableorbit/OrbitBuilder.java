@@ -3,19 +3,19 @@ package org.artools.orbitcalculator.orbitcalculation.method.writeableorbit;
 import static org.artools.orbitcalculator.orbitcalculation.application.writeableorbit.keplerianelements.Kepler.KeplerEnums.*;
 
 import java.util.Map;
-import java.util.logging.Logger;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.artools.orbitcalculator.orbitcalculation.application.Body;
-import org.artools.orbitcalculator.orbitcalculation.application.vector.OrbitalVectors;
+import org.artools.orbitcalculator.orbitcalculation.application.vector.OrbitalState;
 import org.artools.orbitcalculator.orbitcalculation.application.writeableorbit.Orbit;
 import org.artools.orbitcalculator.orbitcalculation.application.writeableorbit.keplerianelements.Kepler;
 import org.artools.orbitcalculator.orbitcalculation.application.writeableorbit.keplerianelements.Kepler.KeplerEnums;
 
 @Data
+@Slf4j
 @NoArgsConstructor
 public class OrbitBuilder {
-  private static final Logger LOG = Logger.getLogger(OrbitBuilder.class.getName());
   private Orbit orbit;
   private OrbitalParameterHolds orbitalParameterHolds;
 
@@ -34,7 +34,7 @@ public class OrbitBuilder {
       if (checkHeldSemiMajorAxis()) return;
       throw new IncorrectHoldException("Unable To Build from Any Holds!!");
     } catch (IncorrectHoldException exception) {
-      LOG.warning(exception.getLocalizedMessage());
+      log.warn(exception.getLocalizedMessage());
       setAllToZero();
     }
   }
@@ -171,7 +171,7 @@ public class OrbitBuilder {
     return this;
   }
 
-  public OrbitBuilder buildFromVectors(OrbitalVectors orbitalVectors) {
+  public OrbitBuilder buildFromVectors(OrbitalState orbitalVectors) {
     orbit = new Orbit(orbitalVectors.getCentralBody());
     orbit.setDataFor(SEMI_MAJOR_AXIS, orbitalVectors.getSemiMajorAxis());
     orbit.setDataFor(ECCENTRICITY, orbitalVectors.getEccentricity().getNorm());

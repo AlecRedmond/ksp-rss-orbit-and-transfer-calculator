@@ -8,12 +8,13 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.artools.orbitcalculator.orbitcalculation.application.Body;
 import org.artools.orbitcalculator.orbitcalculation.application.BodyOrbits1951;
-import org.artools.orbitcalculator.orbitcalculation.application.vector.MotionVectors;
+import org.artools.orbitcalculator.orbitcalculation.application.vector.MotionState;
+import org.artools.orbitcalculator.orbitcalculation.application.vector.OrbitalState;
 import org.artools.orbitcalculator.orbitcalculation.application.vector.Orrery;
 
 @NoArgsConstructor
 @Getter
-public class OrreryBuilder {
+public class OrreryBuilder extends OrreryUtils {
   private final Orrery orrery = new Orrery();
 
   public OrreryBuilder setTo1951Jan1() {
@@ -34,13 +35,13 @@ public class OrreryBuilder {
   }
 
   private void initializeSun() {
-    MotionVectors motionVectors =
-        new MotionVectors(
+    MotionState motionState =
+        new MotionState(
             Body.SUN,
             Vector3D.ZERO,
             Vector3D.ZERO,
             Instant.parse("1951-01-01T00:00:00.00Z"));
-    orrery.putData(Body.SUN, motionVectors);
+    orrery.putData(Body.SUN, motionState);
   }
 
   private void convertAllToHelioCentric() {
@@ -49,14 +50,14 @@ public class OrreryBuilder {
         .forEach(entry -> changeToSolarBodyCentredInertial(entry.getKey(), entry.getValue()));
   }
 
-  private static boolean isNotHelioCentric(Map.Entry<Body, MotionVectors> entry) {
+  private static boolean isNotHelioCentric(Map.Entry<Body, MotionState> entry) {
     return !entry.getKey().equals(Body.SUN) && !entry.getValue().getCentralBody().equals(Body.SUN);
   }
 
-  private void changeToSolarBodyCentredInertial(Body body, MotionVectors motionVectors) {
-    MotionVectors centralBodyVectors = orrery.getMotionVectors(motionVectors.getCentralBody());
-    new MotionVectorUtils()
-        .changeCentralBody(motionVectors, centralBodyVectors)
+  private void changeToSolarBodyCentredInertial(Body body, MotionState motionState) {
+    MotionState centralBodyVectors = orrery.getMotionVectors(motionState.getCentralBody());
+    new MotionStateUtils()
+        .changeCentralBody(motionState, centralBodyVectors)
         .ifPresent(vectors -> orrery.putData(body, vectors));
   }
 }

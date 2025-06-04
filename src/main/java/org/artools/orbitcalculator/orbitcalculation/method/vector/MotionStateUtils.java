@@ -2,15 +2,15 @@ package org.artools.orbitcalculator.orbitcalculation.method.vector;
 
 import java.util.Optional;
 import lombok.Getter;
-import org.artools.orbitcalculator.orbitcalculation.application.vector.MotionVectors;
+import org.artools.orbitcalculator.orbitcalculation.application.vector.MotionState;
 
 @Getter
-public class MotionVectorUtils {
-  protected MotionVectors vectors = new MotionVectors();
+public class MotionStateUtils {
+  protected MotionState vectors = new MotionState();
 
   /** Returns a NEW optional */
-  public Optional<MotionVectors> changeCentralBody(
-      MotionVectors vectorsInOldBodyFrame, MotionVectors oldBodyInNewBodyFrame) {
+  public Optional<MotionState> changeCentralBody(
+          MotionState vectorsInOldBodyFrame, MotionState oldBodyInNewBodyFrame) {
     if (!vectorsInOldBodyFrame.getEpoch().equals(oldBodyInNewBodyFrame.getEpoch())) {
       return Optional.empty();
     }
@@ -19,6 +19,6 @@ public class MotionVectorUtils {
     var newVelocity = vectorsInOldBodyFrame.getVelocity().add(oldBodyInNewBodyFrame.getVelocity());
     var newRadius = vectorsInOldBodyFrame.getPosition().add(oldBodyInNewBodyFrame.getPosition());
     var epoch = oldBodyInNewBodyFrame.getEpoch();
-    return Optional.of(new MotionVectors(centralBody, newVelocity, newRadius, epoch));
+    return Optional.of(new MotionState(centralBody, newVelocity, newRadius, epoch));
   }
 }

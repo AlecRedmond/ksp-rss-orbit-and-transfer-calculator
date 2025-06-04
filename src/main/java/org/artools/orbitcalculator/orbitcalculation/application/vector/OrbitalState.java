@@ -10,7 +10,7 @@ import org.artools.orbitcalculator.orbitcalculation.application.Body;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrbitalVectors extends MotionVectors {
+public class OrbitalState extends MotionState {
     private Body centralBody;
     private Vector3D position;
     private Vector3D velocity;

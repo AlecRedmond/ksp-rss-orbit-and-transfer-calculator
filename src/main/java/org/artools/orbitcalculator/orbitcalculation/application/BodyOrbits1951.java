@@ -1,23 +1,23 @@
 package org.artools.orbitcalculator.orbitcalculation.application;
 
 import java.time.Instant;
-import org.artools.orbitcalculator.orbitcalculation.application.vector.MotionVectors;
-import org.artools.orbitcalculator.orbitcalculation.application.vector.OrbitalVectors;
+import org.artools.orbitcalculator.orbitcalculation.application.vector.MotionState;
+import org.artools.orbitcalculator.orbitcalculation.application.vector.OrbitalState;
 import org.artools.orbitcalculator.orbitcalculation.application.writeableorbit.Orbit;
-import org.artools.orbitcalculator.orbitcalculation.method.vector.MotionVectorBuilder;
-import org.artools.orbitcalculator.orbitcalculation.method.vector.OrbitalVectorBuilder;
+import org.artools.orbitcalculator.orbitcalculation.method.vector.MotionStateBuilder;
+import org.artools.orbitcalculator.orbitcalculation.method.vector.OrbitalStateBuilder;
 import org.artools.orbitcalculator.orbitcalculation.method.writeableorbit.OrbitBuilder;
 
 public class BodyOrbits1951 {
 
   private BodyOrbits1951() {}
 
-  public static OrbitalVectors getOrbitalVectors(Body body) {
-    MotionVectors motionVectors = getMotionVectors(body);
-    return getOrbitalVectors(motionVectors);
+  public static OrbitalState getOrbitalVectors(Body body) {
+    MotionState motionState = getMotionVectors(body);
+    return getOrbitalVectors(motionState);
   }
 
-  public static MotionVectors getMotionVectors(Body body) {
+  public static MotionState getMotionVectors(Body body) {
     switch (body) {
       case JUPITER -> {
         return jupiter1951();
@@ -56,11 +56,11 @@ public class BodyOrbits1951 {
     return null;
   }
 
-  private static OrbitalVectors getOrbitalVectors(MotionVectors motionVectors) {
-    return new OrbitalVectorBuilder().buildVectors(motionVectors).getVectors();
+  private static OrbitalState getOrbitalVectors(MotionState motionState) {
+    return new OrbitalStateBuilder().buildVectors(motionState).getVectors();
   }
 
-  private static MotionVectors jupiter1951() {
+  private static MotionState jupiter1951() {
     var sma = 7.783124763169246E+08; // A
     var e = 6.808524916462147E-03; // EC
     var rightAscensionDegas = 1.003930097175018E+02; // OM
@@ -71,7 +71,7 @@ public class BodyOrbits1951 {
         sma, e, rightAscensionDegas, inclinationDegs, argumentPEDegs, trueAnomalyDegs, Body.SUN);
   }
 
-  private static MotionVectors saturn1951() {
+  private static MotionState saturn1951() {
     var sma = 1.424215956312398E+09; // A
     var e = 1.669646124569650E-02; // EC
     var rightAscensionDegas = 1.138795873644347E+02; // OM
@@ -82,7 +82,7 @@ public class BodyOrbits1951 {
         sma, e, rightAscensionDegas, inclinationDegs, argumentPEDegs, trueAnomalyDegs, Body.SUN);
   }
 
-  private static MotionVectors neptune1951() {
+  private static MotionState neptune1951() {
     var sma = 4.490035724335194E+09; // A
     var e = 9.869019515608365E-03; // EC
     var rightAscensionDegas = 1.318523583815618E+02; // OM
@@ -93,7 +93,7 @@ public class BodyOrbits1951 {
         sma, e, rightAscensionDegas, inclinationDegs, argumentPEDegs, trueAnomalyDegs, Body.SUN);
   }
 
-  private static MotionVectors uranus1951() {
+  private static MotionState uranus1951() {
     var sma = 2.870791387145711E+09; // A
     var e = 4.608379864433731E-02; // EC
     var rightAscensionDegs = 7.397985519737271E+01; // OM
@@ -104,7 +104,7 @@ public class BodyOrbits1951 {
         sma, e, rightAscensionDegs, inclinationDegs, argumentPEDegs, trueAnomalyDegs, Body.SUN);
   }
 
-  private static MotionVectors venus1951() {
+  private static MotionState venus1951() {
 
     var sma = 1.082089074269984E+08; // A
     var e = 6.808524916462147E-03; // EC
@@ -116,7 +116,7 @@ public class BodyOrbits1951 {
         sma, e, rightAscensionDegs, inclinationDegs, argumentPEDegs, trueAnomalyDegs, Body.SUN);
   }
 
-  private static MotionVectors mars1951() {
+  private static MotionState mars1951() {
     var sma = 2.279508650650513E+08; // A
     var e = 9.343352557950071E-02; // EC
     var rightAscensionDegs = 4.970153890842160E+01; // OM
@@ -127,7 +127,7 @@ public class BodyOrbits1951 {
         sma, e, rightAscensionDegs, inclinationDegs, argumentPEDegs, trueAnomalyDegs, Body.SUN);
   }
 
-  private static MotionVectors mercury1951() {
+  private static MotionState mercury1951() {
     var sma = 5.790899028576464E+07; // A
     var e = 2.056177912766275E-01; // EC
     var rightAscensionDegs = 4.839193279902154E+01; // OM
@@ -138,7 +138,7 @@ public class BodyOrbits1951 {
         sma, e, rightAscensionDegs, inclinationDegs, argumentPEDegs, trueAnomalyDegs, Body.SUN);
   }
 
-  private static MotionVectors moon1951() {
+  private static MotionState moon1951() {
     var sma = 3.799350804775866E+05; // A
     var e = 5.520638951835218E-02; // EC
     var rightAscensionDegs = 3.525773788808153E+02; // OM
@@ -149,7 +149,7 @@ public class BodyOrbits1951 {
         sma, e, rightAscensionDegs, inclinationDegs, argumentPEDegs, trueAnomalyDegs, Body.EARTH);
   }
 
-  private static MotionVectors earth1951() {
+  private static MotionState earth1951() {
 
     var sma = 1.495963847513234E+08; // A
     var e = 1.669646124569650E-02; // EC
@@ -161,11 +161,11 @@ public class BodyOrbits1951 {
         sma, e, rightAscensionDegs, inclinationDegs, argumentPEDegs, trueAnomalyDegs, Body.SUN);
   }
 
-  private static MotionVectors sun1951() {
-    return new MotionVectors();
+  private static MotionState sun1951() {
+    return new MotionState();
   }
 
-  private static MotionVectors getVectors(
+  private static MotionState getVectors(
       double sma,
       double e,
       double rightAscensionDegs,
@@ -179,7 +179,7 @@ public class BodyOrbits1951 {
             .buildFromHorizonsData(
                 sma * 1e3, e, rightAscensionDegs, inclinationDegs, argumentPEDegs, centralBody)
             .getOrbit();
-    return new MotionVectorBuilder()
+    return new MotionStateBuilder()
         .buildVectors(orbit, Math.toRadians(trueAnomalyDegs), instant)
         .getVectors();
   }

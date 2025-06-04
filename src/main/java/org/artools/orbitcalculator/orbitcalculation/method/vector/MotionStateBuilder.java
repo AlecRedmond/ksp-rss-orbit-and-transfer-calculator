@@ -5,20 +5,20 @@ import static org.artools.orbitcalculator.orbitcalculation.application.writeable
 import java.time.Instant;
 import lombok.Getter;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.artools.orbitcalculator.orbitcalculation.application.vector.MotionVectors;
+import org.artools.orbitcalculator.orbitcalculation.application.vector.MotionState;
 import org.artools.orbitcalculator.orbitcalculation.application.writeableorbit.Orbit;
 
 @Getter
-public class MotionVectorBuilder extends MotionVectorUtils {
+public class MotionStateBuilder extends MotionStateUtils {
   private static FrameTransform getTransform(Orbit orbit, double trueAnomaly) {
     return new FrameTransform().setAnomalyAngle(trueAnomaly).setOrbitAngles(orbit);
   }
 
-  public MotionVectorBuilder buildVectors(Orbit orbit, double trueAnomaly, Instant epoch) {
+  public MotionStateBuilder buildVectors(Orbit orbit, double trueAnomaly, Instant epoch) {
     FrameTransform transform = getTransform(orbit, trueAnomaly);
     Vector3D velocity = buildVelocityVector(orbit, trueAnomaly, transform);
     Vector3D radius = buildRadiusVector(orbit, trueAnomaly, transform);
-    vectors = new MotionVectors(orbit.getBody(), velocity, radius, epoch);
+    vectors = new MotionState(orbit.getBody(), velocity, radius, epoch);
     return this;
   }
 

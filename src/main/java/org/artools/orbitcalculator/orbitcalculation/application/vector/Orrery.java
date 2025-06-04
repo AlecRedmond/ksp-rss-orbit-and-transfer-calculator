@@ -9,13 +9,13 @@ import org.artools.orbitcalculator.orbitcalculation.application.Body;
 @Data
 @NoArgsConstructor
 public class Orrery {
-  private Map<Body, MotionVectors> map = new EnumMap<>(Body.class);
+  private Map<Body, MotionState> map = new EnumMap<>(Body.class);
 
-  public void putData(Body body, MotionVectors motionVectors) {
-    map.put(body, motionVectors);
+  public void putData(Body body, MotionState motionState) {
+    map.put(body, motionState);
   }
 
-  public MotionVectors getMotionVectors(Body body) {
-    return map.getOrDefault(body, new MotionVectors());
+  public MotionState getMotionVectors(Body body) {
+    return map.getOrDefault(body, new MotionState());
   }
 }

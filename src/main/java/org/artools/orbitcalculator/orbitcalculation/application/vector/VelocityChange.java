@@ -5,7 +5,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 @Data
 public class VelocityChange {
-    private OrbitalVectors initialVectors;
-    private OrbitalVectors finalVectors;
+    private OrbitalState initialVectors;
+    private OrbitalState finalVectors;
     private Vector3D deltaV;
 }
