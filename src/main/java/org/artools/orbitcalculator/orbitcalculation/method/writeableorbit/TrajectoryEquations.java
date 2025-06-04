@@ -8,8 +8,7 @@ import org.artools.orbitcalculator.orbitcalculation.application.writeableorbit.O
 public class TrajectoryEquations {
   private static Body body = Body.EARTH;
 
-  private TrajectoryEquations() {
-  }
+  private TrajectoryEquations() {}
 
   public static void calculateFromPeriapsisApoapsis(Orbit orbit) {
     TrajectoryEquations.body = orbit.getBody();
@@ -84,10 +83,8 @@ public class TrajectoryEquations {
     TrajectoryEquations.body = orbit.getBody();
     double eccentricity = orbit.getDataFor(ECCENTRICITY);
     double semiMajorAxis = orbit.getDataFor(SEMI_MAJOR_AXIS);
-    orbit.setDataFor(
-        APOAPSIS, (semiMajorAxis * (1 + eccentricity)) - orbit.getBody().getRadius());
-    orbit.setDataFor(
-        PERIAPSIS, (semiMajorAxis * (1 - eccentricity)) - orbit.getBody().getRadius());
+    orbit.setDataFor(APOAPSIS, (semiMajorAxis * (1 + eccentricity)) - orbit.getBody().getRadius());
+    orbit.setDataFor(PERIAPSIS, (semiMajorAxis * (1 - eccentricity)) - orbit.getBody().getRadius());
     convertSemiMajorAxisToOrbitalPeriod(orbit);
     calculateBothVelocities(orbit);
   }
@@ -116,8 +113,7 @@ public class TrajectoryEquations {
     orbit.setDataFor(SEMI_MAJOR_AXIS, semiMajorAxis);
   }
 
-  public static void calculateSMAFromVelocityAndAltitude(
-          Orbit orbit, boolean periapsis) {
+  public static void calculateSMAFromVelocityAndAltitude(Orbit orbit, boolean periapsis) {
     TrajectoryEquations.body = orbit.getBody();
 
     if (periapsis) {
@@ -131,7 +127,6 @@ public class TrajectoryEquations {
           SEMI_MAJOR_AXIS,
           smaFromVelocityAndAltitude(
               orbit.getDataFor(VELOCITY_APOAPSIS), orbit.getDataFor(APOAPSIS)));
-
     }
   }
 
@@ -140,8 +135,7 @@ public class TrajectoryEquations {
     return 1 / ((2 / radius) - ((velocity * velocity) / body.getMu()));
   }
 
-  public static void calculateAltitudeFromVelocityAndSMA(
-          Orbit orbit, boolean periapsis) {
+  public static void calculateAltitudeFromVelocityAndSMA(Orbit orbit, boolean periapsis) {
     TrajectoryEquations.body = orbit.getBody();
 
     if (periapsis) {
@@ -155,7 +149,6 @@ public class TrajectoryEquations {
           APOAPSIS,
           altitudeFromVelocityAndSMA(
               orbit.getDataFor(VELOCITY_APOAPSIS), orbit.getDataFor(SEMI_MAJOR_AXIS)));
-
     }
   }
 
