@@ -2,6 +2,7 @@ package org.artools.orbitcalculator.application.vector;
 
 import java.time.Instant;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.artools.orbitcalculator.application.bodies.Body;
 

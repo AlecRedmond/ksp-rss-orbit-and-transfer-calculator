@@ -18,30 +18,24 @@ public class OrreryIntegrator {
   private final double maxTimeStep;
   private double[] y;
   private List<Body> bodies;
-  private Instant epoch;
+  private Instant newEpoch;
 
   public OrreryIntegrator(Orrery orrery) {
     this.orrery = orrery;
     minTimeStep = 1e-6;
-    maxTimeStep = 3600.00 * 24;
+    maxTimeStep = 3600.0;
     initializeBodies();
     initializeStateVector();
-    initializeEpoch();
+    newEpoch = orrery.getEpoch();
   }
 
   private void initializeBodies() {
-    bodies = orrery.getMap().keySet().stream().toList();
+    bodies = orrery.getBodyStateMap().keySet().stream().toList();
   }
 
   private void initializeStateVector() {
     y = new double[bodies.size() * 6];
     IntStream.range(0, bodies.size()).forEach(this::inputStates);
-  }
-
-  private void initializeEpoch() {
-    orrery.getMap().values().stream()
-        .findFirst()
-        .ifPresent(motionVectors -> epoch = motionVectors.getEpoch());
   }
 
   private void inputStates(int bodyIndex) {
@@ -59,17 +53,25 @@ public class OrreryIntegrator {
   }
 
   public OrreryIntegrator stepForward(Duration duration) {
-    setEpoch(duration);
-    integrate(duration);
+    offsetEpoch(duration);
+    integrate();
     writeResultsToOrrery();
     return this;
   }
 
-  private void setEpoch(Duration duration) {
-    epoch = epoch.plus(duration);
+  public OrreryIntegrator stepToDate(Instant epoch){
+    newEpoch = epoch;
+    integrate();
+    writeResultsToOrrery();
+    return this;
   }
 
-  private void integrate(Duration duration) {
+  private void offsetEpoch(Duration duration) {
+    newEpoch = newEpoch.plus(duration);
+  }
+
+  private void integrate() {
+    Duration duration = Duration.between(orrery.getEpoch(), newEpoch);
     FirstOrderIntegrator integrator =
         new DormandPrince853Integrator(minTimeStep, maxTimeStep, 1e-10, 1e-10);
     NBodyODEProblem problem = new NBodyODEProblem(bodies);
@@ -86,9 +88,9 @@ public class OrreryIntegrator {
     Vector3D position = new Vector3D(new double[] {y[yIndex], y[yIndex + 1], y[yIndex + 2]});
     Vector3D velocity = new Vector3D(new double[] {y[yIndex + 3], y[yIndex + 4], y[yIndex + 5]});
     MotionState mv = orrery.getMotionVectors(body);
-    mv.setEpoch(epoch);
+    mv.setEpoch(newEpoch);
     mv.setPosition(position);
     mv.setVelocity(velocity);
-    orrery.getMap().put(body, mv);
+    orrery.getBodyStateMap().put(body, mv);
   }
 }
