@@ -1,11 +1,11 @@
 package org.artools.orbitcalculator.application.bodies.astralbodies;
 
-public class Sun extends AstralBody {
+public class Mercury extends AstralBody {
 
   @Override
   protected String horizonsVectorData() {
-    return "X =-4.301777867304494E+04 Y = 1.174093787096878E+05 Z =-8.299334313999803E+03\n"
-        + " VX=-2.610383151396620E-03 VY=-9.586514629520296E-03 VZ= 5.749810730508453E-05";
+    return "X =-4.894170451539801E+06 Y = 4.609872635824879E+07 Z = 4.190798643785544E+06\n"
+        + " VX=-5.821328936093884E+01 VY=-3.332570130104314E+00 VZ= 5.078986722966221E+00";
   }
 
   @Override
@@ -15,11 +15,11 @@ public class Sun extends AstralBody {
 
   @Override
   protected double muHorizons() {
-    return 132712440041.93938;
+    return 22031.86855;
   }
 
   @Override
   protected double equatorialRadiusHorizons() {
-    return 695700;
+    return 2440.53;
   }
 }

@@ -2,6 +2,8 @@ package org.artools.orbitcalculator.application.bodies.astralbodies;
 
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.artools.orbitcalculator.application.bodies.Body;
 import org.artools.orbitcalculator.application.vector.MotionState;
@@ -14,33 +16,51 @@ public abstract class AstralBody implements AstralBodyInterface {
   private double bodyRadius;
 
   protected AstralBody() {
-    setHorizonsData();
+    parseStateVector(horizonsVectorData());
   }
 
-  private void setHorizonsData() {
+  public void parseStateVector(String input) {
+    Pattern pattern = Pattern.compile("[-+]?\\d*\\.?\\d+[eE][-+]?\\d+");
+    Matcher matcher = pattern.matcher(input);
+    double[] numbers = new double[6];
+    int count = 0;
+
+    while (matcher.find() && count < 6) {
+      numbers[count++] = Double.parseDouble(matcher.group());
+    }
+
+    if (count != 6) {
+      throw new IllegalArgumentException("Expected 6 numbers, found " + count);
+    }
+
+    double[] positionArray = new double[] {numbers[0], numbers[1], numbers[2]};
+    double[] velocityArray = new double[] {numbers[3], numbers[4], numbers[5]};
+
+    setHorizonsData(positionArray, velocityArray);
+  }
+
+  // These are from Barycentric (@ssb on Horizons data)
+  abstract String horizonsVectorData();
+
+  private void setHorizonsData(double[] positionArray, double[] velocityArray) {
     j2 = j2();
-    velocity1951Jan1 = kilometreToSIVector(velocity1951Jan1Horizons());
-    position1951Jan1 = kilometreToSIVector(position1951Jan1Horizons());
-    mu = muHorizons() * 10e9;
-    bodyRadius = bodyRadiusHorizons() * 10e3;
+    velocity1951Jan1 = kilometreToSIVector(velocityArray);
+    position1951Jan1 = kilometreToSIVector(positionArray);
+    mu = muHorizons() * 1E9;
+    bodyRadius = equatorialRadiusHorizons() * 1E3;
   }
 
   abstract double j2();
 
   private Vector3D kilometreToSIVector(double[] horizonsArray) {
-    return new Vector3D(Arrays.stream(horizonsArray).map(d -> d * 10e3).toArray());
+    return new Vector3D(Arrays.stream(horizonsArray).map(d -> d * 1E3).toArray());
   }
-
-  // These are from Barycentric (@ssb on Horizons data)
-  abstract double[] velocity1951Jan1Horizons();
-
-  abstract double[] position1951Jan1Horizons();
 
   // in km^3/s^2
   abstract double muHorizons();
 
   // in km
-  abstract double bodyRadiusHorizons();
+  abstract double equatorialRadiusHorizons();
 
   @Override
   public double getMu() {

@@ -38,13 +38,13 @@ class OrreryIntegratorTest {
               sunPositions.put(i, test.getOrrery().getMotionVectors(Body.SUN).getPosition());
               test.stepForward(Duration.of(365, ChronoUnit.DAYS));
             });
-    sunPositions.forEach((k, v) -> System.out.println(k + " year : " + v.getNorm()));
+    sunPositions.forEach((k, v) -> System.out.println((1951 + k) + " : " + (v.getNorm())/(2 * Body.SUN.getRadius())));
     var max =
         sunPositions.entrySet().stream()
             .max(Comparator.comparing(entry -> entry.getValue().getNorm()))
             .get()
             .getKey();
-    System.out.println("Max is " + max);
+    System.out.println("Max is " + (max + 1951));
   }
 
   @Test

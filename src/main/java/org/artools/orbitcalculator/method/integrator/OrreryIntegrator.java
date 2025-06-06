@@ -23,7 +23,7 @@ public class OrreryIntegrator {
   public OrreryIntegrator(Orrery orrery) {
     this.orrery = orrery;
     minTimeStep = 1e-6;
-    maxTimeStep = 3600.0;
+    maxTimeStep = 3600.0 * 24;
     initializeBodies();
     initializeStateVector();
     newEpoch = orrery.getEpoch();
