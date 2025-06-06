@@ -80,6 +80,6 @@ public abstract class AstralBody implements AstralBodyInterface {
   @Override
   public MotionState getMotionState1951Jan1() {
     return new MotionState(
-        Body.SUN, velocity1951Jan1, position1951Jan1, Instant.parse("1951-01-01T00:00:00.00Z"));
+        velocity1951Jan1, position1951Jan1, Instant.parse("1951-01-01T00:00:00.00Z"));
   }
 }

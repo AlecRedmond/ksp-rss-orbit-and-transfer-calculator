@@ -17,7 +17,7 @@ public class MotionStateBuilder extends MotionStateUtils {
     FrameTransform transform = getTransform(orbit, trueAnomaly);
     Vector3D velocity = buildVelocityVector(orbit, trueAnomaly, transform);
     Vector3D radius = buildRadiusVector(orbit, trueAnomaly, transform);
-    vectors = new MotionState(orbit.getBody(), velocity, radius, epoch);
+    vectors = new MotionState(velocity, radius, epoch);
     return this;
   }
 

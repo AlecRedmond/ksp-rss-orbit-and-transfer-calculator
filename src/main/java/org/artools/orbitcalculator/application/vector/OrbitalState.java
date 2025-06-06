@@ -8,21 +8,18 @@ import org.artools.orbitcalculator.application.bodies.Body;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@SuperBuilder
 public class OrbitalState extends MotionState {
-    private Body centralBody;
-    private Vector3D position;
-    private Vector3D velocity;
-    private Vector3D momentum;
-    private Vector3D eccentricity;
-    private double semiMajorAxis;
-    private double rightAscension;
-    private double inclination;
-    private double argumentPE;
-    private double trueAnomaly;
-    private double eccentricAnomaly;
-    private double meanAnomaly;
-    private Instant epoch;
+  private Body centralBody;
+  private Vector3D momentum;
+  private Vector3D eccentricity;
+  private double semiMajorAxis;
+  private double rightAscension;
+  private double inclination;
+  private double argumentPE;
+  private double trueAnomaly;
+  private double eccentricAnomaly;
+  private double meanAnomaly;
 }

@@ -15,21 +15,24 @@ import org.artools.orbitcalculator.application.vector.OrbitalState;
 @NoArgsConstructor
 public class OrbitalStateBuilder extends OrbitalStateUtils {
 
-  public OrbitalStateBuilder buildVectors(MotionState motionState) {
-    Body body = motionState.getCentralBody();
-    Instant epoch = motionState.getEpoch();
-    Vector3D velocity = getVelocity(motionState);
-    Vector3D position = getPosition(motionState);
-    buildVectors(position, velocity, body, epoch);
+  public OrbitalStateBuilder(MotionState satelliteState,MotionState centralBodyState,Body centralBody){
+    buildVectors(satelliteState,centralBodyState,centralBody);
+  }
+
+  public OrbitalStateBuilder buildVectors(MotionState satelliteState,MotionState centralBodyState,Body centralBody) {
+    Instant epoch = satelliteState.getEpoch();
+    Vector3D velocity = getRelativeVelocity(satelliteState,centralBodyState);
+    Vector3D position = getRelativePosition(satelliteState,centralBodyState);
+    buildVectors(position, velocity, centralBody, epoch);
     return this;
   }
 
-  private static Vector3D getVelocity(MotionState motionState) {
-    return new Vector3D(1, motionState.getVelocity());
+  private static Vector3D getRelativeVelocity(MotionState satelliteState, MotionState centralBodyState) {
+      return satelliteState.getVelocity().subtract(centralBodyState.getVelocity());
   }
 
-  private static Vector3D getPosition(MotionState motionState) {
-    return new Vector3D(1, motionState.getPosition());
+  private static Vector3D getRelativePosition(MotionState satelliteState, MotionState centralBodyState) {
+    return satelliteState.getPosition().subtract(centralBodyState.getPosition());
   }
 
   private void buildVectors(Vector3D position, Vector3D velocity, Body body, Instant epoch) {
