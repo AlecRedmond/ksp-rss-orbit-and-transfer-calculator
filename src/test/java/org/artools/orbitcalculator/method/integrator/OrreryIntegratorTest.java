@@ -49,19 +49,25 @@ class OrreryIntegratorTest {
 
   @Test
   void stepForward2() {
-    Map<Integer, Orbit> jupiterOrbits = new HashMap<>();
+    Map<Integer, Orbit> earthOrbits = new HashMap<>();
     IntStream.range(0, 51)
         .forEach(
             i -> {
-              var jupiterMotionState = test.getOrrery().getMotionVectors(Body.JUPITER);
-              var jupiterOrbit =
-                  new OrbitalStateBuilder().buildVectors(jupiterMotionState).getAsOrbit();
-              jupiterOrbits.put(i, jupiterOrbit);
+              var earthMotionState = test.getOrrery().getMotionVectors(Body.EARTH);
+              var earthOrbit =
+                  new OrbitalStateBuilder().buildVectors(earthMotionState).getAsOrbit();
+              earthOrbits.put(i, earthOrbit);
               test.stepForward(Duration.of(365, ChronoUnit.DAYS));
             });
-    jupiterOrbits.forEach(
+    earthOrbits.forEach(
         (k, v) ->
-            System.out.println(k + " year : " + v.getAsString(Kepler.KeplerEnums.SEMI_MAJOR_AXIS)));
+            System.out.println(k + " year : " + v.getAsString(Kepler.KeplerEnums.ORBITAL_PERIOD)));
+
+    var summedOrbitTime = earthOrbits.values().stream().map(orbit -> orbit.getDataFor(Kepler.KeplerEnums.ORBITAL_PERIOD)).reduce(0.0, Double::sum);
+    var averageOrbitTime = summedOrbitTime / earthOrbits.size();
+    Orbit orbit = new Orbit();
+    orbit.setDataFor(Kepler.KeplerEnums.ORBITAL_PERIOD,averageOrbitTime);
+    System.out.println(orbit.getAsString(Kepler.KeplerEnums.ORBITAL_PERIOD));
   }
 
   @Test
