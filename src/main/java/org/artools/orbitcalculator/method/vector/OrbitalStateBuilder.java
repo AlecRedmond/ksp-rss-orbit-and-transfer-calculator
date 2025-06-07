@@ -10,21 +10,23 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.artools.orbitcalculator.application.bodies.Body;
 import org.artools.orbitcalculator.application.vector.MotionState;
 import org.artools.orbitcalculator.application.vector.OrbitalState;
+import org.artools.orbitcalculator.application.writeableorbit.Orbit;
+import org.artools.orbitcalculator.method.writeableorbit.OrbitBuilder;
 
 @Getter
 @NoArgsConstructor
-public class OrbitalStateBuilder extends OrbitalStateUtils {
+public class OrbitalStateBuilder {
+  private OrbitalState vectors = new OrbitalState();
 
   public OrbitalStateBuilder(MotionState satelliteState,MotionState centralBodyState,Body centralBody){
     buildVectors(satelliteState,centralBodyState,centralBody);
   }
 
-  public OrbitalStateBuilder buildVectors(MotionState satelliteState,MotionState centralBodyState,Body centralBody) {
+  private void buildVectors(MotionState satelliteState,MotionState centralBodyState,Body centralBody) {
     Instant epoch = satelliteState.getEpoch();
     Vector3D velocity = getRelativeVelocity(satelliteState,centralBodyState);
     Vector3D position = getRelativePosition(satelliteState,centralBodyState);
     buildVectors(position, velocity, centralBody, epoch);
-    return this;
   }
 
   private static Vector3D getRelativeVelocity(MotionState satelliteState, MotionState centralBodyState) {
@@ -127,5 +129,9 @@ public class OrbitalStateBuilder extends OrbitalStateUtils {
       return 0;
     }
     return eccentricAnomaly - (eccentricAnomaly * sin(eccentricAnomaly));
+  }
+
+  public Orbit getAsOrbit() {
+    return new OrbitBuilder().buildFromVectors(vectors).getOrbit();
   }
 }

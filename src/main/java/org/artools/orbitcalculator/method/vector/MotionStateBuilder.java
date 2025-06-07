@@ -8,7 +8,9 @@ import org.artools.orbitcalculator.application.writeableorbit.Orbit;
 import org.artools.orbitcalculator.application.writeableorbit.keplerianelements.Kepler;
 
 @Getter
-public class MotionStateBuilder extends MotionStateUtils {
+public class MotionStateBuilder {
+  private MotionState vectors = new MotionState();
+
   private static FrameTransform getTransform(Orbit orbit, double trueAnomaly) {
     return new FrameTransform().setAnomalyAngle(trueAnomaly).setOrbitAngles(orbit);
   }
