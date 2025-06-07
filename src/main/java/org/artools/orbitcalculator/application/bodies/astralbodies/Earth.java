@@ -1,5 +1,7 @@
 package org.artools.orbitcalculator.application.bodies.astralbodies;
 
+import org.artools.orbitcalculator.application.bodies.Body;
+
 public class Earth extends AstralBody {
     @Override
     protected String horizonsVectorData() {
@@ -20,5 +22,10 @@ public class Earth extends AstralBody {
     @Override
     protected double equatorialRadiusHorizons() {
         return 6378.137;
+    }
+
+    @Override
+    public Body getDefaultOrbitalFocus() {
+        return Body.SUN;
     }
 }

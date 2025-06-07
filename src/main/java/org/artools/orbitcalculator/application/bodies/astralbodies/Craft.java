@@ -1,5 +1,7 @@
 package org.artools.orbitcalculator.application.bodies.astralbodies;
 
+import org.artools.orbitcalculator.application.bodies.Body;
+
 public class Craft extends AstralBody {
   @Override
   protected String horizonsVectorData() {
@@ -30,5 +32,10 @@ public class Craft extends AstralBody {
   @Override
   public double getMu(){
     return getMass() * G;
+  }
+
+  @Override
+  public Body getDefaultOrbitalFocus() {
+    return null;
   }
 }

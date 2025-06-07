@@ -6,15 +6,18 @@ import org.artools.orbitcalculator.application.vector.MotionState;
 
 public enum Body {
   SUN(new Sun()),
+  //GAS GIANTS
   JUPITER(new Jupiter()),
   SATURN(new Saturn()),
   NEPTUNE(new Neptune()),
   URANUS(new Uranus()),
+  //TERRESTRIAL PLANETS
   VENUS(new Venus()),
   MARS(new Mars()),
   MERCURY(new Mercury()),
-  MOON(new Moon()),
   EARTH(new Earth()),
+  //EARTH MOON AND CRAFT
+  MOON(new Moon()),
   CRAFT(new Craft());
 
   private final AstralBody astralBody;
@@ -41,5 +44,9 @@ public enum Body {
 
   public MotionState get1951Jan1State(){
     return astralBody.getMotionState1951Jan1();
+  }
+
+  public Body getOrbitalFocus(){
+    return astralBody.getDefaultOrbitalFocus();
   }
 }

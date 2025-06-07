@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.stream.IntStream;
 import lombok.Getter;
+import org.apache.commons.math3.exception.NumberIsTooSmallException;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.ode.FirstOrderIntegrator;
 import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator;
@@ -71,11 +72,14 @@ public class OrreryIntegrator {
   }
 
   private void integrate() {
+    try{
     Duration duration = Duration.between(orrery.getEpoch(), newEpoch);
     FirstOrderIntegrator integrator =
         new DormandPrince853Integrator(minTimeStep, maxTimeStep, 1e-10, 1e-10);
     NBodyODEProblem problem = new NBodyODEProblem(bodies);
     integrator.integrate(problem, 0, y, duration.getSeconds(), y);
+    } catch (NumberIsTooSmallException ignored){
+    }
   }
 
   private void writeResultsToOrrery() {

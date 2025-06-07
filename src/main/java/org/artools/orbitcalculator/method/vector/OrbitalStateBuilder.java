@@ -10,6 +10,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.artools.orbitcalculator.application.bodies.Body;
 import org.artools.orbitcalculator.application.vector.MotionState;
 import org.artools.orbitcalculator.application.vector.OrbitalState;
+import org.artools.orbitcalculator.application.vector.Orrery;
 import org.artools.orbitcalculator.application.writeableorbit.Orbit;
 import org.artools.orbitcalculator.method.writeableorbit.OrbitBuilder;
 

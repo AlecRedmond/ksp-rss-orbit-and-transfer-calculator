@@ -1,5 +1,7 @@
 package org.artools.orbitcalculator.application.bodies.astralbodies;
 
+import org.artools.orbitcalculator.application.bodies.Body;
+
 public class Saturn extends AstralBody{
     @Override
     protected String horizonsVectorData() {
@@ -20,5 +22,10 @@ public class Saturn extends AstralBody{
     @Override
     protected double equatorialRadiusHorizons() {
         return 60268;
+    }
+
+    @Override
+    public Body getDefaultOrbitalFocus() {
+        return Body.SUN;
     }
 }

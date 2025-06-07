@@ -2,15 +2,15 @@ package org.artools.orbitcalculator.method.vector;
 
 import java.util.Arrays;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.artools.orbitcalculator.application.bodies.Body;
-import org.artools.orbitcalculator.application.vector.Orrery;
 
-@NoArgsConstructor
 @Getter
 public class OrreryBuilder extends OrreryUtils {
-  private final Orrery orrery = new Orrery();
+
+  public OrreryBuilder(){
+      super();
+  }
 
   public OrreryBuilder setTo1951Jan1() {
     initialisePlanetsTo1951Jan1();

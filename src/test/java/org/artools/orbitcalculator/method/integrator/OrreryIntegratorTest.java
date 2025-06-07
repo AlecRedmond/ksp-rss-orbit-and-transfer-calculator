@@ -1,85 +1,64 @@
 package org.artools.orbitcalculator.method.integrator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.artools.orbitcalculator.application.bodies.Body.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.stream.IntStream;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import java.util.stream.Stream;
 import org.artools.orbitcalculator.application.bodies.Body;
 import org.artools.orbitcalculator.application.vector.Orrery;
-import org.artools.orbitcalculator.application.writeableorbit.Orbit;
-import org.artools.orbitcalculator.application.writeableorbit.keplerianelements.Kepler;
-import org.artools.orbitcalculator.method.vector.OrbitalStateBuilder;
 import org.artools.orbitcalculator.method.vector.OrreryBuilder;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.artools.orbitcalculator.method.vector.OrreryUtils;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class OrreryIntegratorTest {
-  OrreryIntegrator test;
+  static final List<Integer> yearsToTest = List.of(1951, 1971, 1991, 2011, 2021, 2031, 2041, 2051);
+  static final int TESTS_PER_YEAR = 8;
+  static final double AVERAGE_DELTA_RATIO = 10E-3;
+  static OrreryIntegrator test;
+  static List<Orrery> orreries;
 
-  @BeforeEach
-  void initialise() {
+  public static Stream<Arguments> provideSemiMajorAxisValidation() {
+    return Stream.of(Arguments.of(EARTH, 149.598E9),
+            Arguments.of(JUPITER,778.479E9),
+            Arguments.of(SATURN,1432.041E9),
+            Arguments.of(URANUS,2867.043E9),
+            Arguments.of(NEPTUNE,4514.953E9));
+  }
+
+  @BeforeAll
+  static void initialise() {
     Orrery orrery = new OrreryBuilder().setTo1951Jan1().getOrrery();
     test = new OrreryIntegrator(orrery);
+    orreries =
+        yearsToTest.stream()
+            .map(integer -> integer + "-01-01T00:00:00.00Z")
+            .map(Instant::parse)
+            .flatMap(OrreryIntegratorTest::getInstants)
+            .map(instant -> test.stepToDate(instant).getOrrery())
+            .map(thisOrrery -> new OrreryUtils(thisOrrery).convertToOrbitalStates())
+            .toList();
   }
 
-  @Test
-  void stepForward() {
-    Map<Integer, Vector3D> sunPositions = new HashMap<>();
-    IntStream.range(0, 51)
-        .forEach(
-            i -> {
-              sunPositions.put(i, test.getOrrery().getMotionVectors(Body.SUN).getPosition());
-              test.stepForward(Duration.of(365, ChronoUnit.DAYS));
-            });
-    sunPositions.forEach(
-        (k, v) ->
-            System.out.println((1951 + k) + " : " + (v.getNorm()) / (2 * Body.SUN.getRadius())));
-    var max =
-        sunPositions.entrySet().stream()
-            .max(Comparator.comparing(entry -> entry.getValue().getNorm()))
-            .get()
-            .getKey();
-    System.out.println("Max is " + (max + 1951));
+  private static Stream<Instant> getInstants(Instant instant) {
+    Instant end = instant.plus(365, ChronoUnit.DAYS);
+    long timeBetween = instant.until(end, ChronoUnit.SECONDS);
+    long stepSeconds = timeBetween / TESTS_PER_YEAR;
+    return IntStream.range(0, TESTS_PER_YEAR)
+        .mapToObj(integer -> instant.plus(integer * stepSeconds, ChronoUnit.SECONDS));
   }
 
-  @Test
-  void stepForward2() {
-    Instant start = Instant.now();
-    Map<Integer, Orbit> earthOrbits = new HashMap<>();
-    IntStream.range(0, 101)
-        .forEach(
-            i -> {
-              var earthMotionState = test.getOrrery().getMotionVectors(Body.EARTH);
-              var sunMotionState = test.getOrrery().getMotionVectors(Body.SUN);
-              var earthOrbit =
-                  new OrbitalStateBuilder(earthMotionState, sunMotionState, Body.SUN).getAsOrbit();
-              earthOrbits.put(i, earthOrbit);
-              test.stepForward(Duration.of(365, ChronoUnit.DAYS));
-            });
-    Instant end = Instant.now();
-    earthOrbits.forEach(
-        (k, v) ->
-            System.out.println(
-                (k + 1951) + " : " + v.getAsString(Kepler.KeplerEnums.ORBITAL_PERIOD)));
-
-    var summedOrbitTime =
-        earthOrbits.values().stream()
-            .map(orbit -> orbit.getDataFor(Kepler.KeplerEnums.ORBITAL_PERIOD))
-            .reduce(0.0, Double::sum);
-    var averageOrbitTime = summedOrbitTime / earthOrbits.size();
-    Orbit orbit = new Orbit();
-    orbit.setDataFor(Kepler.KeplerEnums.ORBITAL_PERIOD, averageOrbitTime);
-    System.out.println("Average : " + orbit.getAsString(Kepler.KeplerEnums.ORBITAL_PERIOD));
-    long millis = Duration.between(start, end).toMillis();
-    System.out.println("Completed in " + millis + "ms");
+  @ParameterizedTest
+  @MethodSource("provideSemiMajorAxisValidation")
+  void validateOrbitsAverageSMA(Body body, double expectedSMA) {
+    List<Double> smaList = orreries.stream().map(orrery -> orrery.getOrbitalVectors(body).getSemiMajorAxis()).toList();
+    double averageSMA = smaList.stream().reduce(0.0,Double::sum) / smaList.size();
+    assertEquals(expectedSMA,averageSMA,expectedSMA * AVERAGE_DELTA_RATIO);
   }
-
-  @Test
-  void stepToDate() {}
 }

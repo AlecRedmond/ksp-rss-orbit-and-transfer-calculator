@@ -1,5 +1,7 @@
 package org.artools.orbitcalculator.application.bodies.astralbodies;
 
+import org.artools.orbitcalculator.application.bodies.Body;
+
 public class Venus extends AstralBody {
 
   @Override
@@ -21,5 +23,10 @@ public class Venus extends AstralBody {
   @Override
   protected double equatorialRadiusHorizons() {
     return 6051.893;
+  }
+
+  @Override
+  public Body getDefaultOrbitalFocus() {
+    return Body.SUN;
   }
 }

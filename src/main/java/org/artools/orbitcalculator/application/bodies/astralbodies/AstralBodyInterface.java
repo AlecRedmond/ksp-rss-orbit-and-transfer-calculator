@@ -1,5 +1,6 @@
 package org.artools.orbitcalculator.application.bodies.astralbodies;
 
+import org.artools.orbitcalculator.application.bodies.Body;
 import org.artools.orbitcalculator.application.vector.MotionState;
 
 public interface AstralBodyInterface {
@@ -15,4 +16,6 @@ public interface AstralBodyInterface {
   double getBodyRadius();
 
   MotionState getMotionState1951Jan1();
+
+  Body getDefaultOrbitalFocus();
 }
