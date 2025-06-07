@@ -1,7 +1,6 @@
 package org.artools.orbitcalculator.method.vector;
 
-import org.artools.orbitcalculator.application.bodies.Body;
-import org.artools.orbitcalculator.application.vector.OrbitalState;
+import org.artools.orbitcalculator.application.bodies.AstralBodies;
 import org.artools.orbitcalculator.application.vector.Orrery;
 import org.artools.orbitcalculator.exceptions.NotOrbitalStateException;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +20,7 @@ class OrreryUtilsTest {
   @Test
   void convertToOrbitalStates() {
     Orrery orrery = test.convertToOrbitalStates();
-    assertThrows(NotOrbitalStateException.class,() -> orrery.getOrbitalVectors(Body.SUN));
-    assertDoesNotThrow(() -> orrery.getOrbitalVectors(Body.EARTH));
+    assertThrows(NotOrbitalStateException.class,() -> orrery.getOrbitalVectors(AstralBodies.SUN));
+    assertDoesNotThrow(() -> orrery.getOrbitalVectors(AstralBodies.EARTH));
   }
 }

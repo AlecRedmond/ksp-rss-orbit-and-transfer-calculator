@@ -3,7 +3,7 @@ package org.artools.orbitcalculator.method.vector;
 import java.util.Arrays;
 import lombok.Getter;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.artools.orbitcalculator.application.bodies.Body;
+import org.artools.orbitcalculator.application.bodies.AstralBodies;
 
 @Getter
 public class OrreryBuilder extends OrreryUtils {
@@ -19,18 +19,18 @@ public class OrreryBuilder extends OrreryUtils {
   }
 
   private void initialisePlanetsTo1951Jan1() {
-    Arrays.stream(Body.values())
-        .filter(body -> !body.equals(Body.CRAFT))
+    Arrays.stream(AstralBodies.values())
+        .filter(body -> !body.equals(AstralBodies.CRAFT))
         .forEach(this::get1951Jan1Positions);
   }
 
   private void shiftToSunAtZero() {
-    Vector3D shiftVector = orrery.getMotionVectors(Body.SUN).getPosition().negate();
+    Vector3D shiftVector = orrery.getMotionVectors(AstralBodies.SUN).getPosition().negate();
     adjustAllBy(shiftVector);
   }
 
-  private void get1951Jan1Positions(Body body) {
-    orrery.putData(body, body.get1951Jan1State());
+  private void get1951Jan1Positions(AstralBodies astralBodies) {
+    orrery.putData(astralBodies, astralBodies.get1951Jan1State());
   }
 
   private void adjustAllBy(Vector3D shiftVector) {

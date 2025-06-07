@@ -1,6 +1,6 @@
 package org.artools.orbitcalculator.application.bodies.astralbodies;
 
-import org.artools.orbitcalculator.application.bodies.Body;
+import org.artools.orbitcalculator.application.bodies.AstralBodies;
 
 public class Sun extends AstralBody {
 
@@ -26,7 +26,7 @@ public class Sun extends AstralBody {
   }
 
   @Override
-  public Body getDefaultOrbitalFocus() {
+  public AstralBodies getDefaultOrbitalFocus() {
     return null;
   }
 }

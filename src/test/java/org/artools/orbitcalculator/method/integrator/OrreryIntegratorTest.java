@@ -1,6 +1,6 @@
 package org.artools.orbitcalculator.method.integrator;
 
-import static org.artools.orbitcalculator.application.bodies.Body.*;
+import static org.artools.orbitcalculator.application.bodies.AstralBodies.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.Instant;
@@ -8,7 +8,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import org.artools.orbitcalculator.application.bodies.Body;
+import org.artools.orbitcalculator.application.bodies.AstralBodies;
 import org.artools.orbitcalculator.application.vector.Orrery;
 import org.artools.orbitcalculator.method.vector.OrreryBuilder;
 import org.artools.orbitcalculator.method.vector.OrreryUtils;
@@ -56,8 +56,8 @@ class OrreryIntegratorTest {
 
   @ParameterizedTest
   @MethodSource("provideSemiMajorAxisValidation")
-  void validateOrbitsAverageSMA(Body body, double expectedSMA) {
-    List<Double> smaList = orreries.stream().map(orrery -> orrery.getOrbitalVectors(body).getSemiMajorAxis()).toList();
+  void validateOrbitsAverageSMA(AstralBodies astralBodies, double expectedSMA) {
+    List<Double> smaList = orreries.stream().map(orrery -> orrery.getOrbitalVectors(astralBodies).getSemiMajorAxis()).toList();
     double averageSMA = smaList.stream().reduce(0.0,Double::sum) / smaList.size();
     assertEquals(expectedSMA,averageSMA,expectedSMA * AVERAGE_DELTA_RATIO);
   }

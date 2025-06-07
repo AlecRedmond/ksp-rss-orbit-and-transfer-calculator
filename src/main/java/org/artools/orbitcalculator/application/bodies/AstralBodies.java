@@ -4,7 +4,7 @@ import org.artools.orbitcalculator.application.bodies.astralbodies.*;
 import org.artools.orbitcalculator.application.vector.MotionState;
 
 
-public enum Body {
+public enum AstralBodies {
   SUN(new Sun()),
   //GAS GIANTS
   JUPITER(new Jupiter()),
@@ -22,7 +22,7 @@ public enum Body {
 
   private final AstralBody astralBody;
 
-  Body(AstralBody astralBody) {
+  AstralBodies(AstralBody astralBody) {
     this.astralBody = astralBody;
   }
 
@@ -46,7 +46,7 @@ public enum Body {
     return astralBody.getMotionState1951Jan1();
   }
 
-  public Body getOrbitalFocus(){
+  public AstralBodies getOrbitalFocus(){
     return astralBody.getDefaultOrbitalFocus();
   }
 }

@@ -3,17 +3,17 @@ package org.artools.orbitcalculator.application.writeableorbit;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.Data;
-import org.artools.orbitcalculator.application.bodies.Body;
+import org.artools.orbitcalculator.application.bodies.AstralBodies;
 import org.artools.orbitcalculator.application.writeableorbit.keplerianelements.*;
 
 @Data
 public class Orbit {
-  private Body body;
+  private AstralBodies astralBodies;
 
   private Map<Kepler.KeplerEnums, Kepler> keplarianElements = new LinkedHashMap<>();
 
-  public Orbit(Body body) {
-    this.body = body;
+  public Orbit(AstralBodies astralBodies) {
+    this.astralBodies = astralBodies;
     buildKeplarianElements();
   }
 
@@ -32,7 +32,7 @@ public class Orbit {
   }
 
   public Orbit() {
-    this.body = Body.EARTH;
+    this.astralBodies = AstralBodies.EARTH;
     buildKeplarianElements();
   }
 

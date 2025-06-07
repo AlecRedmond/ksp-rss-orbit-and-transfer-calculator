@@ -7,12 +7,12 @@ import org.apache.commons.math3.exception.DimensionMismatchException;
 import org.apache.commons.math3.exception.MaxCountExceededException;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
-import org.artools.orbitcalculator.application.bodies.Body;
+import org.artools.orbitcalculator.application.bodies.AstralBodies;
 
 public class NBodyODEProblem implements FirstOrderDifferentialEquations {
-  private final List<Body> bodies;
+  private final List<AstralBodies> bodies;
 
-  public NBodyODEProblem(List<Body> bodies) {
+  public NBodyODEProblem(List<AstralBodies> bodies) {
     this.bodies = bodies;
   }
 
@@ -63,17 +63,17 @@ public class NBodyODEProblem implements FirstOrderDifferentialEquations {
         .reduce(Vector3D.ZERO, Vector3D::add);
   }
 
-  private Map.Entry<Body, Vector3D> getDistance(int bodyIndex, double[] y, Vector3D currentPos) {
-    Body body = bodies.get(bodyIndex);
+  private Map.Entry<AstralBodies, Vector3D> getDistance(int bodyIndex, double[] y, Vector3D currentPos) {
+    AstralBodies astralBodies = bodies.get(bodyIndex);
     Vector3D distance = getRadiusFromBodyIndex(bodyIndex, y).subtract(currentPos);
-    return Map.entry(body, distance);
+    return Map.entry(astralBodies, distance);
   }
 
-  private Vector3D accelerationTowardsBody(Map.Entry<Body, Vector3D> distanceEntry) {
-    Body body = distanceEntry.getKey();
+  private Vector3D accelerationTowardsBody(Map.Entry<AstralBodies, Vector3D> distanceEntry) {
+    AstralBodies astralBodies = distanceEntry.getKey();
     Vector3D directionVector = distanceEntry.getValue().normalize();
     double distanceScalar = distanceEntry.getValue().getNorm();
-    double accelerationScalar = body.getMu() / Math.pow(distanceScalar, 2);
+    double accelerationScalar = astralBodies.getMu() / Math.pow(distanceScalar, 2);
     return directionVector.scalarMultiply(accelerationScalar);
   }
 

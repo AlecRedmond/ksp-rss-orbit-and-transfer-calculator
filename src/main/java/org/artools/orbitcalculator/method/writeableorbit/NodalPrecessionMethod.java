@@ -24,12 +24,12 @@ public class NodalPrecessionMethod {
   // https://i.imgur.com/lJ07OIn.png for the formula
   private double precessionMethod(Orbit orbit) {
     double omegaP;
-    double radiusBody = orbit.getBody().getRadius();
+    double radiusBody = orbit.getAstralBodies().getRadius();
     double semiMajorAxis = orbit.getDataFor(Kepler.KeplerEnums.SEMI_MAJOR_AXIS);
     double eccentricity = orbit.getDataFor(Kepler.KeplerEnums.ECCENTRICITY);
     double omegaSat = (2 * Math.PI) / (orbit.getDataFor(Kepler.KeplerEnums.ORBITAL_PERIOD));
     double inclination = orbit.getDataFor(Kepler.KeplerEnums.INCLINATION);
-    double j2 = orbit.getBody().getJ2();
+    double j2 = orbit.getAstralBodies().getJ2();
 
     double equationTopHalf = -3 * radiusBody * radiusBody * j2 * omegaSat * Math.cos(inclination);
     double equationBotHalf = 2 * Math.pow((semiMajorAxis * (1 - (eccentricity * eccentricity))), 2);
@@ -42,12 +42,12 @@ public class NodalPrecessionMethod {
 
   private double precessionFitMethod(Orbit orbit, double desiredPrecession) {
     double omegaP = desiredPrecession;
-    double radiusBody = orbit.getBody().getRadius();
+    double radiusBody = orbit.getAstralBodies().getRadius();
     double semiMajorAxis = orbit.getDataFor(Kepler.KeplerEnums.SEMI_MAJOR_AXIS);
     double eccentricity = orbit.getDataFor(Kepler.KeplerEnums.ECCENTRICITY);
     double omegaSat = (2 * Math.PI) / (orbit.getDataFor(Kepler.KeplerEnums.ORBITAL_PERIOD));
     double inclination;
-    double j2 = orbit.getBody().getJ2();
+    double j2 = orbit.getAstralBodies().getJ2();
 
     // omegaP is in rad/s. Convert to rad/day
     omegaP = omegaP / (3600 * 24);

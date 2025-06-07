@@ -3,7 +3,7 @@ package org.artools.orbitcalculator.method.vector;
 import java.util.Map;
 import java.util.Optional;
 import lombok.Getter;
-import org.artools.orbitcalculator.application.bodies.Body;
+import org.artools.orbitcalculator.application.bodies.AstralBodies;
 import org.artools.orbitcalculator.application.vector.MotionState;
 import org.artools.orbitcalculator.application.vector.OrbitalState;
 import org.artools.orbitcalculator.application.vector.Orrery;
@@ -25,26 +25,26 @@ public class OrreryUtils {
     return orrery;
   }
 
-  private void convertToOrbitalState(Body body, MotionState satelliteState) {
-    Optional<Body> centralBodyOptional = findOrbitalFocus(body);
+  private void convertToOrbitalState(AstralBodies astralBodies, MotionState satelliteState) {
+    Optional<AstralBodies> centralBodyOptional = findOrbitalFocus(astralBodies);
     if (centralBodyOptional.isEmpty()) {
       return;
     }
-    Body centralBody = centralBodyOptional.get();
-    MotionState centralBodyState = orrery.getMotionVectors(centralBody);
+    AstralBodies centralAstralBodies = centralBodyOptional.get();
+    MotionState centralBodyState = orrery.getMotionVectors(centralAstralBodies);
     OrbitalState state =
-        new OrbitalStateBuilder(satelliteState, centralBodyState, centralBody).getVectors();
-    orrery.setMotionState(body, state);
+        new OrbitalStateBuilder(satelliteState, centralBodyState, centralAstralBodies).getVectors();
+    orrery.setMotionState(astralBodies, state);
   }
 
-  private Optional<Body> findOrbitalFocus(Body satellite) {
-    if (!satellite.equals(Body.CRAFT)) {
+  private Optional<AstralBodies> findOrbitalFocus(AstralBodies satellite) {
+    if (!satellite.equals(AstralBodies.CRAFT)) {
       return Optional.ofNullable(satellite.getOrbitalFocus());
     }
     return maximumAccelerationValue(satellite);
   }
 
-  private Optional<Body> maximumAccelerationValue(Body satellite) {
+  private Optional<AstralBodies> maximumAccelerationValue(AstralBodies satellite) {
     MotionState satelliteState = orrery.getMotionVectors(satellite);
 
     return orrery.getBodyStateMap().entrySet().stream()
@@ -54,11 +54,11 @@ public class OrreryUtils {
         .map(Map.Entry::getKey);
   }
 
-  private Map.Entry<Body, Double> findAccelerationTowards(
-      MotionState satelliteState, Body focusBody, MotionState focusBodyState) {
-    double focusBodyMu = focusBody.getMu();
+  private Map.Entry<AstralBodies, Double> findAccelerationTowards(
+          MotionState satelliteState, AstralBodies focusAstralBodies, MotionState focusBodyState) {
+    double focusBodyMu = focusAstralBodies.getMu();
     double distance = focusBodyState.getPosition().subtract(satelliteState.getPosition()).getNorm();
     double acceleration = focusBodyMu / Math.pow(distance, 2);
-    return Map.entry(focusBody, acceleration);
+    return Map.entry(focusAstralBodies, acceleration);
   }
 }

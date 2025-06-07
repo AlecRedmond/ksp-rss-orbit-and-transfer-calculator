@@ -4,7 +4,7 @@ import java.util.Map;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.artools.orbitcalculator.application.bodies.Body;
+import org.artools.orbitcalculator.application.bodies.AstralBodies;
 import org.artools.orbitcalculator.application.vector.OrbitalState;
 import org.artools.orbitcalculator.application.writeableorbit.Orbit;
 import org.artools.orbitcalculator.application.writeableorbit.keplerianelements.Kepler;
@@ -156,8 +156,8 @@ public class OrbitBuilder {
       double rightAscensionDegs,
       double inclinationDegs,
       double argumentPEdegs,
-      Body body) {
-    orbit = new Orbit(body);
+      AstralBodies astralBodies) {
+    orbit = new Orbit(astralBodies);
     orbit.setDataFor(Kepler.KeplerEnums.SEMI_MAJOR_AXIS, sma);
     orbit.setDataFor(Kepler.KeplerEnums.ECCENTRICITY, e);
     orbitalParameterHolds = new OrbitalParameterHolds(Kepler.KeplerEnums.SEMI_MAJOR_AXIS, Kepler.KeplerEnums.ECCENTRICITY);
@@ -169,7 +169,7 @@ public class OrbitBuilder {
   }
 
   public OrbitBuilder buildFromVectors(OrbitalState orbitalVectors) {
-    orbit = new Orbit(orbitalVectors.getCentralBody());
+    orbit = new Orbit(orbitalVectors.getCentralAstralBodies());
     orbit.setDataFor(Kepler.KeplerEnums.SEMI_MAJOR_AXIS, orbitalVectors.getSemiMajorAxis());
     orbit.setDataFor(Kepler.KeplerEnums.ECCENTRICITY, orbitalVectors.getEccentricity().getNorm());
     orbitalParameterHolds = new OrbitalParameterHolds(Kepler.KeplerEnums.SEMI_MAJOR_AXIS, Kepler.KeplerEnums.ECCENTRICITY);

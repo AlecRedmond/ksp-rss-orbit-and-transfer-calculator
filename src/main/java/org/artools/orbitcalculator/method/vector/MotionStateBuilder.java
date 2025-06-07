@@ -45,14 +45,14 @@ public class MotionStateBuilder {
   }
 
   private double computeTangentialVelocityComponent(Orbit orbit, double trueAnomaly) {
-    var mu = orbit.getBody().getMu();
+    var mu = orbit.getAstralBodies().getMu();
     var semiLatusRectum = semiLatusRectum(orbit);
     var eccentricity = orbit.getDataFor(Kepler.KeplerEnums.ECCENTRICITY);
     return Math.sqrt(mu / semiLatusRectum) * (1 + eccentricity * Math.cos(trueAnomaly));
   }
 
   private double computeVerticalVelocityComponent(Orbit orbit, double trueAnomaly) {
-    var mu = orbit.getBody().getMu();
+    var mu = orbit.getAstralBodies().getMu();
     var semiLatusRectum = semiLatusRectum(orbit);
     var eccentricity = orbit.getDataFor(Kepler.KeplerEnums.ECCENTRICITY);
     return Math.sqrt(mu / semiLatusRectum) * (eccentricity * Math.sin(trueAnomaly));

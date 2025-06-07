@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.artools.orbitcalculator.application.bodies.Body;
+import org.artools.orbitcalculator.application.bodies.AstralBodies;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -14,7 +14,7 @@ import org.artools.orbitcalculator.application.bodies.Body;
 @AllArgsConstructor
 @SuperBuilder
 public class OrbitalState extends MotionState {
-  private Body centralBody;
+  private AstralBodies centralAstralBodies;
   private Vector3D momentum;
   private Vector3D eccentricity;
   private double semiMajorAxis;

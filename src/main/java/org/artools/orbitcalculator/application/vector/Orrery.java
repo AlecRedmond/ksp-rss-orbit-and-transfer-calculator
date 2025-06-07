@@ -5,32 +5,32 @@ import java.util.EnumMap;
 import java.util.Map;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.artools.orbitcalculator.application.bodies.Body;
+import org.artools.orbitcalculator.application.bodies.AstralBodies;
 import org.artools.orbitcalculator.exceptions.NotOrbitalStateException;
 
 @Data
 @NoArgsConstructor
 public class Orrery {
-  private Map<Body, MotionState> bodyStateMap = new EnumMap<>(Body.class);
+  private Map<AstralBodies, MotionState> bodyStateMap = new EnumMap<>(AstralBodies.class);
 
-  public void putData(Body body, MotionState motionState) {
-    bodyStateMap.put(body, motionState);
+  public void putData(AstralBodies astralBodies, MotionState motionState) {
+    bodyStateMap.put(astralBodies, motionState);
   }
 
-  public MotionState getMotionVectors(Body body) {
-    return bodyStateMap.get(body);
+  public MotionState getMotionVectors(AstralBodies astralBodies) {
+    return bodyStateMap.get(astralBodies);
   }
 
-  public OrbitalState getOrbitalVectors(Body body) throws NotOrbitalStateException {
+  public OrbitalState getOrbitalVectors(AstralBodies astralBodies) throws NotOrbitalStateException {
     try {
-      return (OrbitalState) bodyStateMap.get(body);
+      return (OrbitalState) bodyStateMap.get(astralBodies);
     } catch (ClassCastException e) {
-      throw new NotOrbitalStateException(body);
+      throw new NotOrbitalStateException(astralBodies);
     }
   }
 
-  public void setMotionState(Body body, MotionState state) {
-    bodyStateMap.put(body, state);
+  public void setMotionState(AstralBodies astralBodies, MotionState state) {
+    bodyStateMap.put(astralBodies, state);
   }
 
   public Instant getEpoch() {

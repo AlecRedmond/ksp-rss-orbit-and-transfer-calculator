@@ -1,6 +1,6 @@
 package org.artools.orbitcalculator.application.bodies.astralbodies;
 
-import org.artools.orbitcalculator.application.bodies.Body;
+import org.artools.orbitcalculator.application.bodies.AstralBodies;
 
 public class Jupiter extends AstralBody {
   @Override
@@ -25,7 +25,7 @@ public class Jupiter extends AstralBody {
   }
 
   @Override
-  public Body getDefaultOrbitalFocus() {
-    return Body.SUN;
+  public AstralBodies getDefaultOrbitalFocus() {
+    return AstralBodies.SUN;
   }
 }

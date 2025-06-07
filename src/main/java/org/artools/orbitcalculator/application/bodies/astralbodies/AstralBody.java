@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.artools.orbitcalculator.application.bodies.Body;
 import org.artools.orbitcalculator.application.vector.MotionState;
 
 public abstract class AstralBody implements AstralBodyInterface {
