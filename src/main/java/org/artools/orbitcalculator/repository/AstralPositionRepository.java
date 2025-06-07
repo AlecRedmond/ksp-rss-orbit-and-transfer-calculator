@@ -1,8 +1,8 @@
 package org.artools.orbitcalculator.repository;
 
-import org.artools.orbitcalculator.application.AstralState;
+import org.artools.orbitcalculator.application.AstralPosition;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AstralStateRepository extends CrudRepository<AstralState, String> {}
+public interface AstralPositionRepository extends CrudRepository<AstralPosition, String> {}

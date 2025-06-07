@@ -10,8 +10,6 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.artools.orbitcalculator.application.bodies.AstralBodies;
 import org.artools.orbitcalculator.application.vector.MotionState;
 import org.artools.orbitcalculator.application.vector.OrbitalState;
-import org.artools.orbitcalculator.application.writeableorbit.Orbit;
-import org.artools.orbitcalculator.method.writeableorbit.OrbitBuilder;
 
 @Getter
 @NoArgsConstructor
@@ -131,7 +129,4 @@ public class OrbitalStateBuilder {
     return eccentricAnomaly - (eccentricAnomaly * sin(eccentricAnomaly));
   }
 
-  public Orbit getAsOrbit() {
-    return new OrbitBuilder().buildFromVectors(vectors).getOrbit();
-  }
 }

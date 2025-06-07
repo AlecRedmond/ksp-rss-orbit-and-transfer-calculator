@@ -55,7 +55,7 @@ public class OrreryUtils {
   }
 
   private Map.Entry<AstralBodies, Double> findAccelerationTowards(
-          MotionState satelliteState, AstralBodies focusAstralBodies, MotionState focusBodyState) {
+      MotionState satelliteState, AstralBodies focusAstralBodies, MotionState focusBodyState) {
     double focusBodyMu = focusAstralBodies.getMu();
     double distance = focusBodyState.getPosition().subtract(satelliteState.getPosition()).getNorm();
     double acceleration = focusBodyMu / Math.pow(distance, 2);

@@ -12,7 +12,7 @@ import org.artools.orbitcalculator.application.bodies.AstralBodies;
 public class NBodyODEProblem implements FirstOrderDifferentialEquations {
   private final List<AstralBodies> bodies;
 
-  public NBodyODEProblem(List<AstralBodies> bodies) {
+  protected NBodyODEProblem(List<AstralBodies> bodies) {
     this.bodies = bodies;
   }
 

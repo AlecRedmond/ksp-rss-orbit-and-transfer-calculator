@@ -13,7 +13,7 @@ import org.hibernate.annotations.UuidGenerator;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AstralState {
+public class AstralPosition {
   @Id
   @UuidGenerator
   private String id;

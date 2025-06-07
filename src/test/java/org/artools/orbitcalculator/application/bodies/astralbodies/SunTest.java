@@ -13,7 +13,5 @@ class SunTest {
     void motionState(){
         var motionState = test.getMotionState1951Jan1();
         assertNotNull(motionState);
-        System.out.println(Arrays.toString(motionState.getPosition().toArray()));
-        System.out.println(Arrays.toString(motionState.getVelocity().toArray()));
     }
 }
