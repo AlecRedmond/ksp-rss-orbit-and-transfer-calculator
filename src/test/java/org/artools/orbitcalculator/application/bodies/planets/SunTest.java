@@ -1,8 +1,6 @@
-package org.artools.orbitcalculator.application.bodies.astralbodies;
+package org.artools.orbitcalculator.application.bodies.planets;
 
 import org.junit.jupiter.api.Test;
-
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,7 +9,7 @@ class SunTest {
 
     @Test
     void motionState(){
-        var motionState = test.getMotionState1951Jan1();
+        var motionState = test.getMotionState();
         assertNotNull(motionState);
     }
 }

@@ -1,8 +1,13 @@
-package org.artools.orbitcalculator.application.bodies.astralbodies;
+package org.artools.orbitcalculator.application.bodies.planets;
 
-import org.artools.orbitcalculator.application.bodies.AstralBodies;
+import org.artools.orbitcalculator.application.bodies.BodyType;
 
-public class Jupiter extends AstralBody {
+public class Jupiter extends Planet {
+  @Override
+  protected BodyType planetName() {
+    return BodyType.JUPITER;
+  }
+
   @Override
   protected String horizonsVectorData() {
     return "X = 7.181715558101405E+08 Y =-1.965439895019584E+08 Z =-1.529523246304591E+07\n"
@@ -25,7 +30,7 @@ public class Jupiter extends AstralBody {
   }
 
   @Override
-  public AstralBodies getDefaultOrbitalFocus() {
-    return AstralBodies.SUN;
+  public BodyType parentBody() {
+    return BodyType.SUN;
   }
 }

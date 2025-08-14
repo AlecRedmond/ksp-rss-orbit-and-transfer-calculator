@@ -1,9 +1,14 @@
 package org.artools.orbitcalculator.method.vector;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
 import lombok.Getter;
-import org.artools.orbitcalculator.application.bodies.AstralBodies;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.artools.orbitcalculator.application.bodies.AstralBody;
+import org.artools.orbitcalculator.application.bodies.BodyType;
+import org.artools.orbitcalculator.application.bodies.planets.Planet;
 import org.artools.orbitcalculator.application.vector.MotionState;
 import org.artools.orbitcalculator.application.vector.OrbitalState;
 import org.artools.orbitcalculator.application.vector.Orrery;
@@ -21,44 +26,61 @@ public class OrreryUtils {
   }
 
   public Orrery convertToOrbitalStates() {
-    orrery.getBodyStateMap().forEach(this::convertToOrbitalState);
+    orrery.getAstralBodies().forEach(this::convertToOrbitalState);
     return orrery;
   }
 
-  private void convertToOrbitalState(AstralBodies astralBodies, MotionState satelliteState) {
-    Optional<AstralBodies> centralBodyOptional = findOrbitalFocus(astralBodies);
-    if (centralBodyOptional.isEmpty()) {
+  private void convertToOrbitalState(AstralBody body) {
+    if(body.getBodyType().equals(BodyType.SUN)){
       return;
     }
-    AstralBodies centralAstralBodies = centralBodyOptional.get();
-    MotionState centralBodyState = orrery.getMotionVectors(centralAstralBodies);
-    OrbitalState state =
-        new OrbitalStateBuilder(satelliteState, centralBodyState, centralAstralBodies).getVectors();
-    orrery.setMotionState(astralBodies, state);
+    Planet orbitalFocus = findOrbitalFocus(body);
+    OrbitalState state = new OrbitalStateBuilder(body.getMotionState(), orbitalFocus).getVectors();
+    body.setMotionState(state);
   }
 
-  private Optional<AstralBodies> findOrbitalFocus(AstralBodies satellite) {
-    if (!satellite.equals(AstralBodies.CRAFT)) {
-      return Optional.ofNullable(satellite.getOrbitalFocus());
+  private Planet findOrbitalFocus(AstralBody satellite) {
+    if (satellite instanceof Planet) {
+      BodyType parentBodyType = ((Planet) satellite).getParentBody();
+      return orrery.getAstralBodies().stream()
+          .filter(body -> body.getBodyType().equals(parentBodyType))
+          .findFirst()
+          .map(Planet.class::cast)
+          .orElseThrow();
     }
     return maximumAccelerationValue(satellite);
   }
 
-  private Optional<AstralBodies> maximumAccelerationValue(AstralBodies satellite) {
-    MotionState satelliteState = orrery.getMotionVectors(satellite);
+  private Planet maximumAccelerationValue(AstralBody satellite) {
+    MotionState satelliteState = satellite.getMotionState();
+    List<Planet> planets = orrery.getAllPlanets();
 
-    return orrery.getBodyStateMap().entrySet().stream()
-        .filter(entry -> !entry.getKey().equals(satellite))
-        .map(entry -> findAccelerationTowards(satelliteState, entry.getKey(), entry.getValue()))
+    return planets.stream()
+        .filter(body -> !body.equals(satellite))
+        .map(planet -> findAccelerationTowards(satelliteState, planet))
         .max(Map.Entry.comparingByValue())
-        .map(Map.Entry::getKey);
+        .map(Map.Entry::getKey)
+        .orElseThrow();
   }
 
-  private Map.Entry<AstralBodies, Double> findAccelerationTowards(
-      MotionState satelliteState, AstralBodies focusAstralBodies, MotionState focusBodyState) {
-    double focusBodyMu = focusAstralBodies.getMu();
+  private Map.Entry<Planet, Double> findAccelerationTowards(
+      MotionState satelliteState, Planet focusPlanet) {
+    MotionState focusBodyState = focusPlanet.getMotionState();
+    double focusBodyMu = focusPlanet.getMu();
     double distance = focusBodyState.getPosition().subtract(satelliteState.getPosition()).getNorm();
     double acceleration = focusBodyMu / Math.pow(distance, 2);
-    return Map.entry(focusAstralBodies, acceleration);
+    return Map.entry(focusPlanet, acceleration);
+  }
+
+  public void centreBody(AstralBody body) {
+    Vector3D shiftVector = body.getMotionState().getPosition().negate();
+    adjustAllBy(shiftVector);
+  }
+
+  private void adjustAllBy(Vector3D shiftVector) {
+    orrery.getAstralBodies().stream()
+        .map(AstralBody::getMotionState)
+        .forEach(
+            motionState -> motionState.setPosition(motionState.getPosition().add(shiftVector)));
   }
 }

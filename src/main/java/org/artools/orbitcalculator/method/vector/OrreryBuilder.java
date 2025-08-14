@@ -1,43 +1,44 @@
 package org.artools.orbitcalculator.method.vector;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.artools.orbitcalculator.application.bodies.AstralBodies;
+import org.artools.orbitcalculator.application.bodies.BodyType;
+import org.artools.orbitcalculator.application.bodies.planets.*;
+import org.artools.orbitcalculator.application.vector.Orrery;
 
 @Getter
-public class OrreryBuilder extends OrreryUtils {
+public class OrreryBuilder {
+  private final Orrery orrery;
 
-  public OrreryBuilder(){
-      super();
+  public OrreryBuilder() {
+    List<Planet> planets = initializeAllPlanets();
+    orrery = new Orrery(planets);
+    Planet sun = orrery.getPlanetByName(BodyType.SUN).orElseThrow();
+    OrreryUtils utils = new OrreryUtils(orrery);
+    utils.centreBody(sun);
   }
 
-  public OrreryBuilder setTo1951Jan1() {
-    initialisePlanetsTo1951Jan1();
-    shiftToSunAtZero();
-    return this;
-  }
-
-  private void initialisePlanetsTo1951Jan1() {
-    Arrays.stream(AstralBodies.values())
-        .filter(body -> !body.equals(AstralBodies.CRAFT))
-        .forEach(this::get1951Jan1Positions);
-  }
-
-  private void shiftToSunAtZero() {
-    Vector3D shiftVector = orrery.getMotionVectors(AstralBodies.SUN).getPosition().negate();
-    adjustAllBy(shiftVector);
-  }
-
-  private void get1951Jan1Positions(AstralBodies astralBodies) {
-    orrery.putData(astralBodies, astralBodies.get1951Jan1State());
-  }
-
-  private void adjustAllBy(Vector3D shiftVector) {
-    orrery
-        .getBodyStateMap()
-        .values()
-        .forEach(
-            motionState -> motionState.setPosition(motionState.getPosition().add(shiftVector)));
+  private List<Planet> initializeAllPlanets() {
+    List<Planet> planets = new ArrayList<>();
+    for (BodyType type : BodyType.values()) {
+      switch (type) {
+        case SUN -> planets.add(new Sun());
+        case MERCURY -> planets.add(new Mercury());
+        case VENUS -> planets.add(new Venus());
+        case EARTH -> planets.add(new Earth());
+        case MOON -> planets.add(new Moon());
+        case MARS -> planets.add(new Mars());
+        case JUPITER -> planets.add(new Jupiter());
+        case SATURN -> planets.add(new Saturn());
+        case URANUS -> planets.add(new Uranus());
+        case NEPTUNE -> planets.add(new Neptune());
+        case CRAFT -> {}
+        default ->
+            throw new IllegalStateException(
+                "Unexpected value during Orrery Initialization: " + type);
+      }
+    }
+    return planets;
   }
 }

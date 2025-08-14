@@ -1,8 +1,13 @@
-package org.artools.orbitcalculator.application.bodies.astralbodies;
+package org.artools.orbitcalculator.application.bodies.planets;
 
-import org.artools.orbitcalculator.application.bodies.AstralBodies;
+import org.artools.orbitcalculator.application.bodies.BodyType;
 
-public class Saturn extends AstralBody{
+public class Saturn extends Planet {
+    @Override
+    protected BodyType planetName() {
+        return BodyType.SATURN;
+    }
+
     @Override
     protected String horizonsVectorData() {
     return "X =-1.412383721620868E+09 Y = 7.367284295993097E+07 Z = 5.480875622993410E+07\n"
@@ -25,7 +30,7 @@ public class Saturn extends AstralBody{
     }
 
     @Override
-    public AstralBodies getDefaultOrbitalFocus() {
-        return AstralBodies.SUN;
+    public BodyType parentBody() {
+        return BodyType.SUN;
     }
 }

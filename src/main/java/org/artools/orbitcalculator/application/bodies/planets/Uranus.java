@@ -1,8 +1,13 @@
-package org.artools.orbitcalculator.application.bodies.astralbodies;
+package org.artools.orbitcalculator.application.bodies.planets;
 
-import org.artools.orbitcalculator.application.bodies.AstralBodies;
+import org.artools.orbitcalculator.application.bodies.BodyType;
 
-public class Uranus extends AstralBody {
+public class Uranus extends Planet {
+  @Override
+  protected BodyType planetName() {
+    return BodyType.URANUS;
+  }
+
   @Override
   protected String horizonsVectorData() {
     return "X =-4.007700778061882E+08 Y = 2.796136159810110E+09 Z = 1.559876300241232E+07\n"
@@ -25,7 +30,7 @@ public class Uranus extends AstralBody {
   }
 
   @Override
-  public AstralBodies getDefaultOrbitalFocus() {
-    return AstralBodies.SUN;
+  public BodyType parentBody() {
+    return BodyType.SUN;
   }
 }

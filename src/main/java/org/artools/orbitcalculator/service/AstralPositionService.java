@@ -50,18 +50,17 @@ public class AstralPositionService {
 
   @PostConstruct
   public void initializePositions() {
-    orrery = new OrreryBuilder().setTo1951Jan1().getOrrery();
+    orrery = new OrreryBuilder().getOrrery();
     saveOrreryState();
   }
 
   private void saveOrreryState() {
-    orrery.getBodyStateMap().entrySet().stream()
+    orrery.getAstralBodies().stream()
         .map(astralStateMapper::orreryToAstralState)
         .forEach(repository::save);
   }
 
-  public List<AstralPosition> statesAtNewEpoch(String epochString) {
-    Instant epoch = Instant.parse(epochString);
+  public List<AstralPosition> statesAtNewEpoch(Instant epoch) {
     stepToDate(epoch);
     return fetchSolarSystemStates().stream()
         .filter(sameEpochAs(epoch))

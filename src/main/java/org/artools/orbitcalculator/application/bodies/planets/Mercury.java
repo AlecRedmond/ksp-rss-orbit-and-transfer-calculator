@@ -1,8 +1,13 @@
-package org.artools.orbitcalculator.application.bodies.astralbodies;
+package org.artools.orbitcalculator.application.bodies.planets;
 
-import org.artools.orbitcalculator.application.bodies.AstralBodies;
+import org.artools.orbitcalculator.application.bodies.BodyType;
 
-public class Mercury extends AstralBody {
+public class Mercury extends Planet {
+
+  @Override
+  protected BodyType planetName() {
+    return BodyType.MERCURY;
+  }
 
   @Override
   protected String horizonsVectorData() {
@@ -26,7 +31,7 @@ public class Mercury extends AstralBody {
   }
 
   @Override
-  public AstralBodies getDefaultOrbitalFocus() {
-    return AstralBodies.SUN;
+  public BodyType parentBody() {
+    return BodyType.SUN;
   }
 }

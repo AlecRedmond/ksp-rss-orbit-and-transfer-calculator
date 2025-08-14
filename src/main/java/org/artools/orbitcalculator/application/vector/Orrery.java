@@ -1,36 +1,37 @@
 package org.artools.orbitcalculator.application.vector;
 
 import java.time.Instant;
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.*;
+
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.artools.orbitcalculator.application.bodies.AstralBodies;
-import org.artools.orbitcalculator.exceptions.NotOrbitalStateException;
+import org.artools.orbitcalculator.application.bodies.AstralBody;
+import org.artools.orbitcalculator.application.bodies.BodyType;
+import org.artools.orbitcalculator.application.bodies.planets.Planet;
 
 @Data
 @NoArgsConstructor
 public class Orrery {
-  private Map<AstralBodies, MotionState> bodyStateMap = new EnumMap<>(AstralBodies.class);
+  private List<AstralBody> astralBodies = new ArrayList<>();
 
-  public void putData(AstralBodies astralBodies, MotionState motionState) {
-    bodyStateMap.put(astralBodies, motionState);
+  public Orrery(List<Planet> planets) {
+    astralBodies.addAll(planets);
   }
 
-  public MotionState getMotionVectors(AstralBodies astralBodies) {
-    return bodyStateMap.get(astralBodies);
+  public List<Planet> getAllPlanets() {
+    return astralBodies.stream().filter(Planet.class::isInstance).map(Planet.class::cast).toList();
   }
 
-  public OrbitalState getOrbitalVectors(AstralBodies astralBodies) throws NotOrbitalStateException {
-    try {
-      return (OrbitalState) bodyStateMap.get(astralBodies);
-    } catch (ClassCastException e) {
-      throw new NotOrbitalStateException(astralBodies);
+  public Optional<Planet> getPlanetByName(BodyType name) {
+    if (name.equals(BodyType.CRAFT)) {
+      return Optional.empty();
     }
-  }
-
-  public void setMotionState(AstralBodies astralBodies, MotionState state) {
-    bodyStateMap.put(astralBodies, state);
+    return astralBodies.stream()
+        .filter(body -> body.getBodyType().equals(name))
+        .filter(Planet.class::isInstance)
+        .map(Planet.class::cast)
+        .findFirst();
   }
 
   public Instant getEpoch() {
@@ -39,11 +40,16 @@ public class Orrery {
 
   private boolean epochsAreEqual() {
     Instant firstInstant = firstInstant();
-    return bodyStateMap.values().stream()
+    return astralBodies.stream()
+        .map(AstralBody::getMotionState)
         .allMatch(motionState -> motionState.getEpoch().equals(firstInstant));
   }
 
   private Instant firstInstant() {
-    return bodyStateMap.values().stream().findFirst().map(MotionState::getEpoch).orElse(null);
+    return astralBodies.stream()
+        .findFirst()
+        .map(AstralBody::getMotionState)
+        .map(MotionState::getEpoch)
+        .orElse(null);
   }
 }

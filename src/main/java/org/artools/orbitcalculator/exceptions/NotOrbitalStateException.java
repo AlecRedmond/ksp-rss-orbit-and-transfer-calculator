@@ -1,9 +1,9 @@
 package org.artools.orbitcalculator.exceptions;
 
-import org.artools.orbitcalculator.application.bodies.AstralBodies;
+import org.artools.orbitcalculator.application.bodies.AstralBody;
 
 public class NotOrbitalStateException extends ClassCastException {
-    public NotOrbitalStateException(AstralBodies astralBodies){
-        super("The motionState for " + astralBodies + " could not be cast as an OrbitalState!");
+    public NotOrbitalStateException(AstralBody body){
+        super("The motionState for " + body + " could not be cast as an OrbitalState!");
     }
 }

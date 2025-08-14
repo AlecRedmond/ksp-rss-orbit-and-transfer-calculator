@@ -7,7 +7,7 @@ import java.time.Instant;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.artools.orbitcalculator.application.bodies.AstralBodies;
+import org.artools.orbitcalculator.application.bodies.planets.Planet;
 import org.artools.orbitcalculator.application.vector.MotionState;
 import org.artools.orbitcalculator.application.vector.OrbitalState;
 
@@ -16,15 +16,14 @@ import org.artools.orbitcalculator.application.vector.OrbitalState;
 public class OrbitalStateBuilder {
   private OrbitalState vectors = new OrbitalState();
 
-  public OrbitalStateBuilder(MotionState satelliteState, MotionState centralBodyState, AstralBodies centralAstralBodies){
-    buildVectors(satelliteState,centralBodyState, centralAstralBodies);
+  public OrbitalStateBuilder(MotionState satelliteState, Planet centralBody){
+    buildVectors(satelliteState,centralBody);
   }
-
-  private void buildVectors(MotionState satelliteState, MotionState centralBodyState, AstralBodies centralAstralBodies) {
+  private void buildVectors(MotionState satelliteState, Planet centralBody) {
     Instant epoch = satelliteState.getEpoch();
-    Vector3D velocity = getRelativeVelocity(satelliteState,centralBodyState);
-    Vector3D position = getRelativePosition(satelliteState,centralBodyState);
-    buildVectors(position, velocity, centralAstralBodies, epoch);
+    Vector3D velocity = getRelativeVelocity(satelliteState,centralBody.getMotionState());
+    Vector3D position = getRelativePosition(satelliteState,centralBody.getMotionState());
+    buildVectors(position, velocity, centralBody, epoch);
   }
 
   private static Vector3D getRelativeVelocity(MotionState satelliteState, MotionState centralBodyState) {
@@ -35,11 +34,11 @@ public class OrbitalStateBuilder {
     return satelliteState.getPosition().subtract(centralBodyState.getPosition());
   }
 
-  private void buildVectors(Vector3D position, Vector3D velocity, AstralBodies astralBodies, Instant epoch) {
+  private void buildVectors(Vector3D position, Vector3D velocity, Planet centralBody, Instant epoch) {
     Vector3D momentum = position.crossProduct(velocity);
-    Vector3D eccentricity = getEccentricity(velocity, momentum, astralBodies, position);
+    Vector3D eccentricity = getEccentricity(velocity, momentum, centralBody, position);
     Vector3D ascendingNodeVector = Vector3D.PLUS_K.crossProduct(momentum);
-    double semiMajorAxis = getSemiMajorAxis(momentum, astralBodies, eccentricity);
+    double semiMajorAxis = getSemiMajorAxis(momentum, centralBody, eccentricity);
     double inclination = getInclination(momentum);
     double rightAscension = getRightAscension(ascendingNodeVector);
     double argumentPE = getArgumentPE(ascendingNodeVector, eccentricity);
@@ -48,7 +47,7 @@ public class OrbitalStateBuilder {
     double meanAnomaly = getMeanAnomaly(eccentricAnomaly, eccentricity);
     vectors =
         OrbitalState.builder()
-            .centralAstralBodies(astralBodies)
+            .centralBodyType(centralBody.getBodyType())
             .position(position)
             .velocity(velocity)
             .momentum(momentum)
@@ -65,20 +64,20 @@ public class OrbitalStateBuilder {
   }
 
   private Vector3D getEccentricity(
-          Vector3D velocity, Vector3D momentum, AstralBodies astralBodies, Vector3D position) {
-    var vector1 = velocity.crossProduct(momentum).scalarMultiply(1 / astralBodies.getMu());
+          Vector3D velocity, Vector3D momentum, Planet planet, Vector3D position) {
+    var vector1 = velocity.crossProduct(momentum).scalarMultiply(1 / planet.getMu());
     var vector2 = position.scalarMultiply(1 / position.getNorm());
     return vector1.subtract(vector2);
   }
 
-  private double getSemiMajorAxis(Vector3D momentumVector, AstralBodies astralBodies, Vector3D eccentricityVector) {
+  private double getSemiMajorAxis(Vector3D momentumVector, Planet planet, Vector3D eccentricityVector) {
     double eccentricity = eccentricityVector.getNorm();
     if (eccentricity == 1) {
       return Double.MAX_VALUE;
     }
     double eccentricitySquared = Math.pow(eccentricity, 2);
     double momentumSquared = Math.pow(momentumVector.getNorm(), 2);
-    double semiLatusRectum = momentumSquared / astralBodies.getMu();
+    double semiLatusRectum = momentumSquared / planet.getMu();
     return semiLatusRectum / (1 - eccentricitySquared);
   }
 

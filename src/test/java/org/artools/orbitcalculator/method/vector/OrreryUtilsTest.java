@@ -1,6 +1,8 @@
 package org.artools.orbitcalculator.method.vector;
 
-import org.artools.orbitcalculator.application.bodies.AstralBodies;
+import org.artools.orbitcalculator.application.bodies.BodyType;
+import org.artools.orbitcalculator.application.vector.MotionState;
+import org.artools.orbitcalculator.application.vector.OrbitalState;
 import org.artools.orbitcalculator.application.vector.Orrery;
 import org.artools.orbitcalculator.exceptions.NotOrbitalStateException;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,14 +15,16 @@ class OrreryUtilsTest {
 
   @BeforeEach
   void initialize(){
-    Orrery orrery = new OrreryBuilder().setTo1951Jan1().getOrrery();
+    Orrery orrery = new OrreryBuilder().getOrrery();
     test = new OrreryUtils(orrery);
   }
 
   @Test
   void convertToOrbitalStates() {
     Orrery orrery = test.convertToOrbitalStates();
-    assertThrows(NotOrbitalStateException.class,() -> orrery.getOrbitalVectors(AstralBodies.SUN));
-    assertDoesNotThrow(() -> orrery.getOrbitalVectors(AstralBodies.EARTH));
+    MotionState sunState = orrery.getPlanetByName(BodyType.SUN).orElseThrow().getMotionState();
+    MotionState earthState = orrery.getPlanetByName(BodyType.EARTH).orElseThrow().getMotionState();
+    assertThrows(ClassCastException.class,() -> {OrbitalState state = (OrbitalState) sunState;});
+    assertDoesNotThrow(() -> {OrbitalState state = (OrbitalState) earthState;});
   }
 }

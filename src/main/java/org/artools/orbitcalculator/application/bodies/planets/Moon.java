@@ -1,8 +1,13 @@
-package org.artools.orbitcalculator.application.bodies.astralbodies;
+package org.artools.orbitcalculator.application.bodies.planets;
 
-import org.artools.orbitcalculator.application.bodies.AstralBodies;
+import org.artools.orbitcalculator.application.bodies.BodyType;
 
-public class Moon extends AstralBody{
+public class Moon extends Planet {
+    @Override
+    protected BodyType planetName() {
+        return BodyType.MOON;
+    }
+
     @Override
     protected String horizonsVectorData() {
     return "X =-2.707985902329372E+07 Y = 1.447291984553363E+08 Z =-9.383994639739394E+02\n"
@@ -25,7 +30,7 @@ public class Moon extends AstralBody{
     }
 
     @Override
-    public AstralBodies getDefaultOrbitalFocus() {
-        return AstralBodies.EARTH;
+    public BodyType parentBody() {
+        return BodyType.EARTH;
     }
 }

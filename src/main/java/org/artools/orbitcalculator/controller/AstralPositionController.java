@@ -1,5 +1,7 @@
 package org.artools.orbitcalculator.controller;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 import org.artools.orbitcalculator.application.AstralPosition;
@@ -8,7 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("astralstates")
+@RequestMapping("astralpositions")
+@CrossOrigin(origins = "http://localhost:5173") // React default port
 public class AstralPositionController {
   @Autowired private AstralPositionService service;
 
@@ -40,8 +43,9 @@ public class AstralPositionController {
     return "Deleted Successfully!";
   }
 
-  @GetMapping(value = "/stepto/{epoch}")
-  public List<AstralPosition> stepToNewEpoch(@PathVariable("epoch") String newEpoch){
+  @GetMapping(value = "/stepto/{timestamp}")
+  public List<AstralPosition> stepToNewEpoch(@PathVariable("timestamp") String newTimestamp){
+    Instant newEpoch = Timestamp.valueOf(newTimestamp).toInstant();
     return service.statesAtNewEpoch(newEpoch);
   }
 

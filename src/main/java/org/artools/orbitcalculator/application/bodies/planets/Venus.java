@@ -1,8 +1,13 @@
-package org.artools.orbitcalculator.application.bodies.astralbodies;
+package org.artools.orbitcalculator.application.bodies.planets;
 
-import org.artools.orbitcalculator.application.bodies.AstralBodies;
+import org.artools.orbitcalculator.application.bodies.BodyType;
 
-public class Venus extends AstralBody {
+public class Venus extends Planet {
+
+  @Override
+  protected BodyType planetName() {
+    return BodyType.VENUS;
+  }
 
   @Override
   protected String horizonsVectorData() {
@@ -26,7 +31,7 @@ public class Venus extends AstralBody {
   }
 
   @Override
-  public AstralBodies getDefaultOrbitalFocus() {
-    return AstralBodies.SUN;
+  public BodyType parentBody() {
+    return BodyType.SUN;
   }
 }

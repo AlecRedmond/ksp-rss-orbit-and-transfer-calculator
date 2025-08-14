@@ -1,14 +1,17 @@
 package org.artools.orbitcalculator.method.integrator;
 
-import static org.artools.orbitcalculator.application.bodies.AstralBodies.*;
+import static org.artools.orbitcalculator.application.bodies.BodyType.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import org.artools.orbitcalculator.application.bodies.AstralBodies;
+import org.artools.orbitcalculator.application.bodies.BodyType;
+import org.artools.orbitcalculator.application.bodies.planets.Planet;
+import org.artools.orbitcalculator.application.vector.OrbitalState;
 import org.artools.orbitcalculator.application.vector.Orrery;
 import org.artools.orbitcalculator.method.vector.OrreryBuilder;
 import org.artools.orbitcalculator.method.vector.OrreryUtils;
@@ -18,9 +21,9 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 class OrreryIntegratorTest {
-  static final List<Integer> yearsToTest = List.of(1951, 1971, 1991, 2011, 2021, 2031, 2041, 2051);
-  static final int TESTS_PER_YEAR = 8;
-  static final double AVERAGE_DELTA_RATIO = 10E-3;
+  static final List<Integer> yearsToTest = IntStream.range(1951,2051).boxed().toList();
+  static final int TESTS_PER_YEAR = 16;
+  static final double AVERAGE_DELTA_RATIO = 1E-3;
   static OrreryIntegrator test;
   static List<Orrery> orreries;
 
@@ -34,7 +37,7 @@ class OrreryIntegratorTest {
 
   @BeforeAll
   static void initialise() {
-    Orrery orrery = new OrreryBuilder().setTo1951Jan1().getOrrery();
+    Orrery orrery = new OrreryBuilder().getOrrery();
     test = new OrreryIntegrator(orrery);
     orreries =
         yearsToTest.stream()
@@ -47,7 +50,7 @@ class OrreryIntegratorTest {
   }
 
   private static Stream<Instant> getInstants(Instant instant) {
-    Instant end = instant.plus(365, ChronoUnit.DAYS);
+    Instant end = instant.plus(365, ChronoUnit.DAYS).plus(6,ChronoUnit.HOURS);
     long timeBetween = instant.until(end, ChronoUnit.SECONDS);
     long stepSeconds = timeBetween / TESTS_PER_YEAR;
     return IntStream.range(0, TESTS_PER_YEAR)
@@ -56,8 +59,17 @@ class OrreryIntegratorTest {
 
   @ParameterizedTest
   @MethodSource("provideSemiMajorAxisValidation")
-  void validateOrbitsAverageSMA(AstralBodies astralBodies, double expectedSMA) {
-    List<Double> smaList = orreries.stream().map(orrery -> orrery.getOrbitalVectors(astralBodies).getSemiMajorAxis()).toList();
+  void validateOrbitsAverageSMA(BodyType bodyType, double expectedSMA) {
+    List<Double> smaList =
+        orreries.stream()
+            .map(orrery -> orrery.getPlanetByName(bodyType))
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .map(Planet::getMotionState)
+            .filter(OrbitalState.class::isInstance)
+            .map(OrbitalState.class::cast)
+            .map(OrbitalState::getSemiMajorAxis)
+            .toList();
     double averageSMA = smaList.stream().reduce(0.0,Double::sum) / smaList.size();
     assertEquals(expectedSMA,averageSMA,expectedSMA * AVERAGE_DELTA_RATIO);
   }

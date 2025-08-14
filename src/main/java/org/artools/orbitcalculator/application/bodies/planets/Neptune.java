@@ -1,8 +1,13 @@
-package org.artools.orbitcalculator.application.bodies.astralbodies;
+package org.artools.orbitcalculator.application.bodies.planets;
 
-import org.artools.orbitcalculator.application.bodies.AstralBodies;
+import org.artools.orbitcalculator.application.bodies.BodyType;
 
-public class Neptune extends AstralBody{
+public class Neptune extends Planet {
+    @Override
+    protected BodyType planetName() {
+        return BodyType.NEPTUNE;
+    }
+
     @Override
     protected String horizonsVectorData() {
     return "X =-4.302388320559609E+09 Y =-1.420276864687885E+09 Z = 1.283614478699602E+08\n"
@@ -25,7 +30,7 @@ public class Neptune extends AstralBody{
     }
 
     @Override
-    public AstralBodies getDefaultOrbitalFocus() {
-        return AstralBodies.SUN;
+    public BodyType parentBody() {
+        return BodyType.SUN;
     }
 }

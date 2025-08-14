@@ -7,12 +7,12 @@ import org.apache.commons.math3.exception.DimensionMismatchException;
 import org.apache.commons.math3.exception.MaxCountExceededException;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
-import org.artools.orbitcalculator.application.bodies.AstralBodies;
+import org.artools.orbitcalculator.application.bodies.AstralBody;
 
 public class NBodyODEProblem implements FirstOrderDifferentialEquations {
-  private final List<AstralBodies> bodies;
+  private final List<AstralBody> bodies;
 
-  protected NBodyODEProblem(List<AstralBodies> bodies) {
+  protected NBodyODEProblem(List<AstralBody> bodies) {
     this.bodies = bodies;
   }
 
@@ -63,18 +63,18 @@ public class NBodyODEProblem implements FirstOrderDifferentialEquations {
         .reduce(Vector3D.ZERO, Vector3D::add);
   }
 
-  private Map.Entry<AstralBodies, Vector3D> getDistance(int bodyIndex, double[] y, Vector3D currentPos) {
-    AstralBodies astralBodies = bodies.get(bodyIndex);
+  private Map.Entry<AstralBody, Vector3D> getDistance(int bodyIndex, double[] y, Vector3D currentPos) {
+    AstralBody body = bodies.get(bodyIndex);
     Vector3D distance = getRadiusFromBodyIndex(bodyIndex, y).subtract(currentPos);
-    return Map.entry(astralBodies, distance);
+    return Map.entry(body, distance);
   }
 
-  private Vector3D accelerationTowardsBody(Map.Entry<AstralBodies, Vector3D> distanceEntry) {
-    AstralBodies astralBodies = distanceEntry.getKey();
-    Vector3D directionVector = distanceEntry.getValue().normalize();
+  private Vector3D accelerationTowardsBody(Map.Entry<AstralBody, Vector3D> distanceEntry) {
+    AstralBody body = distanceEntry.getKey();
+    Vector3D directionUnitVector = distanceEntry.getValue().normalize();
     double distanceScalar = distanceEntry.getValue().getNorm();
-    double accelerationScalar = astralBodies.getMu() / Math.pow(distanceScalar, 2);
-    return directionVector.scalarMultiply(accelerationScalar);
+    double accelerationScalar = body.getMu() / Math.pow(distanceScalar, 2);
+    return directionUnitVector.scalarMultiply(accelerationScalar);
   }
 
 }

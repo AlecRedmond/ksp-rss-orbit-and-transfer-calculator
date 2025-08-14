@@ -23,7 +23,7 @@ public class AstralPosition {
   @Temporal(TemporalType.TIMESTAMP)
   private Timestamp timestamp;
 
-  private Double xPos;
-  private Double yPos;
-  private Double zPos;
+  private Double xpos;
+  private Double ypos;
+  private Double zpos;
 }

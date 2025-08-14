@@ -3,7 +3,10 @@ package org.artools.orbitcalculator.method.vector;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
-import org.artools.orbitcalculator.application.bodies.AstralBodies;
+import java.util.Optional;
+
+import org.artools.orbitcalculator.application.bodies.BodyType;
+import org.artools.orbitcalculator.application.bodies.planets.Planet;
 import org.artools.orbitcalculator.application.vector.Orrery;
 import org.junit.jupiter.api.Test;
 
@@ -11,11 +14,15 @@ class OrreryBuilderTest {
   OrreryBuilder test = new OrreryBuilder();
 
   @Test
-  void setTo1951Jan1() {
+  void setToStartingEpoch() {
     //ASSERT NONE ARE NULL
-    Orrery orrery = test.setTo1951Jan1().getOrrery();
-    Arrays.stream(AstralBodies.values())
-        .filter(ab -> !ab.equals(AstralBodies.CRAFT))
-        .forEach(body -> assertNotNull(orrery.getMotionVectors(body)));
+    Orrery orrery = test.getOrrery();
+    Arrays.stream(BodyType.values())
+        .filter(ab -> !ab.equals(BodyType.CRAFT))
+        .forEach(
+            bodyType -> {
+              Optional<Planet> optionalPlanet = orrery.getPlanetByName(bodyType);
+              assertFalse(optionalPlanet.isEmpty());
+            });
   }
 }

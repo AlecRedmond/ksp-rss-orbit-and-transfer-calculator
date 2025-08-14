@@ -9,29 +9,30 @@ import org.apache.commons.math3.exception.NumberIsTooSmallException;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.ode.FirstOrderIntegrator;
 import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator;
+import org.artools.orbitcalculator.application.bodies.AstralBody;
 import org.artools.orbitcalculator.application.vector.MotionState;
 import org.artools.orbitcalculator.application.vector.Orrery;
-import org.artools.orbitcalculator.application.bodies.AstralBodies;
+import org.artools.orbitcalculator.application.bodies.BodyType;
 
 public class OrreryIntegrator {
   @Getter private final Orrery orrery;
   private final double minTimeStep;
   private final double maxTimeStep;
   private double[] y;
-  private List<AstralBodies> bodies;
+  private List<AstralBody> bodies;
   private Instant newEpoch;
 
   public OrreryIntegrator(Orrery orrery) {
     this.orrery = orrery;
     minTimeStep = 1e-6;
-    maxTimeStep = 3600.0 * 24;
+    maxTimeStep = 3600.0 * 6;
     initializeBodies();
     initializeStateVector();
     newEpoch = orrery.getEpoch();
   }
 
   private void initializeBodies() {
-    bodies = orrery.getBodyStateMap().keySet().stream().toList();
+    bodies = orrery.getAstralBodies();
   }
 
   private void initializeStateVector() {
@@ -40,8 +41,8 @@ public class OrreryIntegrator {
   }
 
   private void inputStates(int bodyIndex) {
-    AstralBodies astralBodies = bodies.get(bodyIndex);
-    MotionState mv = orrery.getMotionVectors(astralBodies);
+    AstralBody body = bodies.get(bodyIndex);
+    MotionState mv = body.getMotionState();
     Vector3D pos = mv.getPosition();
     Vector3D vel = mv.getVelocity();
     int yIndex = bodyIndex * 6;
@@ -88,13 +89,11 @@ public class OrreryIntegrator {
 
   private void writeNewBodyVectors(int bodyIndex) {
     int yIndex = bodyIndex * 6;
-    AstralBodies astralBodies = bodies.get(bodyIndex);
+    AstralBody body = bodies.get(bodyIndex);
     Vector3D position = new Vector3D(new double[] {y[yIndex], y[yIndex + 1], y[yIndex + 2]});
     Vector3D velocity = new Vector3D(new double[] {y[yIndex + 3], y[yIndex + 4], y[yIndex + 5]});
-    MotionState mv = orrery.getMotionVectors(astralBodies);
-    mv.setEpoch(newEpoch);
-    mv.setPosition(position);
-    mv.setVelocity(velocity);
-    orrery.getBodyStateMap().put(astralBodies, mv);
+    body.getMotionState().setEpoch(newEpoch);
+    body.getMotionState().setPosition(position);
+    body.getMotionState().setVelocity(velocity);
   }
 }
