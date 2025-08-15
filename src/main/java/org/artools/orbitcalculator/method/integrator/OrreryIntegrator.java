@@ -12,7 +12,6 @@ import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator;
 import org.artools.orbitcalculator.application.bodies.AstralBody;
 import org.artools.orbitcalculator.application.vector.MotionState;
 import org.artools.orbitcalculator.application.vector.Orrery;
-import org.artools.orbitcalculator.application.bodies.BodyType;
 
 public class OrreryIntegrator {
   @Getter private final Orrery orrery;

@@ -1,21 +1,24 @@
 package org.artools.orbitcalculator.application.bodies;
 
 import lombok.Data;
+import org.artools.orbitcalculator.application.bodies.planets.BodyName;
 import org.artools.orbitcalculator.application.vector.MotionState;
+
+import java.util.Optional;
 
 @Data
 public class Craft implements AstralBody {
     private MotionState motionState;
     private double mass;
-    private BodyType bodyType;
+    private BodyName sphereOfInfluence;
+    private final String name;
 
 
-    public Craft(MotionState motionState,double mass){
+    public Craft(MotionState motionState,double mass,String name){
         this.mass = mass;
         this.motionState = motionState;
-        this.bodyType = BodyType.CRAFT;
+        this.name = name;
     }
-
 
     @Override
     public double getMu() {
@@ -28,7 +31,7 @@ public class Craft implements AstralBody {
     }
 
     @Override
-    public BodyType getBodyType() {
-        return bodyType;
+    public Optional<BodyName> getSphereOfInfluence(){
+        return Optional.ofNullable(sphereOfInfluence);
     }
 }

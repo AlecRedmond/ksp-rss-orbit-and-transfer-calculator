@@ -1,17 +1,15 @@
 package org.artools.orbitcalculator.application.bodies.planets;
 
-import org.artools.orbitcalculator.application.bodies.BodyType;
-
 public class Saturn extends Planet {
     @Override
-    protected BodyType planetName() {
-        return BodyType.SATURN;
+    protected BodyName planetName() {
+        return BodyName.SATURN;
     }
 
     @Override
     protected String horizonsVectorData() {
-    return "X =-1.412383721620868E+09 Y = 7.367284295993097E+07 Z = 5.480875622993410E+07\n"
-        + " VX=-1.019558097108260E+00 VY=-9.668944201961397E+00 VZ= 2.103534313781799E-01";
+    return "X =-1.412383751516021E+09 Y = 7.367255944998446E+07 Z = 5.480876239785470E+07\n"
+        + " VX=-1.019555997058242E+00 VY=-9.668944347402187E+00 VZ= 2.103533639655706E-01";
     }
 
     @Override
@@ -30,7 +28,7 @@ public class Saturn extends Planet {
     }
 
     @Override
-    public BodyType parentBody() {
-        return BodyType.SUN;
+    public BodyName parentBody() {
+        return BodyName.SUN;
     }
 }

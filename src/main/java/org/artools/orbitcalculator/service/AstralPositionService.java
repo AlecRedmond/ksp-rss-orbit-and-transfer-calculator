@@ -62,13 +62,11 @@ public class AstralPositionService {
 
   public List<AstralPosition> statesAtNewEpoch(Instant epoch) {
     stepToDate(epoch);
-    return fetchSolarSystemStates().stream()
-        .filter(sameEpochAs(epoch))
-        .toList();
+    return fetchSolarSystemStates().stream().filter(sameEpochAs(epoch)).toList();
   }
 
   private void stepToDate(Instant epoch) {
-    if(epoch.equals(orrery.getEpoch())){
+    if (epoch.equals(orrery.getEpoch())) {
       return;
     }
     orrery = new OrreryIntegrator(orrery).stepToDate(epoch).getOrrery();

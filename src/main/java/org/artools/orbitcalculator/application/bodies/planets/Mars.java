@@ -1,11 +1,9 @@
 package org.artools.orbitcalculator.application.bodies.planets;
 
-import org.artools.orbitcalculator.application.bodies.BodyType;
-
 public class Mars extends Planet {
     @Override
-    protected BodyType planetName() {
-        return BodyType.MARS;
+    protected BodyName planetName() {
+        return BodyName.MARS;
     }
 
     @Override
@@ -30,7 +28,7 @@ public class Mars extends Planet {
     }
 
     @Override
-    public BodyType parentBody() {
-        return BodyType.SUN;
+    public BodyName parentBody() {
+        return BodyName.SUN;
     }
 }

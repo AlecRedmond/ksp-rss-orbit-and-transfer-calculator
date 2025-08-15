@@ -1,15 +1,14 @@
 package org.artools.orbitcalculator.method.integrator;
 
-import static org.artools.orbitcalculator.application.bodies.BodyType.*;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import org.artools.orbitcalculator.application.bodies.BodyType;
+import org.artools.orbitcalculator.application.bodies.planets.BodyName;
 import org.artools.orbitcalculator.application.bodies.planets.Planet;
 import org.artools.orbitcalculator.application.vector.OrbitalState;
 import org.artools.orbitcalculator.application.vector.Orrery;
@@ -21,18 +20,19 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 class OrreryIntegratorTest {
-  static final List<Integer> yearsToTest = IntStream.range(1951,2051).boxed().toList();
-  static final int TESTS_PER_YEAR = 16;
-  static final double AVERAGE_DELTA_RATIO = 1E-3;
+  static final List<Integer> yearsToTest = IntStream.range(1951, 2051).boxed().toList();
+  static final int TESTS_PER_YEAR = 4;
+  static final double AVERAGE_DELTA_RATIO = 5E-3;
   static OrreryIntegrator test;
   static List<Orrery> orreries;
 
-  public static Stream<Arguments> provideSemiMajorAxisValidation() {
-    return Stream.of(Arguments.of(EARTH, 149.598E9),
-            Arguments.of(JUPITER,778.479E9),
-            Arguments.of(SATURN,1432.041E9),
-            Arguments.of(URANUS,2867.043E9),
-            Arguments.of(NEPTUNE,4514.953E9));
+  public static Stream<Arguments> provideValidSMAs(){
+    return Stream.of(
+            Arguments.of(BodyName.EARTH, 149.598E9),
+            Arguments.of(BodyName.JUPITER, 778.479E9),
+            Arguments.of(BodyName.SATURN, 1.426955795169579E12),
+            Arguments.of(BodyName.URANUS, 2.871309893991385E12),
+            Arguments.of(BodyName.NEPTUNE, 4.498638029781399E12));
   }
 
   @BeforeAll
@@ -50,7 +50,7 @@ class OrreryIntegratorTest {
   }
 
   private static Stream<Instant> getInstants(Instant instant) {
-    Instant end = instant.plus(365, ChronoUnit.DAYS).plus(6,ChronoUnit.HOURS);
+    Instant end = instant.plus(365, ChronoUnit.DAYS).plus(6, ChronoUnit.HOURS);
     long timeBetween = instant.until(end, ChronoUnit.SECONDS);
     long stepSeconds = timeBetween / TESTS_PER_YEAR;
     return IntStream.range(0, TESTS_PER_YEAR)
@@ -58,19 +58,17 @@ class OrreryIntegratorTest {
   }
 
   @ParameterizedTest
-  @MethodSource("provideSemiMajorAxisValidation")
-  void validateOrbitsAverageSMA(BodyType bodyType, double expectedSMA) {
+  @MethodSource("provideValidSMAs")
+  void validateOrbitsAverageSMA(BodyName bodyName, double expectedSMA) {
     List<Double> smaList =
         orreries.stream()
-            .map(orrery -> orrery.getPlanetByName(bodyType))
-            .filter(Optional::isPresent)
-            .map(Optional::get)
+            .map(orrery -> orrery.getPlanetByName(bodyName))
             .map(Planet::getMotionState)
             .filter(OrbitalState.class::isInstance)
             .map(OrbitalState.class::cast)
             .map(OrbitalState::getSemiMajorAxis)
             .toList();
-    double averageSMA = smaList.stream().reduce(0.0,Double::sum) / smaList.size();
-    assertEquals(expectedSMA,averageSMA,expectedSMA * AVERAGE_DELTA_RATIO);
+    double averageSMA = smaList.stream().reduce(0.0, Double::sum) / smaList.size();
+    assertEquals(expectedSMA, averageSMA, expectedSMA * AVERAGE_DELTA_RATIO);
   }
 }

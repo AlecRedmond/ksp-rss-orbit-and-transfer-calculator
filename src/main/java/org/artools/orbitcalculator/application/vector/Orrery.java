@@ -2,36 +2,38 @@ package org.artools.orbitcalculator.application.vector;
 
 import java.time.Instant;
 import java.util.*;
-
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.artools.orbitcalculator.application.bodies.AstralBody;
-import org.artools.orbitcalculator.application.bodies.BodyType;
+import org.artools.orbitcalculator.application.bodies.planets.BodyName;
 import org.artools.orbitcalculator.application.bodies.planets.Planet;
 
 @Data
-@NoArgsConstructor
 public class Orrery {
-  private List<AstralBody> astralBodies = new ArrayList<>();
+  private List<AstralBody> astralBodies;
+  private Map<BodyName, Integer> planetIndex;
+
+  public Orrery() {
+    astralBodies = new ArrayList<>();
+    planetIndex = new EnumMap<>(BodyName.class);
+  }
 
   public Orrery(List<Planet> planets) {
-    astralBodies.addAll(planets);
+    astralBodies = new ArrayList<>();
+    planetIndex = new EnumMap<>(BodyName.class);
+    for (int i = 0; i < planets.size(); i++) {
+      Planet planet = planets.get(i);
+      astralBodies.add(planet);
+      planetIndex.put(planet.getBodyName(), i);
+    }
   }
 
   public List<Planet> getAllPlanets() {
-    return astralBodies.stream().filter(Planet.class::isInstance).map(Planet.class::cast).toList();
+    return planetIndex.values().stream().map(astralBodies::get).map(Planet.class::cast).toList();
   }
 
-  public Optional<Planet> getPlanetByName(BodyType name) {
-    if (name.equals(BodyType.CRAFT)) {
-      return Optional.empty();
-    }
-    return astralBodies.stream()
-        .filter(body -> body.getBodyType().equals(name))
-        .filter(Planet.class::isInstance)
-        .map(Planet.class::cast)
-        .findFirst();
+  public Planet getPlanetByName(BodyName name) {
+    int index = planetIndex.get(name);
+    return (Planet) astralBodies.get(index);
   }
 
   public Instant getEpoch() {

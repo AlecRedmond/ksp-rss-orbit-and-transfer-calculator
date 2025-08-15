@@ -1,17 +1,15 @@
 package org.artools.orbitcalculator.application.bodies.planets;
 
-import org.artools.orbitcalculator.application.bodies.BodyType;
-
 public class Uranus extends Planet {
   @Override
-  protected BodyType planetName() {
-    return BodyType.URANUS;
+  protected BodyName planetName() {
+    return BodyName.URANUS;
   }
 
   @Override
   protected String horizonsVectorData() {
-    return "X =-4.007700778061882E+08 Y = 2.796136159810110E+09 Z = 1.559876300241232E+07\n"
-        + " VX=-6.792937380879133E+00 VY=-1.284744925308281E+00 VZ= 8.336433921638425E-02";
+    return "X =-4.007702769867036E+08 Y = 2.796136122139190E+09 Z = 1.559876544679713E+07\n"
+        + " VX=-6.792937309326550E+00 VY=-1.284745409647841E+00 VZ= 8.336433553615774E-02";
   }
 
   @Override
@@ -30,7 +28,7 @@ public class Uranus extends Planet {
   }
 
   @Override
-  public BodyType parentBody() {
-    return BodyType.SUN;
+  public BodyName parentBody() {
+    return BodyName.SUN;
   }
 }

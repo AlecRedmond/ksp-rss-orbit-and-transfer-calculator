@@ -2,17 +2,17 @@ package org.artools.orbitcalculator.application.bodies.planets;
 
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.Getter;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.artools.orbitcalculator.application.bodies.AstralBody;
-import org.artools.orbitcalculator.application.bodies.BodyType;
 import org.artools.orbitcalculator.application.vector.MotionState;
 
 public abstract class Planet implements AstralBody {
-  @Getter private final BodyType bodyType;
-  @Getter private final BodyType parentBody;
+  @Getter private final BodyName bodyName;
+  @Getter private final BodyName parentBody;
   @Getter private double j2;
   private MotionState motionState;
   private double mu;
@@ -20,8 +20,16 @@ public abstract class Planet implements AstralBody {
 
   protected Planet() {
     parseStateVector(horizonsVectorData());
-    bodyType = planetName();
+    bodyName = planetName();
     parentBody = parentBody();
+  }
+
+  public Optional<BodyName> getSphereOfInfluence(){
+    return Optional.ofNullable(parentBody);
+  }
+
+  public String getName(){
+    return bodyName.toString();
   }
 
   public void parseStateVector(String input) {
@@ -47,9 +55,9 @@ public abstract class Planet implements AstralBody {
   // These are from Barycentric (@ssb on Horizons data)
   abstract String horizonsVectorData();
 
-  protected abstract BodyType planetName();
+  protected abstract BodyName planetName();
 
-  protected abstract BodyType parentBody();
+  protected abstract BodyName parentBody();
 
   private void setHorizonsData(double[] positionArray, double[] velocityArray) {
     j2 = j2();

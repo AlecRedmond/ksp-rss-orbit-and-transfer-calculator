@@ -1,9 +1,9 @@
-package org.artools.orbitcalculator.application.bodies;
+package org.artools.orbitcalculator.application.bodies.planets;
 
 import lombok.Getter;
 
 @Getter
-public enum BodyType {
+public enum BodyName {
   SUN,
   // GAS GIANTS
   JUPITER,
@@ -16,7 +16,5 @@ public enum BodyType {
   MERCURY,
   // EARTH AND MOON
   EARTH,
-  MOON,
-  // CRAFT
-  CRAFT
+  MOON
 }

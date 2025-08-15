@@ -1,11 +1,9 @@
 package org.artools.orbitcalculator.application.bodies.planets;
 
-import org.artools.orbitcalculator.application.bodies.BodyType;
-
 public class Jupiter extends Planet {
   @Override
-  protected BodyType planetName() {
-    return BodyType.JUPITER;
+  protected BodyName planetName() {
+    return BodyName.JUPITER;
   }
 
   @Override
@@ -30,7 +28,7 @@ public class Jupiter extends Planet {
   }
 
   @Override
-  public BodyType parentBody() {
-    return BodyType.SUN;
+  public BodyName parentBody() {
+    return BodyName.SUN;
   }
 }

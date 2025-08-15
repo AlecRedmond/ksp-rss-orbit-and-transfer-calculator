@@ -3,7 +3,7 @@ package org.artools.orbitcalculator.method.vector;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
-import org.artools.orbitcalculator.application.bodies.BodyType;
+import org.artools.orbitcalculator.application.bodies.planets.BodyName;
 import org.artools.orbitcalculator.application.bodies.planets.*;
 import org.artools.orbitcalculator.application.vector.Orrery;
 
@@ -14,14 +14,14 @@ public class OrreryBuilder {
   public OrreryBuilder() {
     List<Planet> planets = initializeAllPlanets();
     orrery = new Orrery(planets);
-    Planet sun = orrery.getPlanetByName(BodyType.SUN).orElseThrow();
+    Planet sun = orrery.getPlanetByName(BodyName.SUN);
     OrreryUtils utils = new OrreryUtils(orrery);
     utils.centreBody(sun);
   }
 
   private List<Planet> initializeAllPlanets() {
     List<Planet> planets = new ArrayList<>();
-    for (BodyType type : BodyType.values()) {
+    for (BodyName type : BodyName.values()) {
       switch (type) {
         case SUN -> planets.add(new Sun());
         case MERCURY -> planets.add(new Mercury());
@@ -33,7 +33,6 @@ public class OrreryBuilder {
         case SATURN -> planets.add(new Saturn());
         case URANUS -> planets.add(new Uranus());
         case NEPTUNE -> planets.add(new Neptune());
-        case CRAFT -> {}
         default ->
             throw new IllegalStateException(
                 "Unexpected value during Orrery Initialization: " + type);

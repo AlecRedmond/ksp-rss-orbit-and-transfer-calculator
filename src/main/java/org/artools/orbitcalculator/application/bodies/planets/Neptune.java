@@ -1,17 +1,15 @@
 package org.artools.orbitcalculator.application.bodies.planets;
 
-import org.artools.orbitcalculator.application.bodies.BodyType;
-
 public class Neptune extends Planet {
     @Override
-    protected BodyType planetName() {
-        return BodyType.NEPTUNE;
+    protected BodyName planetName() {
+        return BodyName.NEPTUNE;
     }
 
     @Override
     protected String horizonsVectorData() {
-    return "X =-4.302388320559609E+09 Y =-1.420276864687885E+09 Z = 1.283614478699602E+08\n"
-        + " VX= 1.673256343417634E+00 VY=-5.127288024535035E+00 VZ= 6.702817080825230E-02";
+    return "X =-4.302388271496875E+09 Y =-1.420277015028722E+09 Z = 1.283614498353369E+08\n"
+        + " VX= 1.673256606721457E+00 VY=-5.127288187325322E+00 VZ= 6.702792483632902E-02";
     }
 
     @Override
@@ -30,7 +28,7 @@ public class Neptune extends Planet {
     }
 
     @Override
-    public BodyType parentBody() {
-        return BodyType.SUN;
+    public BodyName parentBody() {
+        return BodyName.SUN;
     }
 }

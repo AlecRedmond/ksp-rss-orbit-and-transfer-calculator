@@ -19,11 +19,18 @@ public class AstralPosition {
   private String id;
 
   private String body;
+  private Double radius;
 
   @Temporal(TemporalType.TIMESTAMP)
   private Timestamp timestamp;
 
-  private Double xpos;
-  private Double ypos;
-  private Double zpos;
+  private Double positionX;
+  private Double positionY;
+  private Double positionZ;
+  private Double velocityX;
+  private Double velocityY;
+  private Double velocityZ;
+
+  @OneToOne
+  private OrbitInfo orbit;
 }

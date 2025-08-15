@@ -47,7 +47,7 @@ public class OrbitalStateBuilder {
     double meanAnomaly = getMeanAnomaly(eccentricAnomaly, eccentricity);
     vectors =
         OrbitalState.builder()
-            .centralBodyType(centralBody.getBodyType())
+            .centralBody(centralBody)
             .position(position)
             .velocity(velocity)
             .momentum(momentum)

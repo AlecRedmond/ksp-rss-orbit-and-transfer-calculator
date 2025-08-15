@@ -1,12 +1,10 @@
 package org.artools.orbitcalculator.application.bodies.planets;
 
-import org.artools.orbitcalculator.application.bodies.BodyType;
-
 public class Sun extends Planet {
 
   @Override
-  protected BodyType planetName() {
-    return BodyType.SUN;
+  protected BodyName planetName() {
+    return BodyName.SUN;
   }
 
   @Override
@@ -31,7 +29,7 @@ public class Sun extends Planet {
   }
 
   @Override
-  public BodyType parentBody() {
+  public BodyName parentBody() {
     return null;
   }
 }

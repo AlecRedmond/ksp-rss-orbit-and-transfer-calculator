@@ -1,12 +1,10 @@
 package org.artools.orbitcalculator.application.bodies.planets;
 
-import org.artools.orbitcalculator.application.bodies.BodyType;
-
 public class Venus extends Planet {
 
   @Override
-  protected BodyType planetName() {
-    return BodyType.VENUS;
+  protected BodyName planetName() {
+    return BodyName.VENUS;
   }
 
   @Override
@@ -31,7 +29,7 @@ public class Venus extends Planet {
   }
 
   @Override
-  public BodyType parentBody() {
-    return BodyType.SUN;
+  public BodyName parentBody() {
+    return BodyName.SUN;
   }
 }
