@@ -6,7 +6,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
-import org.artools.orbitcalculator.application.AstralPosition;
+import org.artools.orbitcalculator.application.vector.entity.AstralPosition;
 import org.artools.orbitcalculator.application.vector.Orrery;
 import org.artools.orbitcalculator.exceptions.AstralStateNotFoundException;
 import org.artools.orbitcalculator.method.AstralStateMapper;

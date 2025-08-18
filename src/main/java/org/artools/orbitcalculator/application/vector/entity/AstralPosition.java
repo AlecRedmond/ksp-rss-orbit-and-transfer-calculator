@@ -1,4 +1,4 @@
-package org.artools.orbitcalculator.application;
+package org.artools.orbitcalculator.application.vector.entity;
 
 import jakarta.persistence.*;
 import java.sql.Timestamp;
@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.artools.orbitcalculator.application.OrbitInfo;
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
@@ -14,9 +15,7 @@ import org.hibernate.annotations.UuidGenerator;
 @AllArgsConstructor
 @Builder
 public class AstralPosition {
-  @Id
-  @UuidGenerator
-  private String id;
+  @Id @UuidGenerator private String id;
 
   private String body;
   private Double radius;
@@ -24,13 +23,9 @@ public class AstralPosition {
   @Temporal(TemporalType.TIMESTAMP)
   private Timestamp timestamp;
 
-  private Double positionX;
-  private Double positionY;
-  private Double positionZ;
-  private Double velocityX;
-  private Double velocityY;
-  private Double velocityZ;
+  @Embedded private Vector3 position;
 
-  @OneToOne
-  private OrbitInfo orbit;
+  @Embedded private Vector3 velocity;
+
+  @OneToOne private OrbitInfo orbit;
 }

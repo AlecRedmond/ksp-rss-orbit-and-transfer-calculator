@@ -2,7 +2,7 @@ package org.artools.orbitcalculator.method;
 
 import java.sql.Timestamp;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.artools.orbitcalculator.application.AstralPosition;
+import org.artools.orbitcalculator.application.vector.entity.AstralPosition;
 import org.artools.orbitcalculator.application.OrbitInfo;
 import org.artools.orbitcalculator.application.bodies.AstralBody;
 import org.artools.orbitcalculator.application.bodies.planets.Planet;

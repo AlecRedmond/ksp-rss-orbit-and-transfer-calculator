@@ -1,6 +1,6 @@
 package org.artools.orbitcalculator.repository;
 
-import org.artools.orbitcalculator.application.AstralPosition;
+import org.artools.orbitcalculator.application.vector.entity.AstralPosition;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
