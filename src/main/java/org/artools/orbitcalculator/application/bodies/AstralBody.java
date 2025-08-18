@@ -13,15 +13,12 @@ public abstract class AstralBody {
   protected double mu;
   @Setter
   protected MotionState motionState;
+  @Getter
   protected BodyType sphereOfInfluence;
 
   protected AstralBody(){}
 
   public abstract String getName();
-  
-  public Optional<BodyType> getSphereOfInfluence(){
-    return Optional.ofNullable(sphereOfInfluence);
-  }
   
   protected double massToMu(){
     return G * mu;
