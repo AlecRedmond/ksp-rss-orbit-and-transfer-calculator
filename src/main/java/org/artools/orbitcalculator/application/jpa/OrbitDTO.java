@@ -1,4 +1,4 @@
-package org.artools.orbitcalculator.application;
+package org.artools.orbitcalculator.application.jpa;
 
 import jakarta.persistence.*;
 import java.sql.Timestamp;
@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.artools.orbitcalculator.application.vector.entity.AstralPositionDTO;
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
@@ -14,7 +13,7 @@ import org.hibernate.annotations.UuidGenerator;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OrbitInfo {
+public class OrbitDTO {
   @Id @UuidGenerator private String id;
   private String orbitFocus;
   private double apoapsisAlt;

@@ -1,4 +1,4 @@
-package org.artools.orbitcalculator.application.vector.entity;
+package org.artools.orbitcalculator.application.jpa;
 
 import jakarta.persistence.*;
 import java.sql.Timestamp;
@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.artools.orbitcalculator.application.OrbitInfo;
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
@@ -23,9 +22,9 @@ public class AstralPositionDTO {
   @Temporal(TemporalType.TIMESTAMP)
   private Timestamp timestamp;
 
-  @Embedded private Vector3 position;
+  @Embedded private Vector3DTO position;
 
-  @Embedded private Vector3 velocity;
+  @Embedded private Vector3DTO velocity;
 
-  @OneToOne private OrbitInfo orbit;
+  @OneToOne private OrbitDTO orbit;
 }

@@ -1,19 +1,19 @@
-package org.artools.orbitcalculator.method.vector;
+package org.artools.orbitcalculator.method.jpa;
 
 import java.sql.Timestamp;
 import lombok.Getter;
-import org.artools.orbitcalculator.application.OrbitInfo;
+import org.artools.orbitcalculator.application.jpa.OrbitDTO;
 import org.artools.orbitcalculator.application.vector.OrbitalState;
 
 @Getter
-public class OrbitInfoWriter {
-  private final OrbitInfo orbitInfo;
+public class OrbitDTOWriter {
+  private final OrbitDTO orbitDTO;
 
-  public OrbitInfoWriter(OrbitalState state) {
-    this.orbitInfo = writeOrbit(state);
+  public OrbitDTOWriter(OrbitalState state) {
+    this.orbitDTO = writeOrbit(state);
   }
 
-  private OrbitInfo writeOrbit(OrbitalState state) {
+  private OrbitDTO writeOrbit(OrbitalState state) {
     double eccentricity = state.getEccentricity().getNorm();
     double bodyRadius = state.getCentralBody().getBodyRadius();
     double sma = state.getSemiMajorAxis();
@@ -22,7 +22,7 @@ public class OrbitInfoWriter {
     double altitude = state.getPosition().getNorm() - bodyRadius;
     double velocity = state.getVelocity().getNorm();
 
-    return OrbitInfo.builder()
+    return OrbitDTO.builder()
         .orbitFocus(state.getCentralBody().getBodyType().toString())
         .apoapsisAlt(apoapsisAlt)
         .periapsisAlt(periapsisAlt)

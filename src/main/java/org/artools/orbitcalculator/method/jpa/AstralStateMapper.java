@@ -1,14 +1,13 @@
-package org.artools.orbitcalculator.method;
+package org.artools.orbitcalculator.method.jpa;
 
 import java.sql.Timestamp;
-import org.artools.orbitcalculator.application.OrbitInfo;
+import org.artools.orbitcalculator.application.jpa.OrbitDTO;
 import org.artools.orbitcalculator.application.bodies.AstralBody;
 import org.artools.orbitcalculator.application.bodies.planets.Planet;
 import org.artools.orbitcalculator.application.vector.MotionState;
 import org.artools.orbitcalculator.application.vector.OrbitalState;
-import org.artools.orbitcalculator.application.vector.entity.AstralPositionDTO;
-import org.artools.orbitcalculator.application.vector.entity.Vector3;
-import org.artools.orbitcalculator.method.vector.OrbitInfoWriter;
+import org.artools.orbitcalculator.application.jpa.AstralPositionDTO;
+import org.artools.orbitcalculator.application.jpa.Vector3DTO;
 import org.artools.orbitcalculator.method.vector.OrbitalStateUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
@@ -28,15 +27,15 @@ public interface AstralStateMapper {
             .timestamp(Timestamp.from(motionState.getEpoch()));
 
     if (!(motionState instanceof OrbitalState state)) {
-      Vector3 position = new Vector3(motionState.getPosition());
-      Vector3 velocity = new Vector3(motionState.getVelocity());
+      Vector3DTO position = new Vector3DTO(motionState.getPosition());
+      Vector3DTO velocity = new Vector3DTO(motionState.getVelocity());
       return builder.position(position).velocity(velocity).build();
     }
 
     OrbitalStateUtils utils = new OrbitalStateUtils();
-    Vector3 truePosition = new Vector3(utils.getTruePosition(state));
-    Vector3 trueVelocity = new Vector3(utils.getTrueVelocity(state));
-    OrbitInfo orbit = new OrbitInfoWriter(state).getOrbitInfo();
+    Vector3DTO truePosition = new Vector3DTO(utils.getTruePosition(state));
+    Vector3DTO trueVelocity = new Vector3DTO(utils.getTrueVelocity(state));
+    OrbitDTO orbit = new OrbitDTOWriter(state).getOrbitDTO();
     return builder.position(truePosition).velocity(trueVelocity).orbit(orbit).build();
   }
 }
