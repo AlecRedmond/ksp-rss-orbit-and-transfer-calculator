@@ -35,7 +35,7 @@ public class OrreryBuilder {
         case NEPTUNE -> planets.add(new Neptune());
         default ->
             throw new IllegalStateException(
-                "Unexpected value during Orrery Initialization: " + type);
+                "Unexpected value during orrery Initialization: " + type);
       }
     }
     return planets;

@@ -12,11 +12,6 @@ public class Orrery {
   private List<AstralBody> astralBodies;
   private Map<BodyType, Integer> planetIndex;
 
-  public Orrery() {
-    astralBodies = new ArrayList<>();
-    planetIndex = new EnumMap<>(BodyType.class);
-  }
-
   public Orrery(List<Planet> planets) {
     astralBodies = new ArrayList<>();
     planetIndex = new EnumMap<>(BodyType.class);
