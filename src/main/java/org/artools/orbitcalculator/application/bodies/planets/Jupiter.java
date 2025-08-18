@@ -1,10 +1,15 @@
 package org.artools.orbitcalculator.application.bodies.planets;
 
 public class Jupiter extends Planet {
+
   @Override
-  protected String horizonsVectorData() {
-    return "X = 7.181715558101405E+08 Y =-1.965439895019584E+08 Z =-1.529523246304591E+07\n"
-        + " VX= 3.290030663487953E+00 VY= 1.322568640142670E+01 VZ=-1.281304086408337E-01";
+  protected double[] horizonsDataPosition() {
+    return new double[]{7.181716522793443E+08,-1.965436017022419E+08,-1.529523622004643E+07};
+  }
+
+  @Override
+  protected double[] horizonsDataVelocity() {
+    return new double[]{3.290023171949559E+00, 1.322568784338261E+01, -1.281302905289552E-01};
   }
 
   @Override

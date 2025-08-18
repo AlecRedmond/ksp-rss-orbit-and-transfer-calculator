@@ -7,9 +7,13 @@ public class Uranus extends Planet {
   }
 
   @Override
-  protected String horizonsVectorData() {
-    return "X =-4.007702769867036E+08 Y = 2.796136122139190E+09 Z = 1.559876544679713E+07\n"
-        + " VX=-6.792937309326550E+00 VY=-1.284745409647841E+00 VZ= 8.336433553615774E-02";
+  protected double[] horizonsDataPosition() {
+    return new double[]{-4.007702769867036E+08,2.796136122139190E+09,1.559876544679713E+07};
+  }
+
+  @Override
+  protected double[] horizonsDataVelocity() {
+    return new double[]{-6.792937309326550E+00,-1.284745409647841E+00,8.336433553615774E-02};
   }
 
   @Override

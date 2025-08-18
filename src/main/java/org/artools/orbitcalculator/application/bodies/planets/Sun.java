@@ -7,9 +7,13 @@ public class Sun extends Planet {
   }
 
   @Override
-  protected String horizonsVectorData() {
-    return "X =-4.301777867304494E+04 Y = 1.174093787096878E+05 Z =-8.299334313999803E+03\n"
-        + " VX=-2.610383151396620E-03 VY=-9.586514629520296E-03 VZ= 5.749810730508453E-05";
+  protected double[] horizonsDataPosition() {
+    return new double[]{-4.301785521384158E+04,1.174090976166967E+05,-8.299332628059026E+03};
+  }
+
+  @Override
+  protected double[] horizonsDataVelocity() {
+    return new double[]{-2.610376871003066E-03,-9.586516161212495E-03,5.749798102632365E-05};
   }
 
   @Override

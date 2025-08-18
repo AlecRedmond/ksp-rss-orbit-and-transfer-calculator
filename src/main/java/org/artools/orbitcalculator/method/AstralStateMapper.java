@@ -17,7 +17,7 @@ import org.mapstruct.Named;
 public interface AstralStateMapper {
   @Named("orreryToAstralState")
   default AstralPositionDTO orreryToAstralState(AstralBody body) {
-    String name = body.getNameString();
+    String name = body.getName();
     MotionState motionState = body.getMotionState();
     double radius = body instanceof Planet planet ? planet.getBodyRadius() : 1.0;
 

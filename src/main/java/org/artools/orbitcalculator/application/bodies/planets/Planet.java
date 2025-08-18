@@ -2,8 +2,6 @@ package org.artools.orbitcalculator.application.bodies.planets;
 
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import lombok.Getter;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.artools.orbitcalculator.application.bodies.AstralBody;
@@ -12,44 +10,31 @@ import org.artools.orbitcalculator.application.vector.MotionState;
 @Getter
 public abstract class Planet extends AstralBody {
   private final BodyType bodyType;
-  private final BodyType parentBody;
   private double j2;
   private double bodyRadius;
 
   protected Planet() {
     super();
-    parseStateVector(horizonsVectorData());
+    parseStateVector();
     bodyType = planetBodyType();
-    parentBody = parentBodyType();
+    sphereOfInfluence = parentBodyType();
     mass = muToMass();
   }
 
-  public void parseStateVector(String input) {
-    Pattern pattern = Pattern.compile("[-+]?\\d*\\.?\\d+[eE][-+]?\\d+");
-    Matcher matcher = pattern.matcher(input);
-    double[] numbers = new double[6];
-    int count = 0;
-
-    while (matcher.find() && count < 6) {
-      numbers[count++] = Double.parseDouble(matcher.group());
-    }
-
-    if (count != 6) {
-      throw new IllegalArgumentException("Expected 6 numbers, found " + count);
-    }
-
-    double[] positionArray = new double[] {numbers[0], numbers[1], numbers[2]};
-    double[] velocityArray = new double[] {numbers[3], numbers[4], numbers[5]};
-
+  public void parseStateVector() {
+    double[] positionArray = horizonsDataPosition();
+    double[] velocityArray = horizonsDataVelocity();
     setHorizonsData(positionArray, velocityArray);
   }
-
-  // These are from Barycentric (@ssb on Horizons data)
-  abstract String horizonsVectorData();
 
   protected abstract BodyType planetBodyType();
 
   protected abstract BodyType parentBodyType();
+
+  // These are from Barycentric (@ssb on Horizons data)
+  protected abstract double[] horizonsDataPosition();
+
+  protected abstract double[] horizonsDataVelocity();
 
   private void setHorizonsData(double[] positionArray, double[] velocityArray) {
     j2 = j2();

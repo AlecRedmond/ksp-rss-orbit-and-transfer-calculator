@@ -7,9 +7,13 @@ public class Venus extends Planet {
   }
 
   @Override
-  protected String horizonsVectorData() {
-    return "X = 6.672802494807968E+07 Y =-8.582044058549407E+07 Z =-5.027613098699130E+06\n"
-        + " VX= 2.741737914074245E+01 VY= 2.135294831981611E+01 VZ=-1.294686974962003E+00";
+  protected double[] horizonsDataPosition() {
+    return new double[]{6.672882886947885E+07,-8.581981447681817E+07,-5.027651060909204E+06};
+  }
+
+  @Override
+  protected double[] horizonsDataVelocity() {
+    return new double[]{2.741717820369225E+01,2.135320694286949E+01,-1.294671869668157E+00};
   }
 
   @Override

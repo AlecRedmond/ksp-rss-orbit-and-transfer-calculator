@@ -7,9 +7,13 @@ public class Mercury extends Planet {
   }
 
   @Override
-  protected String horizonsVectorData() {
-    return "X =-4.894170451539801E+06 Y = 4.609872635824879E+07 Z = 4.190798643785544E+06\n"
-        + " VX=-5.821328936093884E+01 VY=-3.332570130104314E+00 VZ= 5.078986722966221E+00";
+  protected double[] horizonsDataPosition() {
+    return new double[]{-4.895877361760728E+06,4.609862861539137E+07,4.190947565949773E+06};
+  }
+
+  @Override
+  protected double[] horizonsDataVelocity() {
+    return new double[]{-5.821310068038928E+01,-3.334358159037551E+00,5.078823433723494E+00};
   }
 
   @Override

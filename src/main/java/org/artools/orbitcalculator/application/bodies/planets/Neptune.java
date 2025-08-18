@@ -7,9 +7,13 @@ public class Neptune extends Planet {
     }
 
     @Override
-    protected String horizonsVectorData() {
-    return "X =-4.302388271496875E+09 Y =-1.420277015028722E+09 Z = 1.283614498353369E+08\n"
-        + " VX= 1.673256606721457E+00 VY=-5.127288187325322E+00 VZ= 6.702792483632902E-02";
+    protected double[] horizonsDataPosition() {
+        return new double[]{-4.302388271496875E+09,-1.420277015028722E+09,1.283614498353369E+08};
+    }
+
+    @Override
+    protected double[] horizonsDataVelocity() {
+        return new double[]{1.673256606721457E+00,-5.127288187325322E+00,6.702792483632902E-02};
     }
 
     @Override

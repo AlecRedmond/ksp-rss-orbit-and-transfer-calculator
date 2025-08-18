@@ -7,9 +7,13 @@ public class Mars extends Planet {
     }
 
     @Override
-    protected String horizonsVectorData() {
-    return "X = 1.897097970704435E+08 Y =-8.148617174405721E+07 Z =-6.400395669880252E+06\n"
-        + " VX= 1.050430483104508E+01 VY= 2.431599133118027E+01 VZ= 2.499009259251110E-01";
+    protected double[] horizonsDataPosition() {
+        return new double[]{1.897101050733607E+08,-8.148545875716785E+07,-6.400388342317320E+06};
+    }
+
+    @Override
+    protected double[] horizonsDataVelocity() {
+        return new double[]{1.050422117548903E+01,2.431602730943637E+01,2.499037440832712E-01};
     }
 
     @Override

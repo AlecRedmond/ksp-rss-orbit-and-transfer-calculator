@@ -2,9 +2,13 @@ package org.artools.orbitcalculator.application.bodies.planets;
 
 public class Earth extends Planet {
     @Override
-    protected String horizonsVectorData() {
-    return "X =-2.670489271346819E+07 Y = 1.447801334935187E+08 Z = 7.826551263824105E+03\n"
-        + " VX=-2.978545710300538E+01 VY=-5.508905987834387E+00 VZ= 2.317255989376932E-04";
+    protected double[] horizonsDataPosition() {
+        return new double[]{-2.670576607343695E+07,1.447799719603990E+08,7.826558057785034E+03};
+    }
+
+    @Override
+    protected double[] horizonsDataVelocity() {
+        return new double[]{-2.978542549619797E+01,-5.509082984270721E+00,2.316825644146370E-04};
     }
 
     @Override
