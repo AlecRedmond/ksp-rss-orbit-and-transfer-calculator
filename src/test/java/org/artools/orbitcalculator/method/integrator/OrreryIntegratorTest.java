@@ -62,7 +62,7 @@ class OrreryIntegratorTest {
   void validateOrbitsAverageSMA(BodyType bodyType, double expectedSMA) {
     List<Double> smaList =
         orreries.stream()
-            .map(orrery -> orrery.getPlanetByName(bodyType))
+            .map(orrery -> orrery.getPlanetByType(bodyType))
             .map(Planet::getMotionState)
             .filter(OrbitalState.class::isInstance)
             .map(OrbitalState.class::cast)

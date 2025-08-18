@@ -19,7 +19,7 @@ class OrreryBuilderTest {
             bodyType -> {
               assertDoesNotThrow(
                   () -> {
-                    orrery.getPlanetByName(bodyType);
+                    orrery.getPlanetByType(bodyType);
                   });
             });
   }

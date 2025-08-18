@@ -38,7 +38,7 @@ public class OrreryUtils {
   private Optional<Planet> findSphereOfInfluence(AstralBody satellite) {
     return satellite instanceof Craft craft
         ? maximumAccelerationValue(craft)
-        : Optional.ofNullable(satellite.getSphereOfInfluence()).map(orrery::getPlanetByName);
+        : Optional.ofNullable(satellite.getSphereOfInfluence()).map(orrery::getPlanetByType);
   }
 
   private Optional<Planet> maximumAccelerationValue(Craft craft) {

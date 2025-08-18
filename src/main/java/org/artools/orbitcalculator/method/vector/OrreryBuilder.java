@@ -14,7 +14,7 @@ public class OrreryBuilder {
   public OrreryBuilder() {
     List<Planet> planets = initializeAllPlanets();
     orrery = new Orrery(planets);
-    Planet sun = orrery.getPlanetByName(BodyType.SUN);
+    Planet sun = orrery.getPlanetByType(BodyType.SUN);
     OrreryUtils utils = new OrreryUtils(orrery);
     utils.centreBody(sun);
   }
