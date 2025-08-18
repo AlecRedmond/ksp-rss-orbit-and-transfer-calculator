@@ -5,15 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bc65ef23-deec-4331-8e48-a9eec8527901" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/artools/orbitcalculator/application/vector/entity/Vector3.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/artools/orbitcalculator/application/AstralPosition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/artools/orbitcalculator/application/vector/entity/AstralPosition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/artools/orbitcalculator/application/OrbitInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/artools/orbitcalculator/application/OrbitInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/artools/orbitcalculator/controller/AstralPositionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/artools/orbitcalculator/controller/AstralPositionController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/artools/orbitcalculator/application/vector/entity/Vector3.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/artools/orbitcalculator/application/vector/entity/Vector3.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/artools/orbitcalculator/method/AstralStateMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/artools/orbitcalculator/method/AstralStateMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/artools/orbitcalculator/repository/AstralPositionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/artools/orbitcalculator/repository/AstralPositionRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/artools/orbitcalculator/service/AstralPositionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/artools/orbitcalculator/service/AstralPositionService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -410,7 +404,15 @@
       <option name="project" value="LOCAL" />
       <updated>1755281488276</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="- Vector3 class added for AstralPosition&#10;- Attempting to properly gitignore .idea files">
+      <option name="closed" value="true" />
+      <created>1755516009354</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1755516009354</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -459,7 +461,8 @@
     <MESSAGE value="- Removed superfluous classes, methods, etc&#10;- All tests now have assertions &#10;- Ready for merge request" />
     <MESSAGE value="- AstralBody types are now divided into Planet for all major body and Craft for minor bodies." />
     <MESSAGE value="- OrbitInfo and OrbitInfoWriter for JPA-conforming way to write orbit information" />
-    <option name="LAST_COMMIT_MESSAGE" value="- OrbitInfo and OrbitInfoWriter for JPA-conforming way to write orbit information" />
+    <MESSAGE value="- Vector3 class added for AstralPosition&#10;- Attempting to properly gitignore .idea files" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Vector3 class added for AstralPosition&#10;- Attempting to properly gitignore .idea files" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/orbitcalculator$All_in_orbitcalculator.ic" NAME="All in orbitcalculator Coverage Results" MODIFIED="1749224202720" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />

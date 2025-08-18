@@ -1,13 +1,13 @@
 package org.artools.orbitcalculator.method;
 
 import java.sql.Timestamp;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.artools.orbitcalculator.application.vector.entity.AstralPosition;
 import org.artools.orbitcalculator.application.OrbitInfo;
 import org.artools.orbitcalculator.application.bodies.AstralBody;
 import org.artools.orbitcalculator.application.bodies.planets.Planet;
 import org.artools.orbitcalculator.application.vector.MotionState;
 import org.artools.orbitcalculator.application.vector.OrbitalState;
+import org.artools.orbitcalculator.application.vector.entity.AstralPosition;
+import org.artools.orbitcalculator.application.vector.entity.Vector3;
 import org.artools.orbitcalculator.method.vector.OrbitInfoWriter;
 import org.artools.orbitcalculator.method.vector.OrbitalStateUtils;
 import org.mapstruct.Mapper;
@@ -28,28 +28,15 @@ public interface AstralStateMapper {
             .timestamp(Timestamp.from(motionState.getEpoch()));
 
     if (!(motionState instanceof OrbitalState state)) {
-      return builder
-          .positionX(motionState.getPosition().getX())
-          .positionY(motionState.getPosition().getY())
-          .positionZ(motionState.getPosition().getZ())
-          .velocityX(motionState.getVelocity().getX())
-          .velocityY(motionState.getVelocity().getY())
-          .velocityZ(motionState.getVelocity().getZ())
-          .build();
+      Vector3 position = new Vector3(motionState.getPosition());
+      Vector3 velocity = new Vector3(motionState.getVelocity());
+      return builder.position(position).velocity(velocity).build();
     }
 
     OrbitalStateUtils utils = new OrbitalStateUtils();
-    Vector3D truePosition = utils.getTruePosition(state);
-    Vector3D trueVelocity = utils.getTrueVelocity(state);
+    Vector3 truePosition = new Vector3(utils.getTruePosition(state));
+    Vector3 trueVelocity = new Vector3(utils.getTrueVelocity(state));
     OrbitInfo orbit = new OrbitInfoWriter(state).getOrbitInfo();
-    return builder
-        .positionX(truePosition.getX())
-        .positionY(truePosition.getY())
-        .positionZ(truePosition.getZ())
-        .velocityX(trueVelocity.getX())
-        .velocityY(trueVelocity.getY())
-        .velocityZ(trueVelocity.getZ())
-        .orbit(orbit)
-        .build();
+    return builder.position(truePosition).velocity(trueVelocity).orbit(orbit).build();
   }
 }
