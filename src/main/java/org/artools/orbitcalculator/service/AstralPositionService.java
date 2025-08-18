@@ -6,7 +6,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
-import org.artools.orbitcalculator.application.vector.entity.AstralPosition;
+import org.artools.orbitcalculator.application.vector.entity.AstralPositionDTO;
 import org.artools.orbitcalculator.application.vector.Orrery;
 import org.artools.orbitcalculator.exceptions.AstralStateNotFoundException;
 import org.artools.orbitcalculator.method.AstralStateMapper;
@@ -23,25 +23,25 @@ public class AstralPositionService {
   @Autowired private AstralStateMapper astralStateMapper;
   private Orrery orrery;
 
-  public AstralPosition saveSolarSystemState(AstralPosition systemState) {
+  public AstralPositionDTO saveSolarSystemState(AstralPositionDTO systemState) {
     return repository.save(systemState);
   }
 
-  public AstralPosition getSolarSystemStateByID(String id) {
-    Optional<AstralPosition> stateOpt = repository.findById(id);
+  public AstralPositionDTO getSolarSystemStateByID(String id) {
+    Optional<AstralPositionDTO> stateOpt = repository.findById(id);
     if (stateOpt.isEmpty()) {
       throw new AstralStateNotFoundException(id);
     }
     return stateOpt.get();
   }
 
-  public AstralPosition updateSolarSystemState(AstralPosition astralPosition, String id) {
-    Optional<AstralPosition> stateOpt = repository.findById(id);
+  public AstralPositionDTO updateSolarSystemState(AstralPositionDTO astralPositionDTO, String id) {
+    Optional<AstralPositionDTO> stateOpt = repository.findById(id);
     if (stateOpt.isEmpty()) {
       throw new AstralStateNotFoundException(id);
     }
-    astralPosition.setId(id);
-    return repository.save(astralPosition);
+    astralPositionDTO.setId(id);
+    return repository.save(astralPositionDTO);
   }
 
   public void deleteSolarSystemState(String id) {
@@ -60,7 +60,7 @@ public class AstralPositionService {
         .forEach(repository::save);
   }
 
-  public List<AstralPosition> statesAtNewEpoch(Instant epoch) {
+  public List<AstralPositionDTO> statesAtNewEpoch(Instant epoch) {
     stepToDate(epoch);
     return fetchSolarSystemStates().stream().filter(sameEpochAs(epoch)).toList();
   }
@@ -73,11 +73,11 @@ public class AstralPositionService {
     saveOrreryState();
   }
 
-  public List<AstralPosition> fetchSolarSystemStates() {
-    return (List<AstralPosition>) repository.findAll();
+  public List<AstralPositionDTO> fetchSolarSystemStates() {
+    return (List<AstralPositionDTO>) repository.findAll();
   }
 
-  private static Predicate<AstralPosition> sameEpochAs(Instant epoch) {
+  private static Predicate<AstralPositionDTO> sameEpochAs(Instant epoch) {
     return astralPosition -> astralPosition.getTimestamp().equals(Timestamp.from(epoch));
   }
 }

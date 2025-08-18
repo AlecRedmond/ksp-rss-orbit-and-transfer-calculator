@@ -2,8 +2,8 @@ package org.artools.orbitcalculator.application.bodies.planets;
 
 public class Uranus extends Planet {
   @Override
-  protected BodyName planetName() {
-    return BodyName.URANUS;
+  protected BodyType planetBodyType() {
+    return BodyType.URANUS;
   }
 
   @Override
@@ -28,7 +28,7 @@ public class Uranus extends Planet {
   }
 
   @Override
-  public BodyName parentBody() {
-    return BodyName.SUN;
+  public BodyType parentBodyType() {
+    return BodyType.SUN;
   }
 }

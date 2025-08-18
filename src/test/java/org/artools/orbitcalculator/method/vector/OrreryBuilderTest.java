@@ -3,8 +3,7 @@ package org.artools.orbitcalculator.method.vector;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
-import org.artools.orbitcalculator.application.bodies.planets.BodyName;
-import org.artools.orbitcalculator.application.bodies.planets.Planet;
+import org.artools.orbitcalculator.application.bodies.planets.BodyType;
 import org.artools.orbitcalculator.application.vector.Orrery;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +14,7 @@ class OrreryBuilderTest {
   void setToStartingEpoch() {
     // ASSERT NONE ARE NULL
     Orrery orrery = test.getOrrery();
-    Arrays.stream(BodyName.values())
+    Arrays.stream(BodyType.values())
         .forEach(
             bodyType -> {
               assertDoesNotThrow(

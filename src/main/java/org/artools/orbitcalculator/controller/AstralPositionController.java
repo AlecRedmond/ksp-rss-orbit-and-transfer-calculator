@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 
-import org.artools.orbitcalculator.application.vector.entity.AstralPosition;
+import org.artools.orbitcalculator.application.vector.entity.AstralPositionDTO;
 import org.artools.orbitcalculator.service.AstralPositionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,23 +17,23 @@ public class AstralPositionController {
 
   // Save
   @PostMapping(consumes = "application/json", produces = "application/json")
-  public AstralPosition saveState(@RequestBody AstralPosition state) {
+  public AstralPositionDTO saveState(@RequestBody AstralPositionDTO state) {
     return service.saveSolarSystemState(state);
   }
 
   @GetMapping()
-  public List<AstralPosition> fetchAllStates() {
+  public List<AstralPositionDTO> fetchAllStates() {
     return service.fetchSolarSystemStates();
   }
 
   @GetMapping(value = "/{id}")
-  public AstralPosition getStateByID(@PathVariable("id") String  id) {
+  public AstralPositionDTO getStateByID(@PathVariable("id") String  id) {
     return service.getSolarSystemStateByID(id);
   }
 
   @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
-  public AstralPosition updateState(
-          @RequestBody AstralPosition state, @PathVariable("id") String  id) {
+  public AstralPositionDTO updateState(
+          @RequestBody AstralPositionDTO state, @PathVariable("id") String  id) {
     return service.updateSolarSystemState(state, id);
   }
 
@@ -44,7 +44,7 @@ public class AstralPositionController {
   }
 
   @GetMapping(value = "/stepto/{timestamp}")
-  public List<AstralPosition> stepToNewEpoch(@PathVariable("timestamp") String newTimestamp){
+  public List<AstralPositionDTO> stepToNewEpoch(@PathVariable("timestamp") String newTimestamp){
     Instant newEpoch = Timestamp.valueOf(newTimestamp).toInstant();
     return service.statesAtNewEpoch(newEpoch);
   }

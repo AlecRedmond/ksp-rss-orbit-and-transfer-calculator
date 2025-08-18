@@ -3,7 +3,7 @@ package org.artools.orbitcalculator.method.vector;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
-import org.artools.orbitcalculator.application.bodies.planets.BodyName;
+import org.artools.orbitcalculator.application.bodies.planets.BodyType;
 import org.artools.orbitcalculator.application.bodies.planets.*;
 import org.artools.orbitcalculator.application.vector.Orrery;
 
@@ -14,14 +14,14 @@ public class OrreryBuilder {
   public OrreryBuilder() {
     List<Planet> planets = initializeAllPlanets();
     orrery = new Orrery(planets);
-    Planet sun = orrery.getPlanetByName(BodyName.SUN);
+    Planet sun = orrery.getPlanetByName(BodyType.SUN);
     OrreryUtils utils = new OrreryUtils(orrery);
     utils.centreBody(sun);
   }
 
   private List<Planet> initializeAllPlanets() {
     List<Planet> planets = new ArrayList<>();
-    for (BodyName type : BodyName.values()) {
+    for (BodyType type : BodyType.values()) {
       switch (type) {
         case SUN -> planets.add(new Sun());
         case MERCURY -> planets.add(new Mercury());

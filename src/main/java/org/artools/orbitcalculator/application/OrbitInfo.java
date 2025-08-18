@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.artools.orbitcalculator.application.vector.entity.AstralPosition;
+import org.artools.orbitcalculator.application.vector.entity.AstralPositionDTO;
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
@@ -31,7 +31,7 @@ public class OrbitInfo {
   private double orbitalVelocity;
 
   @OneToOne(optional = false)
-  private AstralPosition astralPosition;
+  private AstralPositionDTO astralPositionDTO;
 
   @Temporal(TemporalType.TIMESTAMP)
   private Timestamp timestamp;

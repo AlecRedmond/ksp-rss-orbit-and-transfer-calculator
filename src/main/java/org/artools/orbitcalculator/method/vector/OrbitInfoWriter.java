@@ -23,7 +23,7 @@ public class OrbitInfoWriter {
     double velocity = state.getVelocity().getNorm();
 
     return OrbitInfo.builder()
-        .orbitFocus(state.getCentralBody().getBodyName().toString())
+        .orbitFocus(state.getCentralBody().getBodyType().toString())
         .apoapsisAlt(apoapsisAlt)
         .periapsisAlt(periapsisAlt)
         .eccentricity(eccentricity)

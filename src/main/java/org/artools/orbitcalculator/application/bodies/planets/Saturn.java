@@ -2,8 +2,8 @@ package org.artools.orbitcalculator.application.bodies.planets;
 
 public class Saturn extends Planet {
     @Override
-    protected BodyName planetName() {
-        return BodyName.SATURN;
+    protected BodyType planetBodyType() {
+        return BodyType.SATURN;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class Saturn extends Planet {
     }
 
     @Override
-    public BodyName parentBody() {
-        return BodyName.SUN;
+    public BodyType parentBodyType() {
+        return BodyType.SUN;
     }
 }

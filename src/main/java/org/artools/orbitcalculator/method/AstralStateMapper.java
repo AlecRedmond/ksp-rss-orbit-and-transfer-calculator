@@ -6,7 +6,7 @@ import org.artools.orbitcalculator.application.bodies.AstralBody;
 import org.artools.orbitcalculator.application.bodies.planets.Planet;
 import org.artools.orbitcalculator.application.vector.MotionState;
 import org.artools.orbitcalculator.application.vector.OrbitalState;
-import org.artools.orbitcalculator.application.vector.entity.AstralPosition;
+import org.artools.orbitcalculator.application.vector.entity.AstralPositionDTO;
 import org.artools.orbitcalculator.application.vector.entity.Vector3;
 import org.artools.orbitcalculator.method.vector.OrbitInfoWriter;
 import org.artools.orbitcalculator.method.vector.OrbitalStateUtils;
@@ -16,13 +16,13 @@ import org.mapstruct.Named;
 @Mapper(componentModel = "spring")
 public interface AstralStateMapper {
   @Named("orreryToAstralState")
-  default AstralPosition orreryToAstralState(AstralBody body) {
-    String name = body.getName();
+  default AstralPositionDTO orreryToAstralState(AstralBody body) {
+    String name = body.getNameString();
     MotionState motionState = body.getMotionState();
     double radius = body instanceof Planet planet ? planet.getBodyRadius() : 1.0;
 
-    AstralPosition.AstralPositionBuilder builder =
-        AstralPosition.builder()
+    AstralPositionDTO.AstralPositionDTOBuilder builder =
+        AstralPositionDTO.builder()
             .body(name)
             .radius(radius)
             .timestamp(Timestamp.from(motionState.getEpoch()));

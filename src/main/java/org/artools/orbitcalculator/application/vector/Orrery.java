@@ -4,26 +4,26 @@ import java.time.Instant;
 import java.util.*;
 import lombok.Data;
 import org.artools.orbitcalculator.application.bodies.AstralBody;
-import org.artools.orbitcalculator.application.bodies.planets.BodyName;
+import org.artools.orbitcalculator.application.bodies.planets.BodyType;
 import org.artools.orbitcalculator.application.bodies.planets.Planet;
 
 @Data
 public class Orrery {
   private List<AstralBody> astralBodies;
-  private Map<BodyName, Integer> planetIndex;
+  private Map<BodyType, Integer> planetIndex;
 
   public Orrery() {
     astralBodies = new ArrayList<>();
-    planetIndex = new EnumMap<>(BodyName.class);
+    planetIndex = new EnumMap<>(BodyType.class);
   }
 
   public Orrery(List<Planet> planets) {
     astralBodies = new ArrayList<>();
-    planetIndex = new EnumMap<>(BodyName.class);
+    planetIndex = new EnumMap<>(BodyType.class);
     for (int i = 0; i < planets.size(); i++) {
       Planet planet = planets.get(i);
       astralBodies.add(planet);
-      planetIndex.put(planet.getBodyName(), i);
+      planetIndex.put(planet.getBodyType(), i);
     }
   }
 
@@ -31,7 +31,7 @@ public class Orrery {
     return planetIndex.values().stream().map(astralBodies::get).map(Planet.class::cast).toList();
   }
 
-  public Planet getPlanetByName(BodyName name) {
+  public Planet getPlanetByName(BodyType name) {
     int index = planetIndex.get(name);
     return (Planet) astralBodies.get(index);
   }

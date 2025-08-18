@@ -8,7 +8,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import org.artools.orbitcalculator.application.bodies.planets.BodyName;
+import org.artools.orbitcalculator.application.bodies.planets.BodyType;
 import org.artools.orbitcalculator.application.bodies.planets.Planet;
 import org.artools.orbitcalculator.application.vector.OrbitalState;
 import org.artools.orbitcalculator.application.vector.Orrery;
@@ -28,11 +28,11 @@ class OrreryIntegratorTest {
 
   public static Stream<Arguments> provideValidSMAs(){
     return Stream.of(
-            Arguments.of(BodyName.EARTH, 149.598E9),
-            Arguments.of(BodyName.JUPITER, 778.479E9),
-            Arguments.of(BodyName.SATURN, 1.426955795169579E12),
-            Arguments.of(BodyName.URANUS, 2.871309893991385E12),
-            Arguments.of(BodyName.NEPTUNE, 4.498638029781399E12));
+            Arguments.of(BodyType.EARTH, 149.598E9),
+            Arguments.of(BodyType.JUPITER, 778.479E9),
+            Arguments.of(BodyType.SATURN, 1.426955795169579E12),
+            Arguments.of(BodyType.URANUS, 2.871309893991385E12),
+            Arguments.of(BodyType.NEPTUNE, 4.498638029781399E12));
   }
 
   @BeforeAll
@@ -59,10 +59,10 @@ class OrreryIntegratorTest {
 
   @ParameterizedTest
   @MethodSource("provideValidSMAs")
-  void validateOrbitsAverageSMA(BodyName bodyName, double expectedSMA) {
+  void validateOrbitsAverageSMA(BodyType bodyType, double expectedSMA) {
     List<Double> smaList =
         orreries.stream()
-            .map(orrery -> orrery.getPlanetByName(bodyName))
+            .map(orrery -> orrery.getPlanetByName(bodyType))
             .map(Planet::getMotionState)
             .filter(OrbitalState.class::isInstance)
             .map(OrbitalState.class::cast)

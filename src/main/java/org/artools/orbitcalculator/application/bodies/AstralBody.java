@@ -1,24 +1,33 @@
 package org.artools.orbitcalculator.application.bodies;
 
-import org.artools.orbitcalculator.application.bodies.planets.BodyName;
+import java.util.Optional;
+import lombok.Getter;
+import lombok.Setter;
+import org.artools.orbitcalculator.application.bodies.planets.BodyType;
 import org.artools.orbitcalculator.application.vector.MotionState;
 
-import java.util.Optional;
+@Getter
+public abstract class AstralBody {
+  public static final double G = 6.6743015E-11;
+  protected double mass;
+  protected double mu;
+  @Setter
+  protected MotionState motionState;
+  protected BodyType sphereOfInfluence;
 
-public interface AstralBody {
-  double G = 6.6743015E-11;
+  protected AstralBody(){}
 
-  default double getMass() {
-    return getMu() / G;
+  public abstract String getName();
+  
+  public Optional<BodyType> getSphereOfInfluence(){
+    return Optional.ofNullable(sphereOfInfluence);
+  }
+  
+  protected double massToMu(){
+    return G * mu;
   }
 
-  double getMu();
-
-  MotionState getMotionState();
-
-  void setMotionState(MotionState state);
-
-  Optional<BodyName> getSphereOfInfluence();
-
-  String getName();
+  protected double muToMass(){
+    return mu / G;
+  }
 }

@@ -10,26 +10,29 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.artools.orbitcalculator.application.bodies.AstralBody;
 import org.artools.orbitcalculator.application.vector.MotionState;
 
-public abstract class Planet implements AstralBody {
-  @Getter private final BodyName bodyName;
-  @Getter private final BodyName parentBody;
-  @Getter private double j2;
-  private MotionState motionState;
-  private double mu;
-  @Getter private double bodyRadius;
+@Getter
+public abstract class Planet extends AstralBody {
+  private final BodyType bodyType;
+  private final BodyType parentBody;
+  private double j2;
+  private double bodyRadius;
 
   protected Planet() {
+    super();
     parseStateVector(horizonsVectorData());
-    bodyName = planetName();
-    parentBody = parentBody();
+    bodyType = planetBodyType();
+    parentBody = parentBodyType();
+    mass = muToMass();
   }
 
-  public Optional<BodyName> getSphereOfInfluence(){
+
+
+  public Optional<BodyType> getSphereOfInfluence(){
     return Optional.ofNullable(parentBody);
   }
 
   public String getName(){
-    return bodyName.toString();
+    return bodyType.toString();
   }
 
   public void parseStateVector(String input) {
@@ -55,9 +58,9 @@ public abstract class Planet implements AstralBody {
   // These are from Barycentric (@ssb on Horizons data)
   abstract String horizonsVectorData();
 
-  protected abstract BodyName planetName();
+  protected abstract BodyType planetBodyType();
 
-  protected abstract BodyName parentBody();
+  protected abstract BodyType parentBodyType();
 
   private void setHorizonsData(double[] positionArray, double[] velocityArray) {
     j2 = j2();

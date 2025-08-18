@@ -2,8 +2,8 @@ package org.artools.orbitcalculator.application.bodies.planets;
 
 public class Neptune extends Planet {
     @Override
-    protected BodyName planetName() {
-        return BodyName.NEPTUNE;
+    protected BodyType planetBodyType() {
+        return BodyType.NEPTUNE;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class Neptune extends Planet {
     }
 
     @Override
-    public BodyName parentBody() {
-        return BodyName.SUN;
+    public BodyType parentBodyType() {
+        return BodyType.SUN;
     }
 }

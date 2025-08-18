@@ -1,37 +1,26 @@
 package org.artools.orbitcalculator.application.bodies;
 
-import lombok.Data;
-import org.artools.orbitcalculator.application.bodies.planets.BodyName;
+import lombok.Getter;
+import org.artools.orbitcalculator.application.bodies.planets.BodyType;
 import org.artools.orbitcalculator.application.vector.MotionState;
 
-import java.util.Optional;
+@Getter
+public class Craft extends AstralBody {
+  public final String name;
 
-@Data
-public class Craft implements AstralBody {
-    private MotionState motionState;
-    private double mass;
-    private BodyName sphereOfInfluence;
-    private final String name;
+  public Craft(MotionState motionState, double mass, String name) {
+    this.mass = mass;
+    this.mu = massToMu();
+    this.motionState = motionState;
+    this.name = name;
+  }
 
+  public void setMass(double kgMass) {
+    mass = kgMass;
+    mu = massToMu();
+  }
 
-    public Craft(MotionState motionState,double mass,String name){
-        this.mass = mass;
-        this.motionState = motionState;
-        this.name = name;
-    }
-
-    @Override
-    public double getMu() {
-        return mass * G;
-    }
-
-    @Override
-    public MotionState getMotionState() {
-        return motionState;
-    }
-
-    @Override
-    public Optional<BodyName> getSphereOfInfluence(){
-        return Optional.ofNullable(sphereOfInfluence);
-    }
+  public void setSphereOfInfluence(BodyType type) {
+    this.sphereOfInfluence = type;
+  }
 }

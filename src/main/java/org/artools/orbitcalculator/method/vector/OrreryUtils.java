@@ -53,7 +53,7 @@ public class OrreryUtils {
             .map(Map.Entry::getKey)
             .orElseThrow();
 
-    craft.setSphereOfInfluence(sphereOfInfluence.getBodyName());
+    craft.setSphereOfInfluence(sphereOfInfluence.getBodyType());
 
     return sphereOfInfluence;
   }

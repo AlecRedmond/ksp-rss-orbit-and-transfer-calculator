@@ -1,10 +1,9 @@
 package org.artools.orbitcalculator.application.bodies.planets;
 
 public class Mercury extends Planet {
-
   @Override
-  protected BodyName planetName() {
-    return BodyName.MERCURY;
+  protected BodyType planetBodyType() {
+    return BodyType.MERCURY;
   }
 
   @Override
@@ -29,7 +28,7 @@ public class Mercury extends Planet {
   }
 
   @Override
-  public BodyName parentBody() {
-    return BodyName.SUN;
+  public BodyType parentBodyType() {
+    return BodyType.SUN;
   }
 }

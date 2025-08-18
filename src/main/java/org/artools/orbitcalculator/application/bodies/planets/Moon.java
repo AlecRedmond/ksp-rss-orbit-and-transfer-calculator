@@ -2,8 +2,8 @@ package org.artools.orbitcalculator.application.bodies.planets;
 
 public class Moon extends Planet {
     @Override
-    protected BodyName planetName() {
-        return BodyName.MOON;
+    protected BodyType planetBodyType() {
+        return BodyType.MOON;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class Moon extends Planet {
     }
 
     @Override
-    public BodyName parentBody() {
-        return BodyName.EARTH;
+    public BodyType parentBodyType() {
+        return BodyType.EARTH;
     }
 }

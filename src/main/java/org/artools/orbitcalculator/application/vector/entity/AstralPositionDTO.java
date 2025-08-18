@@ -14,7 +14,7 @@ import org.hibernate.annotations.UuidGenerator;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AstralPosition {
+public class AstralPositionDTO {
   @Id @UuidGenerator private String id;
 
   private String body;

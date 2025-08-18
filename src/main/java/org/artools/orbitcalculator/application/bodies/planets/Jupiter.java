@@ -2,14 +2,19 @@ package org.artools.orbitcalculator.application.bodies.planets;
 
 public class Jupiter extends Planet {
   @Override
-  protected BodyName planetName() {
-    return BodyName.JUPITER;
-  }
-
-  @Override
   protected String horizonsVectorData() {
     return "X = 7.181715558101405E+08 Y =-1.965439895019584E+08 Z =-1.529523246304591E+07\n"
         + " VX= 3.290030663487953E+00 VY= 1.322568640142670E+01 VZ=-1.281304086408337E-01";
+  }
+
+  @Override
+  protected BodyType planetBodyType() {
+    return BodyType.JUPITER;
+  }
+
+  @Override
+  public BodyType parentBodyType() {
+    return BodyType.SUN;
   }
 
   @Override
@@ -25,10 +30,5 @@ public class Jupiter extends Planet {
   @Override
   protected double equatorialRadiusHorizons() {
     return 71492;
-  }
-
-  @Override
-  public BodyName parentBody() {
-    return BodyName.SUN;
   }
 }
