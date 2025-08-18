@@ -2,7 +2,6 @@ package org.artools.orbitcalculator.application.bodies.planets;
 
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.Getter;
@@ -23,16 +22,6 @@ public abstract class Planet extends AstralBody {
     bodyType = planetBodyType();
     parentBody = parentBodyType();
     mass = muToMass();
-  }
-
-
-
-  public Optional<BodyType> getSphereOfInfluence(){
-    return Optional.ofNullable(parentBody);
-  }
-
-  public String getName(){
-    return bodyType.toString();
   }
 
   public void parseStateVector(String input) {
@@ -100,5 +89,9 @@ public abstract class Planet extends AstralBody {
   @Override
   public void setMotionState(MotionState state) {
     this.motionState = state;
+  }
+
+  public String getName(){
+    return bodyType.toString();
   }
 }
