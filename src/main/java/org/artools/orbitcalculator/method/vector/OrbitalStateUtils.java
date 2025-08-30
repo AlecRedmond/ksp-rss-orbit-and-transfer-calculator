@@ -18,7 +18,7 @@ public class OrbitalStateUtils {
     }
     double argumentPE = orbitalState.getArgumentPE();
     double inclination = orbitalState.getInclination();
-    double rightAscension = orbitalState.getRightAscension();
+    double rightAscension = orbitalState.getLongitudeAscendingNode();
     Rotation rotation =
         new Rotation(
             RotationOrder.ZXZ,
@@ -39,7 +39,7 @@ public class OrbitalStateUtils {
         .momentum(momentum)
         .eccentricity(eccentricity)
         .semiMajorAxis(orbitalState.getSemiMajorAxis())
-        .rightAscension(rightAscension)
+        .longitudeAscendingNode(rightAscension)
         .inclination(inclination)
         .argumentPE(argumentPE)
         .trueAnomaly(orbitalState.getTrueAnomaly())
@@ -52,7 +52,7 @@ public class OrbitalStateUtils {
   public OrbitalState convertFromPerifocal(PerifocalState perifocalState) {
     double argumentPE = perifocalState.getArgumentPE();
     double inclination = perifocalState.getInclination();
-    double rightAscension = perifocalState.getRightAscension();
+    double rightAscension = perifocalState.getLongitudeAscendingNode();
     Rotation rotation =
         new Rotation(
             RotationOrder.ZXZ,
@@ -73,7 +73,7 @@ public class OrbitalStateUtils {
         .momentum(momentum)
         .eccentricity(eccentricity)
         .semiMajorAxis(perifocalState.getSemiMajorAxis())
-        .rightAscension(rightAscension)
+        .longitudeAscendingNode(rightAscension)
         .inclination(inclination)
         .argumentPE(argumentPE)
         .trueAnomaly(perifocalState.getTrueAnomaly())

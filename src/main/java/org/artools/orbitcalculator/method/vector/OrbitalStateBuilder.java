@@ -40,7 +40,7 @@ public class OrbitalStateBuilder {
     Vector3D ascendingNodeVector = Vector3D.PLUS_K.crossProduct(momentum);
     double semiMajorAxis = getSemiMajorAxis(momentum, centralBody, eccentricity);
     double inclination = getInclination(momentum);
-    double rightAscension = getRightAscension(ascendingNodeVector);
+    double rightAscension = getLongitudeAscendingNode(ascendingNodeVector);
     double argumentPE = getArgumentPE(ascendingNodeVector, eccentricity);
     double trueAnomaly = getTrueAnomaly(eccentricity, position, velocity);
     double eccentricAnomaly = getEccentricAnomaly(eccentricity, trueAnomaly);
@@ -53,7 +53,7 @@ public class OrbitalStateBuilder {
             .momentum(momentum)
             .eccentricity(eccentricity)
             .semiMajorAxis(semiMajorAxis)
-            .rightAscension(rightAscension)
+            .longitudeAscendingNode(rightAscension)
             .inclination(inclination)
             .argumentPE(argumentPE)
             .trueAnomaly(trueAnomaly)
@@ -86,7 +86,7 @@ public class OrbitalStateBuilder {
     return Math.acos(cosI);
   }
 
-  private double getRightAscension(Vector3D ascendingNodeVector) {
+  private double getLongitudeAscendingNode(Vector3D ascendingNodeVector) {
     var nodeI = Vector3D.PLUS_I.dotProduct(ascendingNodeVector) / ascendingNodeVector.getNorm();
     var omega = Math.acos(nodeI);
     var nodeJ = Vector3D.PLUS_J.dotProduct(ascendingNodeVector) / ascendingNodeVector.getNorm();

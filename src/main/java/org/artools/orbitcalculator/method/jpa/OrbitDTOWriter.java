@@ -28,7 +28,7 @@ public class OrbitDTOWriter {
         .periapsisAlt(periapsisAlt)
         .eccentricity(eccentricity)
         .semiMajorAxis(sma)
-        .rightAscension(state.getRightAscension())
+        .rightAscension(state.getLongitudeAscendingNode())
         .inclination(state.getInclination())
         .argumentPE(state.getArgumentPE())
         .trueAnomaly(state.getTrueAnomaly())
