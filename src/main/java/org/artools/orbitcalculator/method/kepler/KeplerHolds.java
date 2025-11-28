@@ -18,6 +18,11 @@ public class KeplerHolds {
     this.solvable = false;
   }
 
+  public KeplerHolds(List<KeplerElement> inputElements) {
+    this.inputElements = new LinkedList<>();
+    inputElements.forEach(this::addHold);
+  }
+
   public List<KeplerElement> addHold(KeplerElement element) {
     if (ELLIPTICAL_ELEMENTS.contains(element)) resolveElliptical(element);
     if (ROTATIONAL_ELEMENTS.contains(element)) resolveRotational(element);
@@ -61,7 +66,7 @@ public class KeplerHolds {
   }
 
   private void removeConcurrent(
-          KeplerElement input, KeplerElement elementA, KeplerElement elementB) {
+      KeplerElement input, KeplerElement elementA, KeplerElement elementB) {
     if (input.equals(elementA)) inputElements.remove(elementB);
     if (input.equals(elementB)) inputElements.remove(elementA);
   }

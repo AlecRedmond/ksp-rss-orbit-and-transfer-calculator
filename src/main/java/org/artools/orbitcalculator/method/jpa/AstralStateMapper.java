@@ -3,7 +3,6 @@ package org.artools.orbitcalculator.method.jpa;
 import java.sql.Timestamp;
 import org.artools.orbitcalculator.application.bodies.AstralBody;
 import org.artools.orbitcalculator.application.jpa.AstralPositionDTO;
-import org.artools.orbitcalculator.application.jpa.KeplerOrbitDTO;
 import org.artools.orbitcalculator.application.jpa.OrbitStateDTO;
 import org.artools.orbitcalculator.application.jpa.Vector3DTO;
 import org.artools.orbitcalculator.application.vector.MotionState;
@@ -33,7 +32,7 @@ public interface AstralStateMapper {
     OrbitStateUtils utils = new OrbitStateUtils();
     Vector3DTO truePosition = new Vector3DTO(utils.getTruePosition(state));
     Vector3DTO trueVelocity = new Vector3DTO(utils.getTrueVelocity(state));
-    OrbitStateDTO orbit = OrbitDTOWriter.writeOrbit(state);
+    OrbitStateDTO orbit = OrbitStateDTOWriter.writeOrbit(state);
     return builder.position(truePosition).velocity(trueVelocity).orbit(orbit).build();
   }
 }

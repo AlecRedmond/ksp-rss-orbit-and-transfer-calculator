@@ -3,8 +3,8 @@ package org.artools.orbitcalculator.method.vector;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
-import org.artools.orbitcalculator.application.bodies.planets.BodyType;
 import org.artools.orbitcalculator.application.bodies.planets.*;
+import org.artools.orbitcalculator.application.bodies.planets.BodyType;
 import org.artools.orbitcalculator.application.vector.Orrery;
 
 @Getter

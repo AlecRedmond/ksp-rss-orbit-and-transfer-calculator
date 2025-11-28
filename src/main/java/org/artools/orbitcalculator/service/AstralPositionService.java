@@ -52,7 +52,7 @@ public class AstralPositionService {
   @PostConstruct
   public void initializePositions() {
     orrery = new OrreryBuilder().getOrrery();
-    saveOrreryState();
+    saveOrreryState(orrery);
   }
 
   public void saveOrreryState(Orrery orrery) {
@@ -73,7 +73,7 @@ public class AstralPositionService {
       return;
     }
     orrery = new OrreryIntegrator(orrery).stepToTime(epoch).getOrrery();
-    saveOrreryState();
+    saveOrreryState(orrery);
   }
 
   public List<AstralPositionDTO> fetchSolarSystemStates() {

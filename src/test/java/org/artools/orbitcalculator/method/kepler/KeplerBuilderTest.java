@@ -4,11 +4,21 @@ import static org.artools.orbitcalculator.application.kepler.KeplerElement.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.Instant;
-import org.artools.orbitcalculator.application.bodies.planets.Earth;
+import org.artools.orbitcalculator.application.bodies.planets.BodyType;
+import org.artools.orbitcalculator.application.vector.Orrery;
+import org.artools.orbitcalculator.method.vector.OrreryBuilder;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class KeplerBuilderTest {
-  KeplerBuilder test = new KeplerBuilder(Instant.parse("1951-01-01T00:00:00.00Z"), new Earth());
+  Orrery orrery;
+  KeplerBuilder test;
+
+  @BeforeEach
+  void init() {
+    orrery = new OrreryBuilder().getOrrery();
+    test = new KeplerBuilder(Instant.parse("1951-01-01T00:00:00.00Z"), BodyType.EARTH, orrery);
+  }
 
   @Test
   void setData() {

@@ -2,13 +2,11 @@ package org.artools.orbitcalculator.application.jpa;
 
 import jakarta.persistence.*;
 import java.sql.Timestamp;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.artools.orbitcalculator.application.bodies.planets.BodyType;
-import org.artools.orbitcalculator.application.kepler.KeplerElement;
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
@@ -18,7 +16,7 @@ import org.hibernate.annotations.UuidGenerator;
 @Builder
 public class OrbitStateDTO {
   @Id @UuidGenerator private String id;
-  private BodyType centralBody;
+  private BodyType centralBodyType;
   private double apoapsisAlt;
   private double periapsisAlt;
   private double eccentricity;

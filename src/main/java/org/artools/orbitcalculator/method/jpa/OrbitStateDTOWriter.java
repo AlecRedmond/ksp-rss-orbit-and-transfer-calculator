@@ -6,9 +6,9 @@ import org.artools.orbitcalculator.application.jpa.OrbitStateDTO;
 import org.artools.orbitcalculator.application.vector.OrbitalState;
 
 @Getter
-public class OrbitDTOWriter {
+public class OrbitStateDTOWriter {
 
-  private OrbitDTOWriter() {}
+  private OrbitStateDTOWriter() {}
 
   public static OrbitStateDTO writeOrbit(OrbitalState state) {
     double eccentricity = state.getEccentricity().getNorm();
@@ -20,7 +20,7 @@ public class OrbitDTOWriter {
     double velocity = state.getVelocity().getNorm();
 
     return OrbitStateDTO.builder()
-        .centralBody(state.getCentralBody().getBodyType())
+        .centralBodyType(state.getCentralBody().getBodyType())
         .apoapsisAlt(apoapsisAlt)
         .periapsisAlt(periapsisAlt)
         .eccentricity(eccentricity)

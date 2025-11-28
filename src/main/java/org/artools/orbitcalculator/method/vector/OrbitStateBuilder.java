@@ -14,22 +14,26 @@ import org.artools.orbitcalculator.application.bodies.planets.Planet;
 import org.artools.orbitcalculator.application.kepler.KeplerOrbit;
 import org.artools.orbitcalculator.application.vector.MotionState;
 import org.artools.orbitcalculator.application.vector.OrbitalState;
+import org.artools.orbitcalculator.application.vector.Orrery;
 
 @Getter
 public class OrbitStateBuilder {
   private OrbitStateBuilder() {}
 
-  public static OrbitalState buildFromKeplerOrbit(KeplerOrbit orbit) {
-    double angularMomentum = calculateAngularMomentum(orbit);
+  public static OrbitalState buildFromKeplerOrbit(KeplerOrbit orbit, Orrery orrery) {
+    Planet centralBody = orrery.getPlanetByType(orbit.getCentralBodyType());
+    double angularMomentum = calculateAngularMomentum(orbit, centralBody);
     Rotation rotationToInertial = calculateRotationToInertial(orbit);
-    Vector3D position = calculateInertialPosition(angularMomentum, orbit, rotationToInertial);
-    Vector3D velocity = calculateInertialVelocity(angularMomentum, orbit, rotationToInertial);
+    Vector3D position =
+        calculateInertialPosition(angularMomentum, orbit, rotationToInertial, centralBody);
+    Vector3D velocity =
+        calculateInertialVelocity(angularMomentum, orbit, rotationToInertial, centralBody);
     return buildFromVelocityAndPositionVectors(
-        orbit.getCentralBody(), position, velocity, orbit.getEpoch());
+        centralBody, position, velocity, orbit.getTimestamp().toInstant());
   }
 
-  private static double calculateAngularMomentum(KeplerOrbit orbit) {
-    double mu = orbit.getCentralBody().getMu();
+  private static double calculateAngularMomentum(KeplerOrbit orbit, Planet centralBody) {
+    double mu = centralBody.getMu();
     double sma = orbit.getData(SEMI_MAJOR_AXIS);
     double eccentricity = orbit.getData(ECCENTRICITY);
     return Math.sqrt(mu * sma * (1 - Math.pow(eccentricity, 2)));
@@ -48,8 +52,8 @@ public class OrbitStateBuilder {
   }
 
   private static Vector3D calculateInertialPosition(
-      double angularMomentum, KeplerOrbit orbit, Rotation rotationToInertial) {
-    double mu = orbit.getCentralBody().getMu();
+      double angularMomentum, KeplerOrbit orbit, Rotation rotationToInertial, Planet centralBody) {
+    double mu = centralBody.getMu();
     double trueAnomaly = orbit.getData(TRUE_ANOMALY);
     double eccentricity = orbit.getData(ECCENTRICITY);
 
@@ -61,8 +65,8 @@ public class OrbitStateBuilder {
   }
 
   private static Vector3D calculateInertialVelocity(
-      double angularMomentum, KeplerOrbit orbit, Rotation rotationToInertial) {
-    double mu = orbit.getCentralBody().getMu();
+      double angularMomentum, KeplerOrbit orbit, Rotation rotationToInertial, Planet centralBody) {
+    double mu = centralBody.getMu();
     double trueAnomaly = orbit.getData(TRUE_ANOMALY);
     double eccentricity = orbit.getData(ECCENTRICITY);
 
