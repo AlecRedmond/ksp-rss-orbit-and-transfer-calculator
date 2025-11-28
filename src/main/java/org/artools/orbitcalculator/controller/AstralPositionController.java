@@ -14,11 +14,10 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "http://localhost:5173") // React default port
 public class AstralPositionController {
   @Autowired private AstralPositionService service;
-
-  // Save
+  
   @PostMapping(consumes = "application/json", produces = "application/json")
   public AstralPositionDTO saveState(@RequestBody AstralPositionDTO state) {
-    return service.saveSolarSystemState(state);
+    return service.saveAstralPosition(state);
   }
 
   @GetMapping()
@@ -34,12 +33,12 @@ public class AstralPositionController {
   @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
   public AstralPositionDTO updateState(
           @RequestBody AstralPositionDTO state, @PathVariable("id") String  id) {
-    return service.updateSolarSystemState(state, id);
+    return service.updateAstralPosition(state, id);
   }
 
   @DeleteMapping(value = "/{id}")
   public String deleteStateByID(@PathVariable("id") String id) {
-    service.deleteSolarSystemState(id);
+    service.deleteAstralPosition(id);
     return "Deleted Successfully!";
   }
 

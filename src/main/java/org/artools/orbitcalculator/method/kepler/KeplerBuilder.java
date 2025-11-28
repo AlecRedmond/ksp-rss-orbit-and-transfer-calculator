@@ -1,13 +1,13 @@
 package org.artools.orbitcalculator.method.kepler;
 
-import static org.artools.orbitcalculator.application.kepler.KeplerElements.*;
+import static org.artools.orbitcalculator.application.kepler.KeplerElement.*;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 import lombok.Getter;
 import org.artools.orbitcalculator.application.bodies.planets.Planet;
-import org.artools.orbitcalculator.application.kepler.KeplerElements;
+import org.artools.orbitcalculator.application.kepler.KeplerElement;
 import org.artools.orbitcalculator.application.kepler.KeplerOrbit;
 import org.artools.orbitcalculator.application.vector.OrbitalState;
 
@@ -50,21 +50,21 @@ public class KeplerBuilder {
     this.built = false;
   }
 
-  public void setData(KeplerElements element, double data) {
-    List<KeplerElements> inputElements = holds.addHold(element);
+  public void setData(KeplerElement element, double data) {
+    List<KeplerElement> inputElements = holds.addHold(element);
     clearNonHeldElements(inputElements);
     orbit.setData(element, data);
     fillElements(inputElements);
     ensureNotNegative();
   }
 
-  private void clearNonHeldElements(List<KeplerElements> inputElements) {
+  private void clearNonHeldElements(List<KeplerElement> inputElements) {
     orbit.getElementsMap().keySet().stream()
-        .filter(ke -> !inputElements.contains(ke))
+        .filter(element -> !inputElements.contains(element))
         .forEach(orbit::removeEntry);
   }
 
-  private void fillElements(List<KeplerElements> inputElements) {
+  private void fillElements(List<KeplerElement> inputElements) {
     if (!holds.isSolvable()) return;
     fillValues(inputElements, ELLIPTICAL_ELEMENTS);
     fillValues(inputElements, EPOCH_ELEMENTS);
@@ -74,10 +74,10 @@ public class KeplerBuilder {
   private void ensureNotNegative() {
     orbit.getElementsMap().entrySet().stream()
         .filter(entry -> entry.getValue() < 0)
-        .forEach(entry -> utils.ensureNotNegative(entry.getKey(), orbit));
+        .forEach(entry -> utils.convertRadialValuesToPositive(entry.getKey(), orbit));
   }
 
-  private void fillValues(List<KeplerElements> inputElements, Set<KeplerElements> elementsSet) {
+  private void fillValues(List<KeplerElement> inputElements, Set<KeplerElement> elementsSet) {
     elementsSet.stream()
         .filter(element -> !inputElements.contains(element))
         .forEach(element -> utils.calculateElement(orbit, element));

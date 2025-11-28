@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.artools.orbitcalculator.application.bodies.planets.BodyType;
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
@@ -16,7 +17,9 @@ import org.hibernate.annotations.UuidGenerator;
 public class AstralPositionDTO {
   @Id @UuidGenerator private String id;
 
-  private String body;
+  @Enumerated(EnumType.STRING)
+  private BodyType bodyType;
+
   private Double radius;
 
   @Temporal(TemporalType.TIMESTAMP)
@@ -26,5 +29,6 @@ public class AstralPositionDTO {
 
   @Embedded private Vector3DTO velocity;
 
-  @OneToOne private OrbitDTO orbit;
+  @OneToOne(cascade = CascadeType.ALL)
+  private OrbitStateDTO orbit;
 }

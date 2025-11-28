@@ -2,10 +2,13 @@ package org.artools.orbitcalculator.application.jpa;
 
 import jakarta.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.artools.orbitcalculator.application.bodies.planets.BodyType;
+import org.artools.orbitcalculator.application.kepler.KeplerElement;
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
@@ -13,14 +16,14 @@ import org.hibernate.annotations.UuidGenerator;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OrbitDTO {
+public class OrbitStateDTO {
   @Id @UuidGenerator private String id;
-  private String orbitFocus;
+  private BodyType centralBody;
   private double apoapsisAlt;
   private double periapsisAlt;
   private double eccentricity;
   private double semiMajorAxis;
-  private double rightAscension;
+  private double longitudeAscendingNode;
   private double inclination;
   private double argumentPE;
   private double trueAnomaly;
@@ -29,8 +32,7 @@ public class OrbitDTO {
   private double altitude;
   private double orbitalVelocity;
 
-  @OneToOne(optional = false)
-  private AstralPositionDTO astralPositionDTO;
+  @OneToOne() private AstralPositionDTO astralPositionDTO;
 
   @Temporal(TemporalType.TIMESTAMP)
   private Timestamp timestamp;

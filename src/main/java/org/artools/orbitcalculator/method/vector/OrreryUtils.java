@@ -26,35 +26,36 @@ public class OrreryUtils {
   }
 
   private void convertToOrbitalState(AstralBody body) {
-    Optional<Planet> sphereOfInfluence = findSphereOfInfluence(body);
-    if (sphereOfInfluence.isEmpty()) {
+    Planet sphereOfInfluence = findSphereOfInfluence(body);
+    if (Optional.ofNullable(sphereOfInfluence).isEmpty()) {
       return;
     }
-    OrbitalState state =
-        new OrbitalStateBuilder(body.getMotionState(), sphereOfInfluence.get()).getVectors();
-    body.setMotionState(state);
+    OrbitalState orbitalState =
+        OrbitStateBuilder.buildFromMotionState(body.getMotionState(), sphereOfInfluence);
+    body.setMotionState(orbitalState);
   }
 
-  private Optional<Planet> findSphereOfInfluence(AstralBody satellite) {
+  private Planet findSphereOfInfluence(AstralBody satellite) {
     return satellite instanceof Craft craft
         ? maximumAccelerationValue(craft)
-        : Optional.ofNullable(satellite.getSphereOfInfluence()).map(orrery::getPlanetByType);
+        : orrery.getPlanetByType(satellite.getSphereOfInfluence());
   }
 
-  private Optional<Planet> maximumAccelerationValue(Craft craft) {
+  private Planet maximumAccelerationValue(Craft craft) {
     MotionState craftState = craft.getMotionState();
     List<Planet> planets = orrery.getAllPlanets();
 
-    Planet sphereOfInfluence =
+    Optional<Planet> optionalPlanet =
         planets.stream()
             .map(planet -> findAccelerationTowards(craftState, planet))
             .max(Map.Entry.comparingByValue())
-            .map(Map.Entry::getKey)
-            .orElseThrow();
+            .map(Map.Entry::getKey);
 
+    if (optionalPlanet.isEmpty()) return null;
+
+    Planet sphereOfInfluence = optionalPlanet.get();
     craft.setSphereOfInfluence(sphereOfInfluence.getBodyType());
-
-    return Optional.of(sphereOfInfluence);
+    return sphereOfInfluence;
   }
 
   private Map.Entry<Planet, Double> findAccelerationTowards(

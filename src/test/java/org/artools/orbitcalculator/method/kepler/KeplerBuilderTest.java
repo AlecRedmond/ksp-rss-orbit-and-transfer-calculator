@@ -1,6 +1,6 @@
 package org.artools.orbitcalculator.method.kepler;
 
-import static org.artools.orbitcalculator.application.kepler.KeplerElements.*;
+import static org.artools.orbitcalculator.application.kepler.KeplerElement.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.Instant;

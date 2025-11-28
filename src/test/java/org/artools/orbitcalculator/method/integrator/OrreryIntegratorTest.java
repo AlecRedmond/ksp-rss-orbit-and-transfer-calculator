@@ -44,7 +44,7 @@ class OrreryIntegratorTest {
             .map(integer -> integer + "-01-01T00:00:00.00Z")
             .map(Instant::parse)
             .flatMap(OrreryIntegratorTest::getInstants)
-            .map(instant -> test.stepToDate(instant).getOrrery())
+            .map(instant -> test.stepToTime(instant).getOrrery())
             .map(thisOrrery -> new OrreryUtils(thisOrrery).convertToOrbitalStates())
             .toList();
   }

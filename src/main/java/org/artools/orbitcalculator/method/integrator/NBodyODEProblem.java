@@ -1,5 +1,8 @@
 package org.artools.orbitcalculator.method.integrator;
 
+import static org.artools.orbitcalculator.method.integrator.OrreryIntegrator.*;
+import static org.artools.orbitcalculator.method.integrator.OrreryIntegrator.VectorDimensionIndex.*;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
@@ -18,54 +21,57 @@ public class NBodyODEProblem implements FirstOrderDifferentialEquations {
 
   @Override
   public int getDimension() {
-    return bodies.size() * 6; // X, Y, Z, Vx, Vy, Vz
+    return bodies.size() * VectorDimensionIndex.getDimension();
   }
 
   @Override
-  public void computeDerivatives(double t, double[] y, double[] yDot)
+  public void computeDerivatives(double t, double[] stateVector, double[] stateDerivatives)
       throws MaxCountExceededException, DimensionMismatchException {
-    IntStream.range(0, bodies.size()).forEach(bodyIndex -> {
-      Vector3D acceleration = computeAcceleration(bodyIndex, y);
-      populateYDot(y,yDot,bodyIndex,acceleration);
-    });
-
+    IntStream.range(0, bodies.size())
+        .forEach(
+            bodyIndex -> {
+              Vector3D acceleration = computeAcceleration(bodyIndex, stateVector);
+              populateDerivatives(stateVector, stateDerivatives, bodyIndex, acceleration);
+            });
   }
 
-  private void populateYDot(double[] y, double[] yDot, int bodyIndex, Vector3D acceleration) {
-    int indexZero = bodyIndex * 6;
-    Vector3D velocity = getVelocityFromBodyIndex(bodyIndex,y);
-    //Derivatives = Vx,Vy,Vz,Ax,Ay,Az
-    yDot[indexZero] = velocity.getX();
-    yDot[indexZero + 1] = velocity.getY();
-    yDot[indexZero + 2] = velocity.getZ();
-
-    yDot[indexZero + 3] = acceleration.getX();
-    yDot[indexZero + 4] = acceleration.getY();
-    yDot[indexZero + 5] = acceleration.getZ();
-  }
-
-  private Vector3D getVelocityFromBodyIndex(int bodyIndex, double[] y) {
-    int indexZero = 6 * bodyIndex;
-    return new Vector3D(new double[] {y[indexZero+3], y[indexZero + 4], y[indexZero + 5]});
-  }
-
-  private Vector3D getRadiusFromBodyIndex(int bodyIndex, double[] y) {
-    int indexZero = 6 * bodyIndex;
-    return new Vector3D(new double[] {y[indexZero], y[indexZero + 1], y[indexZero + 2]});
-  }
-
-  private Vector3D computeAcceleration(int i, double[] y) {
-    Vector3D currentPos = getRadiusFromBodyIndex(i, y);
+  private Vector3D computeAcceleration(int i, double[] stateVector) {
+    Vector3D currentPos = getPositionFromBodyIndex(i, stateVector);
     return IntStream.range(0, bodies.size())
         .filter(bodyIndex -> bodyIndex != i)
-        .mapToObj(bodyIndex -> getDistance(bodyIndex, y, currentPos))
+        .mapToObj(bodyIndex -> getDistance(bodyIndex, stateVector, currentPos))
         .map(this::accelerationTowardsBody)
         .reduce(Vector3D.ZERO, Vector3D::add);
   }
 
-  private Map.Entry<AstralBody, Vector3D> getDistance(int bodyIndex, double[] y, Vector3D currentPos) {
+  private void populateDerivatives(
+      double[] stateVector, double[] stateDerivatives, int bodyIndex, Vector3D acceleration) {
+    int indexZero = bodyIndex * VectorDimensionIndex.getDimension();
+    Vector3D velocity = getVelocityFromBodyIndex(bodyIndex, stateVector);
+    // Derivatives = Vx,Vy,Vz,Ax,Ay,Az
+    stateDerivatives[X_POSITION.offsetIndex(indexZero)] = velocity.getX();
+    stateDerivatives[Y_POSITION.offsetIndex(indexZero)] = velocity.getY();
+    stateDerivatives[Z_POSITION.offsetIndex(indexZero)] = velocity.getZ();
+
+    stateDerivatives[X_VELOCITY.offsetIndex(indexZero)] = acceleration.getX();
+    stateDerivatives[Y_VELOCITY.offsetIndex(indexZero)] = acceleration.getY();
+    stateDerivatives[Z_VELOCITY.offsetIndex(indexZero)] = acceleration.getZ();
+  }
+
+  private Vector3D getPositionFromBodyIndex(int bodyIndex, double[] stateVector) {
+    int stateVectorBodyIndex = VectorDimensionIndex.getDimension() * bodyIndex;
+    return new Vector3D(
+        new double[] {
+          stateVector[X_POSITION.offsetIndex(stateVectorBodyIndex)],
+          stateVector[Y_POSITION.offsetIndex(stateVectorBodyIndex)],
+          stateVector[Z_POSITION.offsetIndex(stateVectorBodyIndex)]
+        });
+  }
+
+  private Map.Entry<AstralBody, Vector3D> getDistance(
+      int bodyIndex, double[] stateVector, Vector3D currentPos) {
     AstralBody body = bodies.get(bodyIndex);
-    Vector3D distance = getRadiusFromBodyIndex(bodyIndex, y).subtract(currentPos);
+    Vector3D distance = getPositionFromBodyIndex(bodyIndex, stateVector).subtract(currentPos);
     return Map.entry(body, distance);
   }
 
@@ -77,4 +83,13 @@ public class NBodyODEProblem implements FirstOrderDifferentialEquations {
     return directionUnitVector.scalarMultiply(accelerationScalar);
   }
 
+  private Vector3D getVelocityFromBodyIndex(int bodyIndex, double[] stateVector) {
+    int stateVectorBodyIndex = VectorDimensionIndex.getDimension() * bodyIndex;
+    return new Vector3D(
+        new double[] {
+          stateVector[X_VELOCITY.offsetIndex(stateVectorBodyIndex)],
+          stateVector[Y_VELOCITY.offsetIndex(stateVectorBodyIndex)],
+          stateVector[Z_VELOCITY.offsetIndex(stateVectorBodyIndex)]
+        });
+  }
 }

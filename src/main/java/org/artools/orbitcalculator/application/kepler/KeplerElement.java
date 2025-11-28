@@ -2,7 +2,7 @@ package org.artools.orbitcalculator.application.kepler;
 
 import java.util.Set;
 
-public enum KeplerElements {
+public enum KeplerElement {
   // ELLIPTICAL ELEMENTS
   ECCENTRICITY,
   SEMI_MAJOR_AXIS,
@@ -21,7 +21,7 @@ public enum KeplerElements {
   // DERIVED EPOCH ELEMENTS
   TIME_TO_PERIAPSIS; // DIRECTLY DERIVED FROM MEAN ANOMALY
 
-  public static final Set<KeplerElements> ELLIPTICAL_ELEMENTS = Set.of(ECCENTRICITY,SEMI_MAJOR_AXIS,APOAPSIS,PERIAPSIS,ORBITAL_PERIOD);
-  public static final Set<KeplerElements> ROTATIONAL_ELEMENTS = Set.of(LONGITUDE_ASCENDING_NODE,INCLINATION,ARGUMENT_OF_PERIAPSIS);
-  public static final Set<KeplerElements> EPOCH_ELEMENTS = Set.of(MEAN_ANOMALY,ECCENTRIC_ANOMALY,TRUE_ANOMALY,TIME_TO_PERIAPSIS);
+  public static final Set<KeplerElement> ELLIPTICAL_ELEMENTS = Set.of(ECCENTRICITY,SEMI_MAJOR_AXIS,APOAPSIS,PERIAPSIS,ORBITAL_PERIOD);
+  public static final Set<KeplerElement> ROTATIONAL_ELEMENTS = Set.of(LONGITUDE_ASCENDING_NODE,INCLINATION,ARGUMENT_OF_PERIAPSIS);
+  public static final Set<KeplerElement> EPOCH_ELEMENTS = Set.of(MEAN_ANOMALY,ECCENTRIC_ANOMALY,TRUE_ANOMALY,TIME_TO_PERIAPSIS);
 }

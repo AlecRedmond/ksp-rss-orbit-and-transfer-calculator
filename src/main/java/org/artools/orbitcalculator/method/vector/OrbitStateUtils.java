@@ -10,7 +10,7 @@ import org.artools.orbitcalculator.application.vector.OrbitalState;
 import org.artools.orbitcalculator.application.vector.PerifocalState;
 
 @NoArgsConstructor
-public class OrbitalStateUtils {
+public class OrbitStateUtils {
 
   public PerifocalState convertToPerifocal(OrbitalState orbitalState) {
     if (orbitalState instanceof PerifocalState state) {

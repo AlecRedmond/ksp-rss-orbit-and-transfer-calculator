@@ -1,12 +1,16 @@
 package org.artools.orbitcalculator.application.bodies;
 
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.artools.orbitcalculator.application.bodies.planets.BodyType;
 import org.artools.orbitcalculator.application.vector.MotionState;
 
-@Getter
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class Craft extends AstralBody {
-  public final String name;
+  private double bodyRadius = 1.0;
+  private String name;
+  private double engineISP;
 
   public Craft(MotionState motionState, double mass, String name) {
     this.mass = mass;
@@ -22,5 +26,10 @@ public class Craft extends AstralBody {
 
   public void setSphereOfInfluence(BodyType type) {
     this.sphereOfInfluence = type;
+  }
+
+  @Override
+  public BodyType getBodyType() {
+    return null;
   }
 }

@@ -25,7 +25,7 @@ public class Orrery {
         .map(Planet.class::cast)
         .filter(p -> p.getBodyType().equals(type))
         .findAny()
-        .orElseThrow();
+        .orElse(null);
   }
 
   public Instant getEpoch() {

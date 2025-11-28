@@ -2,18 +2,15 @@ package org.artools.orbitcalculator.method.jpa;
 
 import java.sql.Timestamp;
 import lombok.Getter;
-import org.artools.orbitcalculator.application.jpa.OrbitDTO;
+import org.artools.orbitcalculator.application.jpa.OrbitStateDTO;
 import org.artools.orbitcalculator.application.vector.OrbitalState;
 
 @Getter
 public class OrbitDTOWriter {
-  private final OrbitDTO orbitDTO;
 
-  public OrbitDTOWriter(OrbitalState state) {
-    this.orbitDTO = writeOrbit(state);
-  }
+  private OrbitDTOWriter() {}
 
-  private OrbitDTO writeOrbit(OrbitalState state) {
+  public static OrbitStateDTO writeOrbit(OrbitalState state) {
     double eccentricity = state.getEccentricity().getNorm();
     double bodyRadius = state.getCentralBody().getBodyRadius();
     double sma = state.getSemiMajorAxis();
@@ -22,13 +19,13 @@ public class OrbitDTOWriter {
     double altitude = state.getPosition().getNorm() - bodyRadius;
     double velocity = state.getVelocity().getNorm();
 
-    return OrbitDTO.builder()
-        .orbitFocus(state.getCentralBody().getBodyType().toString())
+    return OrbitStateDTO.builder()
+        .centralBody(state.getCentralBody().getBodyType())
         .apoapsisAlt(apoapsisAlt)
         .periapsisAlt(periapsisAlt)
         .eccentricity(eccentricity)
         .semiMajorAxis(sma)
-        .rightAscension(state.getLongitudeAscendingNode())
+        .longitudeAscendingNode(state.getLongitudeAscendingNode())
         .inclination(state.getInclination())
         .argumentPE(state.getArgumentPE())
         .trueAnomaly(state.getTrueAnomaly())

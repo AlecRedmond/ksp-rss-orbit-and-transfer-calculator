@@ -1,17 +1,16 @@
 package org.artools.orbitcalculator.method.kepler;
 
-import static org.artools.orbitcalculator.application.kepler.KeplerElements.*;
+import static org.artools.orbitcalculator.application.kepler.KeplerElement.*;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-
 import lombok.Getter;
-import org.artools.orbitcalculator.application.kepler.KeplerElements;
+import org.artools.orbitcalculator.application.kepler.KeplerElement;
 
 @Getter
 public class KeplerHolds {
-  private final List<KeplerElements> inputElements;
+  private final List<KeplerElement> inputElements;
   private boolean solvable;
 
   public KeplerHolds() {
@@ -19,7 +18,7 @@ public class KeplerHolds {
     this.solvable = false;
   }
 
-  public List<KeplerElements> addHold(KeplerElements element) {
+  public List<KeplerElement> addHold(KeplerElement element) {
     if (ELLIPTICAL_ELEMENTS.contains(element)) resolveElliptical(element);
     if (ROTATIONAL_ELEMENTS.contains(element)) resolveRotational(element);
     if (EPOCH_ELEMENTS.contains(element)) resolveEpoch(element);
@@ -27,17 +26,12 @@ public class KeplerHolds {
     return inputElements;
   }
 
-  private void removeConcurrent(KeplerElements input, KeplerElements elementA, KeplerElements elementB){
-    if(input.equals(elementA)) inputElements.remove(elementB);
-    if(input.equals(elementB)) inputElements.remove(elementA);
-  }
-
-  private void resolveElliptical(KeplerElements element) {
+  private void resolveElliptical(KeplerElement element) {
     inputElements.remove(element);
 
-    removeConcurrent(element,SEMI_MAJOR_AXIS,ORBITAL_PERIOD);
+    removeConcurrent(element, SEMI_MAJOR_AXIS, ORBITAL_PERIOD);
 
-    List<KeplerElements> ellipticals = elementTypes(ELLIPTICAL_ELEMENTS);
+    List<KeplerElement> ellipticals = elementTypes(ELLIPTICAL_ELEMENTS);
 
     while (ellipticals.size() > 1) {
       inputElements.remove(ellipticals.getFirst());
@@ -47,12 +41,12 @@ public class KeplerHolds {
     inputElements.add(element);
   }
 
-  private void resolveRotational(KeplerElements element) {
+  private void resolveRotational(KeplerElement element) {
     inputElements.remove(element);
     inputElements.add(element);
   }
 
-  private void resolveEpoch(KeplerElements element) {
+  private void resolveEpoch(KeplerElement element) {
     inputElements.removeAll(EPOCH_ELEMENTS);
     inputElements.add(element);
   }
@@ -66,7 +60,13 @@ public class KeplerHolds {
     if (twoOfElliptical && allOfRotational && oneOfEpoch) solvable = true;
   }
 
-  private List<KeplerElements> elementTypes(Set<KeplerElements> keplerElementsSet) {
-    return inputElements.stream().filter(keplerElementsSet::contains).toList();
+  private void removeConcurrent(
+          KeplerElement input, KeplerElement elementA, KeplerElement elementB) {
+    if (input.equals(elementA)) inputElements.remove(elementB);
+    if (input.equals(elementB)) inputElements.remove(elementA);
+  }
+
+  private List<KeplerElement> elementTypes(Set<KeplerElement> keplerElementSet) {
+    return inputElements.stream().filter(keplerElementSet::contains).toList();
   }
 }
