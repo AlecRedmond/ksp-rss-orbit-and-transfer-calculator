@@ -23,7 +23,7 @@ class OrreryUtilsTest {
     Orrery orrery = test.convertToOrbitalStates();
     MotionState sunState = orrery.getPlanetByType(BodyType.SUN).getMotionState();
     MotionState earthState = orrery.getPlanetByType(BodyType.EARTH).getMotionState();
-    assertThrows(ClassCastException.class,() -> {OrbitalState state = (OrbitalState) sunState;});
-    assertDoesNotThrow(() -> {OrbitalState state = (OrbitalState) earthState;});
+    assertThrows(ClassCastException.class,() -> {OrbitalState ignored = (OrbitalState) sunState;});
+    assertDoesNotThrow(() -> {OrbitalState ignored = (OrbitalState) earthState;});
   }
 }

@@ -28,14 +28,9 @@ public class OrreryIntegrator {
   public OrreryIntegrator(Orrery orrery) {
     this.orrery = orrery;
     this.bodies = orrery.getAstralBodies();
-    this.stateVector = initializeStateVector(bodies);
-    epoch = orrery.getEpoch();
-  }
-
-  private double[] initializeStateVector(List<AstralBody> bodies) {
-    double[] yInit = new double[bodies.size() * VectorDimensionIndex.getDimension()];
+    this.stateVector = new double[bodies.size() * VectorDimensionIndex.getDimension()];
     IntStream.range(0, bodies.size()).forEach(this::inputStates);
-    return yInit;
+    epoch = orrery.getEpoch();
   }
 
   private void inputStates(int bodyIndex) {

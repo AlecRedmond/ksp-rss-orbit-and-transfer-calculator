@@ -34,9 +34,10 @@ public class KeplerHolds {
   private void resolveElliptical(KeplerElement element) {
     inputElements.remove(element);
 
-    removeConcurrent(element, SEMI_MAJOR_AXIS, ORBITAL_PERIOD);
+    if (element.equals(SEMI_MAJOR_AXIS)) inputElements.remove(ORBITAL_PERIOD);
+    if (element.equals(ORBITAL_PERIOD)) inputElements.remove(SEMI_MAJOR_AXIS);
 
-    List<KeplerElement> ellipticals = elementTypes(ELLIPTICAL_ELEMENTS);
+    List<KeplerElement> ellipticals = getHeldElementsOfType(ELLIPTICAL_ELEMENTS);
 
     while (ellipticals.size() > 1) {
       inputElements.remove(ellipticals.getFirst());
@@ -57,21 +58,15 @@ public class KeplerHolds {
   }
 
   private void checkSolvable() {
-    boolean twoOfElliptical = elementTypes(ELLIPTICAL_ELEMENTS).size() == 2;
+    boolean twoOfElliptical = getHeldElementsOfType(ELLIPTICAL_ELEMENTS).size() == 2;
     boolean allOfRotational =
-        elementTypes(ROTATIONAL_ELEMENTS).size() == ROTATIONAL_ELEMENTS.size();
-    boolean oneOfEpoch = elementTypes(EPOCH_ELEMENTS).size() == 1;
+        getHeldElementsOfType(ROTATIONAL_ELEMENTS).size() == ROTATIONAL_ELEMENTS.size();
+    boolean oneOfEpoch = getHeldElementsOfType(EPOCH_ELEMENTS).size() == 1;
 
     if (twoOfElliptical && allOfRotational && oneOfEpoch) solvable = true;
   }
 
-  private void removeConcurrent(
-      KeplerElement input, KeplerElement elementA, KeplerElement elementB) {
-    if (input.equals(elementA)) inputElements.remove(elementB);
-    if (input.equals(elementB)) inputElements.remove(elementA);
-  }
-
-  private List<KeplerElement> elementTypes(Set<KeplerElement> keplerElementSet) {
+  private List<KeplerElement> getHeldElementsOfType(Set<KeplerElement> keplerElementSet) {
     return inputElements.stream().filter(keplerElementSet::contains).toList();
   }
 }

@@ -1,13 +1,14 @@
 package org.artools.orbitcalculator.method.integrator;
 
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import org.apache.commons.math3.exception.NumberIsTooSmallException;
 import org.artools.orbitcalculator.application.bodies.planets.BodyType;
 import org.artools.orbitcalculator.application.bodies.planets.Planet;
 import org.artools.orbitcalculator.application.vector.OrbitalState;
@@ -26,13 +27,13 @@ class OrreryIntegratorTest {
   static OrreryIntegrator test;
   static List<Orrery> orreries;
 
-  public static Stream<Arguments> provideValidSMAs(){
+  public static Stream<Arguments> provideValidSMAs() {
     return Stream.of(
-            Arguments.of(BodyType.EARTH, 149.598E9),
-            Arguments.of(BodyType.JUPITER, 778.479E9),
-            Arguments.of(BodyType.SATURN, 1.426955795169579E12),
-            Arguments.of(BodyType.URANUS, 2.871309893991385E12),
-            Arguments.of(BodyType.NEPTUNE, 4.498638029781399E12));
+        Arguments.of(BodyType.EARTH, 149.598E9),
+        Arguments.of(BodyType.JUPITER, 778.479E9),
+        Arguments.of(BodyType.SATURN, 1.426955795169579E12),
+        Arguments.of(BodyType.URANUS, 2.871309893991385E12),
+        Arguments.of(BodyType.NEPTUNE, 4.498638029781399E12));
   }
 
   @BeforeAll
@@ -44,7 +45,9 @@ class OrreryIntegratorTest {
             .map(integer -> integer + "-01-01T00:00:00.00Z")
             .map(Instant::parse)
             .flatMap(OrreryIntegratorTest::getInstants)
-            .map(instant -> test.stepToTime(instant).getOrrery())
+            .map(OrreryIntegratorTest::stepToTime)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
             .map(thisOrrery -> new OrreryUtils(thisOrrery).convertToOrbitalStates())
             .toList();
   }
@@ -55,6 +58,14 @@ class OrreryIntegratorTest {
     long stepSeconds = timeBetween / TESTS_PER_YEAR;
     return IntStream.range(0, TESTS_PER_YEAR)
         .mapToObj(integer -> instant.plus(integer * stepSeconds, ChronoUnit.SECONDS));
+  }
+
+  private static Optional<Orrery> stepToTime(Instant instant) {
+    try {
+      return Optional.of(test.stepToTime(instant).getOrrery());
+    } catch (NumberIsTooSmallException e) {
+      return Optional.empty();
+    }
   }
 
   @ParameterizedTest

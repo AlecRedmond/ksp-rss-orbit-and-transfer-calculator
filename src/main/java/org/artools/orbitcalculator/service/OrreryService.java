@@ -1,8 +1,7 @@
 package org.artools.orbitcalculator.service;
 
 import java.time.Instant;
-
-import org.artools.orbitcalculator.application.jpa.OrbitStateDTO;
+import org.artools.orbitcalculator.application.kepler.KeplerOrbit;
 import org.artools.orbitcalculator.application.vector.Orrery;
 import org.artools.orbitcalculator.method.integrator.OrreryIntegrator;
 import org.artools.orbitcalculator.method.vector.OrreryBuilder;
@@ -29,7 +28,5 @@ public class OrreryService {
     positionService.saveOrreryState(orrery);
   }
 
-  public void addAstralBody(OrbitStateDTO orbitStateDTO){
-
-  }
+  public void addAstralBody(KeplerOrbit orbit) {}
 }

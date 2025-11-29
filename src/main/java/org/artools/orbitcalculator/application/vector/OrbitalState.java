@@ -24,4 +24,6 @@ public class OrbitalState extends MotionState {
   private double trueAnomaly;
   private double eccentricAnomaly;
   private double meanAnomaly;
+  private double apoapsisAltitude;
+  private double periapsisAltitude;
 }

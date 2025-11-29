@@ -6,42 +6,42 @@ import static org.artools.orbitcalculator.application.kepler.KeplerElement.*;
 
 import java.util.Optional;
 import lombok.NoArgsConstructor;
+import org.artools.orbitcalculator.application.bodies.planets.Planet;
 import org.artools.orbitcalculator.application.kepler.KeplerElement;
 import org.artools.orbitcalculator.application.kepler.KeplerOrbit;
-import org.artools.orbitcalculator.application.vector.Orrery;
 
 @NoArgsConstructor
 public class KeplerUtils {
   private static final double ROOT_FINDER_TOLERANCE = 1e-9;
 
-  public void calculateElement(KeplerOrbit orbit, KeplerElement element, Orrery orrery) {
+  public void calculateElement(KeplerOrbit orbit, KeplerElement element, Planet planet) {
     if (orbit.containsKey(element)) return;
     switch (element) {
-      case ECCENTRICITY -> calculateEccentricity(orbit,orrery);
-      case SEMI_MAJOR_AXIS -> calculateSemiMajorAxis(orbit, orrery);
-      case APOAPSIS -> calculateApoapsis(orbit, orrery);
-      case PERIAPSIS -> calculatePeriapsis(orbit, orrery);
-      case ORBITAL_PERIOD -> calculateOrbitalPeriod(orbit, orrery);
-      case MEAN_ANOMALY -> calculateMeanAnomaly(orbit,orrery);
-      case ECCENTRIC_ANOMALY -> calculateEccentricAnomaly(orbit,orrery);
-      case TRUE_ANOMALY -> calculateTrueAnomaly(orbit, orrery);
-      case TIME_TO_PERIAPSIS -> calculateTimeToPeriapsis(orbit, orrery);
+      case ECCENTRICITY -> calculateEccentricity(orbit, planet);
+      case SEMI_MAJOR_AXIS -> calculateSemiMajorAxis(orbit, planet);
+      case APOAPSIS -> calculateApoapsis(orbit, planet);
+      case PERIAPSIS -> calculatePeriapsis(orbit, planet);
+      case ORBITAL_PERIOD -> calculateOrbitalPeriod(orbit, planet);
+      case MEAN_ANOMALY -> calculateMeanAnomaly(orbit, planet);
+      case ECCENTRIC_ANOMALY -> calculateEccentricAnomaly(orbit, planet);
+      case TRUE_ANOMALY -> calculateTrueAnomaly(orbit, planet);
+      case TIME_TO_PERIAPSIS -> calculateTimeToPeriapsis(orbit, planet);
       case INCLINATION, LONGITUDE_ASCENDING_NODE, ARGUMENT_OF_PERIAPSIS -> {
         // will be the same
       }
     }
   }
 
-  public void calculateSemiMajorAxis(KeplerOrbit orbit, Orrery orrery) {
+  public void calculateSemiMajorAxis(KeplerOrbit orbit, Planet centralBody) {
     if (orbit.containsKey(ORBITAL_PERIOD)) {
       double period = orbit.getData(ORBITAL_PERIOD);
-      double mu = orrery.getPlanetByType(orbit.getCentralBodyType()).getMu();
+      double mu = centralBody.getMu();
       double semiMajorAxis = pow(((period * sqrt(mu)) / (2 * PI)), (2.0 / 3.0));
       orbit.setData(SEMI_MAJOR_AXIS, semiMajorAxis);
       return;
     }
 
-    double radius = orrery.getPlanetByType(orbit.getCentralBodyType()).getBodyRadius();
+    double radius = centralBody.getBodyRadius();
     Optional<Double> apoapsisOptional = Optional.ofNullable(orbit.getData(APOAPSIS));
     Optional<Double> periapsisOptional = Optional.ofNullable(orbit.getData(PERIAPSIS));
 
@@ -61,36 +61,36 @@ public class KeplerUtils {
     orbit.setData(SEMI_MAJOR_AXIS, semiMajorAxis);
   }
 
-  public void calculateApoapsis(KeplerOrbit orbit, Orrery orrery) {
-    if (!orbit.containsKey(SEMI_MAJOR_AXIS)) calculateElement(orbit, SEMI_MAJOR_AXIS, orrery);
-    if (!orbit.containsKey(ECCENTRICITY)) calculateElement(orbit, ECCENTRICITY, orrery);
-    double radius = orrery.getPlanetByType(orbit.getCentralBodyType()).getBodyRadius();
+  public void calculateApoapsis(KeplerOrbit orbit, Planet centralBody) {
+    if (!orbit.containsKey(SEMI_MAJOR_AXIS)) calculateElement(orbit, SEMI_MAJOR_AXIS, centralBody);
+    if (!orbit.containsKey(ECCENTRICITY)) calculateElement(orbit, ECCENTRICITY, centralBody);
+    double radius = centralBody.getBodyRadius();
     double eccentricity = orbit.getData(ECCENTRICITY);
     double semiMajorAxis = orbit.getData(SEMI_MAJOR_AXIS);
     double apoapsis = semiMajorAxis * (1 + eccentricity) - radius;
     orbit.setData(APOAPSIS, apoapsis);
   }
 
-  public void calculatePeriapsis(KeplerOrbit orbit, Orrery orrery) {
-    if (!orbit.containsKey(SEMI_MAJOR_AXIS)) calculateElement(orbit, SEMI_MAJOR_AXIS, orrery);
-    if (!orbit.containsKey(ECCENTRICITY)) calculateElement(orbit, ECCENTRICITY, orrery);
-    double radius = orrery.getPlanetByType(orbit.getCentralBodyType()).getBodyRadius();
+  public void calculatePeriapsis(KeplerOrbit orbit, Planet centralBody) {
+    if (!orbit.containsKey(SEMI_MAJOR_AXIS)) calculateElement(orbit, SEMI_MAJOR_AXIS, centralBody);
+    if (!orbit.containsKey(ECCENTRICITY)) calculateElement(orbit, ECCENTRICITY, centralBody);
+    double radius = centralBody.getBodyRadius();
     double eccentricity = orbit.getData(ECCENTRICITY);
     double semiMajorAxis = orbit.getData(SEMI_MAJOR_AXIS);
     double periapsis = semiMajorAxis * (1 - eccentricity) - radius;
     orbit.setData(PERIAPSIS, periapsis);
   }
 
-  public void calculateOrbitalPeriod(KeplerOrbit orbit, Orrery orrery) {
-    if (!orbit.containsKey(SEMI_MAJOR_AXIS)) calculateElement(orbit, SEMI_MAJOR_AXIS, orrery);
+  public void calculateOrbitalPeriod(KeplerOrbit orbit, Planet centralBody) {
+    if (!orbit.containsKey(SEMI_MAJOR_AXIS)) calculateElement(orbit, SEMI_MAJOR_AXIS, centralBody);
     double semiMajorAxis = orbit.getData(SEMI_MAJOR_AXIS);
-    double mu = orrery.getPlanetByType(orbit.getCentralBodyType()).getMu();
+    double mu = centralBody.getMu();
     double period = (2 * PI) * sqrt(pow(semiMajorAxis, 3) / mu);
     orbit.setData(ORBITAL_PERIOD, period);
   }
 
-  public void calculateTimeToPeriapsis(KeplerOrbit orbit,Orrery orrery) {
-    if (!orbit.containsKey(MEAN_ANOMALY)) calculateMeanAnomaly(orbit,orrery);
+  public void calculateTimeToPeriapsis(KeplerOrbit orbit,Planet centralBody) {
+    if (!orbit.containsKey(MEAN_ANOMALY)) calculateMeanAnomaly(orbit,centralBody);
     double meanAnomaly = orbit.getData(MEAN_ANOMALY);
     double period = orbit.getData(ORBITAL_PERIOD);
     double timeToPeriapsis = period * (2 * PI - meanAnomaly);
@@ -111,8 +111,8 @@ public class KeplerUtils {
     orbit.setData(element, newValue);
   }
 
-  private void calculateTrueAnomaly(KeplerOrbit orbit, Orrery orrery) {
-    if (!orbit.containsKey(ECCENTRIC_ANOMALY)) calculateElement(orbit, ECCENTRIC_ANOMALY, orrery);
+  private void calculateTrueAnomaly(KeplerOrbit orbit, Planet centralBody) {
+    if (!orbit.containsKey(ECCENTRIC_ANOMALY)) calculateElement(orbit, ECCENTRIC_ANOMALY, centralBody);
     double eccentricity = orbit.getData(ECCENTRICITY);
     double eccentricAnomaly = orbit.getData(ECCENTRIC_ANOMALY);
     double beta = eccentricity / (1 + sqrt(1 - pow(eccentricity, 2)));
@@ -123,7 +123,7 @@ public class KeplerUtils {
     orbit.setData(TRUE_ANOMALY, trueAnomaly);
   }
 
-  private void calculateEccentricAnomaly(KeplerOrbit orbit, Orrery orrery) {
+  private void calculateEccentricAnomaly(KeplerOrbit orbit, Planet centralBody) {
     if (orbit.containsKey(TRUE_ANOMALY)) {
       double eccentricity = orbit.getData(ECCENTRICITY);
       double trueAnomaly = orbit.getData(TRUE_ANOMALY);
@@ -134,7 +134,7 @@ public class KeplerUtils {
       orbit.setData(ECCENTRIC_ANOMALY, eAnomaly);
       return;
     }
-    if (orbit.containsKey(TIME_TO_PERIAPSIS)) calculateElement(orbit, MEAN_ANOMALY, orrery);
+    if (orbit.containsKey(TIME_TO_PERIAPSIS)) calculateElement(orbit, MEAN_ANOMALY, centralBody);
     double meanAnomaly = orbit.getData(MEAN_ANOMALY);
     double eccentricity = orbit.getData(ECCENTRICITY);
     double eccentricAnomaly = newtonRaphsonRootFinder(meanAnomaly, eccentricity, meanAnomaly);
@@ -155,7 +155,7 @@ public class KeplerUtils {
     return newtonRaphsonRootFinder(trueMeanAnomaly, eccentricity, currentGuess);
   }
 
-  private void calculateMeanAnomaly(KeplerOrbit orbit, Orrery orrery) {
+  private void calculateMeanAnomaly(KeplerOrbit orbit, Planet centralBody) {
     if (orbit.containsKey(TIME_TO_PERIAPSIS)) {
       double timeToPeriapsis = orbit.getData(TIME_TO_PERIAPSIS);
       double period = orbit.getData(ORBITAL_PERIOD);
@@ -164,7 +164,7 @@ public class KeplerUtils {
       return;
     }
     if (orbit.containsKey(TRUE_ANOMALY)) {
-      calculateElement(orbit, ECCENTRIC_ANOMALY, orrery);
+      calculateElement(orbit, ECCENTRIC_ANOMALY, centralBody);
     }
     double eccentricAnomaly = orbit.getData(ECCENTRIC_ANOMALY);
     double eccentricity = orbit.getData(ECCENTRICITY);
@@ -172,13 +172,13 @@ public class KeplerUtils {
     orbit.setData(MEAN_ANOMALY, meanAnomaly);
   }
 
-  private void calculateEccentricity(KeplerOrbit orbit, Orrery orrery) {
-    if (!orbit.containsKey(SEMI_MAJOR_AXIS)) calculateSemiMajorAxis(orbit, orrery);
+  private void calculateEccentricity(KeplerOrbit orbit, Planet centralBody) {
+    if (!orbit.containsKey(SEMI_MAJOR_AXIS)) calculateSemiMajorAxis(orbit, centralBody);
 
     double semiMajorAxis = orbit.getData(SEMI_MAJOR_AXIS);
 
     Optional<Double> apoapsisOptional = Optional.ofNullable(orbit.getData(APOAPSIS));
-    double radius = orrery.getPlanetByType(orbit.getCentralBodyType()).getBodyRadius();
+    double radius = centralBody.getBodyRadius();
 
     double eccentricity;
     if (apoapsisOptional.isPresent()) {

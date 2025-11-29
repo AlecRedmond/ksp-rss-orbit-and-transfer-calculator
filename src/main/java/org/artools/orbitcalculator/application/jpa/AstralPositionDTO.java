@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.artools.orbitcalculator.application.bodies.planets.BodyType;
+import org.artools.orbitcalculator.application.kepler.KeplerOrbit;
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
@@ -30,5 +31,5 @@ public class AstralPositionDTO {
   @Embedded private Vector3DTO velocity;
 
   @OneToOne(cascade = CascadeType.ALL)
-  private OrbitStateDTO orbit;
+  private KeplerOrbit orbit;
 }

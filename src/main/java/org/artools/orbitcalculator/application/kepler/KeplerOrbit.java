@@ -6,6 +6,7 @@ import java.util.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.artools.orbitcalculator.application.bodies.planets.BodyType;
+import org.artools.orbitcalculator.application.jpa.AstralPositionDTO;
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
@@ -34,6 +35,9 @@ public class KeplerOrbit {
   @Enumerated(EnumType.STRING)
   @Column(name = "held_element")
   private List<KeplerElement> holds;
+
+  @OneToOne
+  private AstralPositionDTO astralPosition;
 
   public KeplerOrbit(Timestamp timestamp, BodyType centralBodyType) {
     this.timestamp = timestamp;

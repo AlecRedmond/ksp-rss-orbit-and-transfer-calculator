@@ -7,49 +7,49 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 import lombok.Getter;
-import org.artools.orbitcalculator.application.bodies.planets.BodyType;
-import org.artools.orbitcalculator.application.jpa.OrbitStateDTO;
+import org.artools.orbitcalculator.application.bodies.planets.Planet;
 import org.artools.orbitcalculator.application.kepler.KeplerElement;
 import org.artools.orbitcalculator.application.kepler.KeplerOrbit;
-import org.artools.orbitcalculator.application.vector.Orrery;
+import org.artools.orbitcalculator.application.vector.OrbitalState;
 
 public class KeplerBuilder {
   @Getter private final KeplerOrbit orbit;
-  private final Orrery orrery;
+  private final Planet centralBody;
   private final KeplerUtils utils;
   private KeplerHolds holds;
   @Getter private boolean built;
 
-  public KeplerBuilder(OrbitStateDTO osDTO, Orrery orrery) {
-    this.orbit = new KeplerOrbit(osDTO.getTimestamp(), osDTO.getCentralBodyType());
-    this.orrery = orrery;
+  public KeplerBuilder(OrbitalState state) {
+    this.centralBody = state.getCentralBody();
+    Timestamp timestamp = Timestamp.from(state.getEpoch());
+    this.orbit = new KeplerOrbit(timestamp, centralBody.getBodyType());
     this.utils = new KeplerUtils();
-    buildOrbitFromState(osDTO);
+    buildOrbitFromState(state);
     built = true;
   }
 
-  private void buildOrbitFromState(OrbitStateDTO osDTO) {
-    orbit.setData(ECCENTRICITY, osDTO.getEccentricity());
-    orbit.setData(SEMI_MAJOR_AXIS, osDTO.getSemiMajorAxis());
+  private void buildOrbitFromState(OrbitalState state) {
+    orbit.setData(ECCENTRICITY, state.getEccentricity().getNorm());
+    orbit.setData(SEMI_MAJOR_AXIS, state.getSemiMajorAxis());
 
-    utils.calculateOrbitalPeriod(orbit, orrery);
-    utils.calculateApoapsis(orbit, orrery);
-    utils.calculatePeriapsis(orbit, orrery);
+    utils.calculateOrbitalPeriod(orbit, centralBody);
+    utils.calculateApoapsis(orbit, centralBody);
+    utils.calculatePeriapsis(orbit, centralBody);
 
-    orbit.setData(INCLINATION, osDTO.getInclination());
-    orbit.setData(LONGITUDE_ASCENDING_NODE, osDTO.getLongitudeAscendingNode());
-    orbit.setData(ARGUMENT_OF_PERIAPSIS, osDTO.getArgumentPE());
+    orbit.setData(INCLINATION, state.getInclination());
+    orbit.setData(LONGITUDE_ASCENDING_NODE, state.getLongitudeAscendingNode());
+    orbit.setData(ARGUMENT_OF_PERIAPSIS, state.getArgumentPE());
 
-    orbit.setData(MEAN_ANOMALY, osDTO.getMeanAnomaly());
-    orbit.setData(ECCENTRIC_ANOMALY, osDTO.getEccentricAnomaly());
-    orbit.setData(TRUE_ANOMALY, osDTO.getTrueAnomaly());
+    orbit.setData(MEAN_ANOMALY, state.getMeanAnomaly());
+    orbit.setData(ECCENTRIC_ANOMALY, state.getEccentricAnomaly());
+    orbit.setData(TRUE_ANOMALY, state.getTrueAnomaly());
 
-    utils.calculateTimeToPeriapsis(orbit, orrery);
+    utils.calculateTimeToPeriapsis(orbit, centralBody);
   }
 
-  public KeplerBuilder(Instant epoch, BodyType centralBodyType, Orrery orrery) {
-    this.orrery = orrery;
-    this.orbit = new KeplerOrbit(Timestamp.from(epoch), centralBodyType);
+  public KeplerBuilder(Instant epoch, Planet centralBody) {
+    this.centralBody = centralBody;
+    this.orbit = new KeplerOrbit(Timestamp.from(epoch), centralBody.getBodyType());
     this.utils = new KeplerUtils();
     this.holds = new KeplerHolds();
     this.built = false;
@@ -85,6 +85,6 @@ public class KeplerBuilder {
   private void fillValues(List<KeplerElement> inputElements, Set<KeplerElement> elementsSet) {
     elementsSet.stream()
         .filter(element -> !inputElements.contains(element))
-        .forEach(element -> utils.calculateElement(orbit, element, orrery));
+        .forEach(element -> utils.calculateElement(orbit, element, centralBody));
   }
 }

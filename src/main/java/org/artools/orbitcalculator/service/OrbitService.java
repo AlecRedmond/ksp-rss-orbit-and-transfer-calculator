@@ -1,8 +1,8 @@
 package org.artools.orbitcalculator.service;
 
 import java.util.List;
-import org.artools.orbitcalculator.application.jpa.OrbitStateDTO;
-import org.artools.orbitcalculator.exceptions.OrbitStateNotFoundException;
+import org.artools.orbitcalculator.application.kepler.KeplerOrbit;
+import org.artools.orbitcalculator.exceptions.OrbitNotFoundException;
 import org.artools.orbitcalculator.repository.OrbitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,33 +13,32 @@ public class OrbitService {
   private final OrbitRepository orbitRepository;
 
   @Autowired
-  public OrbitService(
-      OrbitRepository orbitRepository, AstralPositionService astralPositionService) {
+  public OrbitService(OrbitRepository orbitRepository) {
     this.orbitRepository = orbitRepository;
   }
 
   @Transactional
-  public OrbitStateDTO saveOrbitState(OrbitStateDTO orbitStateDTO) {
-    return orbitRepository.save(orbitStateDTO);
+  public KeplerOrbit saveOrbitState(KeplerOrbit orbit) {
+    return orbitRepository.save(orbit);
   }
 
-  public OrbitStateDTO getOrbitStateByID(String id) {
-    return orbitRepository.findById(id).orElseThrow(() -> new OrbitStateNotFoundException(id));
+  public KeplerOrbit getOrbitStateByID(String id) {
+    return orbitRepository.findById(id).orElseThrow(() -> new OrbitNotFoundException(id));
   }
 
-  public List<OrbitStateDTO> fetchAllOrbitStates() {
-    return (List<OrbitStateDTO>) orbitRepository.findAll();
+  public List<KeplerOrbit> fetchAllOrbitStates() {
+    return (List<KeplerOrbit>) orbitRepository.findAll();
   }
 
   @Transactional
-  public OrbitStateDTO updateOrbitState(OrbitStateDTO orbitStateDTO, String id) {
+  public KeplerOrbit updateOrbitState(KeplerOrbit orbit, String id) {
 
     if (!orbitRepository.existsById(id)) {
-      throw new OrbitStateNotFoundException(id);
+      throw new OrbitNotFoundException(id);
     }
-    orbitStateDTO.setId(id);
+    orbit.setId(id);
 
-    return orbitRepository.save(orbitStateDTO);
+    return orbitRepository.save(orbit);
   }
 
   @Transactional

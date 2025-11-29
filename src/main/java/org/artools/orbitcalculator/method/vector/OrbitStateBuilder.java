@@ -88,6 +88,8 @@ public class OrbitStateBuilder {
     double trueAnomaly = getTrueAnomaly(eccentricity, position, velocity);
     double eccentricAnomaly = getEccentricAnomaly(eccentricity, trueAnomaly);
     double meanAnomaly = getMeanAnomaly(eccentricAnomaly, eccentricity);
+    double apoapsisAltitude = getApoapsisAltitude(centralBody, semiMajorAxis, eccentricity);
+    double periapsisAltitude = getPeriapsisAltitude(centralBody, semiMajorAxis, eccentricity);
     return OrbitalState.builder()
         .centralBody(centralBody)
         .position(position)
@@ -101,6 +103,8 @@ public class OrbitStateBuilder {
         .trueAnomaly(trueAnomaly)
         .eccentricAnomaly(eccentricAnomaly)
         .meanAnomaly(meanAnomaly)
+        .apoapsisAltitude(apoapsisAltitude)
+        .periapsisAltitude(periapsisAltitude)
         .epoch(epoch)
         .build();
   }
@@ -175,6 +179,18 @@ public class OrbitStateBuilder {
       return 0;
     }
     return eccentricAnomaly - (eccentricAnomaly * sin(eccentricAnomaly));
+  }
+
+  private static double getApoapsisAltitude(
+      Planet centralBody, double semiMajorAxis, Vector3D eccentricity) {
+    double radius = centralBody.getBodyRadius();
+    return semiMajorAxis * (1 + eccentricity.getNorm()) - radius;
+  }
+
+  private static double getPeriapsisAltitude(
+      Planet centralBody, double semiMajorAxis, Vector3D eccentricity) {
+    double radius = centralBody.getBodyRadius();
+    return semiMajorAxis * (1 - eccentricity.getNorm()) - radius;
   }
 
   public static OrbitalState buildFromMotionState(MotionState satelliteState, Planet centralBody) {

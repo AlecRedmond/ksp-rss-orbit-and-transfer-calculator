@@ -17,7 +17,9 @@ class KeplerBuilderTest {
   @BeforeEach
   void init() {
     orrery = new OrreryBuilder().getOrrery();
-    test = new KeplerBuilder(Instant.parse("1951-01-01T00:00:00.00Z"), BodyType.EARTH, orrery);
+    test =
+        new KeplerBuilder(
+            Instant.parse("1951-01-01T00:00:00.00Z"), orrery.getPlanetByType(BodyType.EARTH));
   }
 
   @Test
