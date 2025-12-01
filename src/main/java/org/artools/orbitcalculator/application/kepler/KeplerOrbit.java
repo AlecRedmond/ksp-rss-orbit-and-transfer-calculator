@@ -28,23 +28,15 @@ public class KeplerOrbit {
   @Column(name = "value")
   private Map<KeplerElement, Double> elementsMap;
 
-  private boolean built;
+  private boolean allElementsBuilt;
 
-  @ElementCollection
-  @CollectionTable(name = "orbit_holds", joinColumns = @JoinColumn(name = "orbit_id"))
-  @Enumerated(EnumType.STRING)
-  @Column(name = "held_element")
-  private List<KeplerElement> holds;
-
-  @OneToOne
-  private AstralPositionDTO astralPosition;
+  @OneToOne private AstralPositionDTO astralPosition;
 
   public KeplerOrbit(Timestamp timestamp, BodyType centralBodyType) {
     this.timestamp = timestamp;
     this.centralBodyType = centralBodyType;
     this.elementsMap = new EnumMap<>(KeplerElement.class);
-    this.built = false;
-    this.holds = new LinkedList<>();
+    this.allElementsBuilt = false;
   }
 
   // Returns Double object to allow passing null values

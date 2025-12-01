@@ -1,40 +1,39 @@
 package org.artools.orbitcalculator.method.kepler;
 
 import static org.artools.orbitcalculator.application.kepler.KeplerElement.*;
+import static org.artools.orbitcalculator.method.kepler.KeplerUtils.*;
 
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import org.artools.orbitcalculator.application.bodies.planets.Planet;
 import org.artools.orbitcalculator.application.kepler.KeplerElement;
+import org.artools.orbitcalculator.application.kepler.KeplerHolds;
 import org.artools.orbitcalculator.application.kepler.KeplerOrbit;
 import org.artools.orbitcalculator.application.vector.OrbitalState;
 
+@Getter
 public class KeplerBuilder {
-  @Getter private final KeplerOrbit orbit;
-  private final Planet centralBody;
-  private final KeplerUtils utils;
-  private KeplerHolds holds;
-  @Getter private boolean built;
+  private final KeplerOrbit orbit;
 
   public KeplerBuilder(OrbitalState state) {
-    this.centralBody = state.getCentralBody();
+    Planet centralBody = state.getCentralBody();
     Timestamp timestamp = Timestamp.from(state.getEpoch());
     this.orbit = new KeplerOrbit(timestamp, centralBody.getBodyType());
-    this.utils = new KeplerUtils();
-    buildOrbitFromState(state);
-    built = true;
+    buildOrbitFromState(state, centralBody);
+    ensureAllWithinBounds(ROTATIONAL_ELEMENTS);
+    ensureAllWithinBounds(POSITION_ELEMENTS);
   }
 
-  private void buildOrbitFromState(OrbitalState state) {
+  private void buildOrbitFromState(OrbitalState state, Planet centralBody) {
     orbit.setData(ECCENTRICITY, state.getEccentricity().getNorm());
     orbit.setData(SEMI_MAJOR_AXIS, state.getSemiMajorAxis());
 
-    utils.calculateOrbitalPeriod(orbit, centralBody);
-    utils.calculateApoapsis(orbit, centralBody);
-    utils.calculatePeriapsis(orbit, centralBody);
+    KeplerUtils.calculateOrbitalPeriod(orbit, centralBody);
+    KeplerUtils.calculateApoapsis(orbit, centralBody);
+    KeplerUtils.calculatePeriapsis(orbit, centralBody);
 
     orbit.setData(INCLINATION, state.getInclination());
     orbit.setData(LONGITUDE_ASCENDING_NODE, state.getLongitudeAscendingNode());
@@ -44,47 +43,67 @@ public class KeplerBuilder {
     orbit.setData(ECCENTRIC_ANOMALY, state.getEccentricAnomaly());
     orbit.setData(TRUE_ANOMALY, state.getTrueAnomaly());
 
-    utils.calculateTimeToPeriapsis(orbit, centralBody);
+    KeplerUtils.calculateTimeToPeriapsis(orbit, centralBody);
+
+    orbit.setAllElementsBuilt(true);
   }
 
-  public KeplerBuilder(Instant epoch, Planet centralBody) {
-    this.centralBody = centralBody;
-    this.orbit = new KeplerOrbit(Timestamp.from(epoch), centralBody.getBodyType());
-    this.utils = new KeplerUtils();
-    this.holds = new KeplerHolds();
-    this.built = false;
-  }
-
-  public void setData(KeplerElement element, double data) {
-    List<KeplerElement> inputElements = holds.addHold(element);
-    clearNonHeldElements(inputElements);
-    orbit.setData(element, data);
-    fillElements(inputElements);
-    ensureNotNegative();
-  }
-
-  private void clearNonHeldElements(List<KeplerElement> inputElements) {
+  private void ensureAllWithinBounds(Set<KeplerElement> elementType) {
     orbit.getElementsMap().keySet().stream()
-        .filter(element -> !inputElements.contains(element))
-        .forEach(orbit::removeEntry);
+        .filter(elementType::contains)
+        .forEach(element -> KeplerUtils.ensureValuesWithinBounds(element, orbit));
   }
 
-  private void fillElements(List<KeplerElement> inputElements) {
-    if (!holds.isSolvable()) return;
-    fillValues(inputElements, ELLIPTICAL_ELEMENTS);
-    fillValues(inputElements, EPOCH_ELEMENTS);
-    built = true;
+  public KeplerBuilder(KeplerOrbit orbit, Planet centralBody, KeplerHolds holds) {
+    this.orbit = orbit;
+    checkOrbitContainsHolds(orbit, holds);
+    Set<KeplerElement> unHeldElements = getUnHeldElements(holds);
+    trimOrbitToHolds(orbit, unHeldElements);
+    fillSolvableElements(orbit, centralBody, holds, unHeldElements);
   }
 
-  private void ensureNotNegative() {
-    orbit.getElementsMap().entrySet().stream()
-        .filter(entry -> entry.getValue() < 0)
-        .forEach(entry -> utils.convertRadialValuesToPositive(entry.getKey(), orbit));
+  private void checkOrbitContainsHolds(KeplerOrbit orbit, KeplerHolds holds) {
+    boolean holdsMatch =
+        holds.getHeldElements().stream().allMatch(orbit.getElementsMap()::containsKey);
+    if (holdsMatch) return;
+    throw new IllegalArgumentException("Orbit did not contain data for all held elements!");
   }
 
-  private void fillValues(List<KeplerElement> inputElements, Set<KeplerElement> elementsSet) {
-    elementsSet.stream()
-        .filter(element -> !inputElements.contains(element))
-        .forEach(element -> utils.calculateElement(orbit, element, centralBody));
+  private Set<KeplerElement> getUnHeldElements(KeplerHolds holds) {
+    return Arrays.stream(values())
+        .filter(keplerElement -> !holds.getHeldElements().contains(keplerElement))
+        .collect(Collectors.toSet());
+  }
+
+  private void trimOrbitToHolds(KeplerOrbit orbit, Set<KeplerElement> unHeldElements) {
+    unHeldElements.forEach(orbit.getElementsMap()::remove);
+  }
+
+  private void fillSolvableElements(
+      KeplerOrbit orbit, Planet centralBody, KeplerHolds holds, Set<KeplerElement> unHeldElements) {
+    if (holds.isEllipticSolvable()) {
+      fillValues(orbit, unHeldElements, ELLIPTICAL_ELEMENTS, centralBody);
+    }
+    if (holds.isRotationalSolvable()) {
+      fillValues(orbit, unHeldElements, ROTATIONAL_ELEMENTS, centralBody);
+      ensureAllWithinBounds(ROTATIONAL_ELEMENTS);
+    }
+    if (holds.isPositionSolvable()) {
+      fillValues(orbit, unHeldElements, POSITION_ELEMENTS, centralBody);
+      ensureAllWithinBounds(POSITION_ELEMENTS);
+    }
+    if (holds.isAllSolvable()) {
+      orbit.setAllElementsBuilt(true);
+    }
+  }
+
+  private void fillValues(
+      KeplerOrbit orbit,
+      Set<KeplerElement> unHeldElements,
+      Set<KeplerElement> elementType,
+      Planet centralBody) {
+    unHeldElements.stream()
+        .filter(elementType::contains)
+        .forEach(keplerElement -> KeplerUtils.calculateElement(orbit, keplerElement, centralBody));
   }
 }

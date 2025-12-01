@@ -15,7 +15,7 @@ public abstract class AstralBody {
 
   protected AstralBody() {}
 
-  public abstract String getName();
+  public abstract String getId();
 
   protected double massToMu() {
     return GRAVITATIONAL_CONSTANT * mu;

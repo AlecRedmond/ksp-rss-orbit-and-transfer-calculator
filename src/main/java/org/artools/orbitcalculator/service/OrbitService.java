@@ -1,6 +1,7 @@
 package org.artools.orbitcalculator.service;
 
 import java.util.List;
+import java.util.Optional;
 import org.artools.orbitcalculator.application.kepler.KeplerOrbit;
 import org.artools.orbitcalculator.exceptions.OrbitNotFoundException;
 import org.artools.orbitcalculator.repository.OrbitRepository;
@@ -22,8 +23,8 @@ public class OrbitService {
     return orbitRepository.save(orbit);
   }
 
-  public KeplerOrbit getOrbitStateByID(String id) {
-    return orbitRepository.findById(id).orElseThrow(() -> new OrbitNotFoundException(id));
+  public Optional<KeplerOrbit> getOrbitStateByID(String id) {
+    return orbitRepository.findById(id);
   }
 
   public List<KeplerOrbit> fetchAllOrbitStates() {

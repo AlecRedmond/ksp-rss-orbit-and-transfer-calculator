@@ -9,14 +9,14 @@ import org.artools.orbitcalculator.application.vector.MotionState;
 @Data
 public class Craft extends AstralBody {
   private double bodyRadius = 1.0;
-  private String name;
+  private String id;
   private double engineISP;
 
-  public Craft(MotionState motionState, double mass, String name) {
+  public Craft(MotionState motionState, double mass, String id) {
     this.mass = mass;
     this.mu = massToMu();
     this.motionState = motionState;
-    this.name = name;
+    this.id = id;
   }
 
   public void setMass(double kgMass) {

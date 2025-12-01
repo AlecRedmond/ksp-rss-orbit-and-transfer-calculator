@@ -76,7 +76,7 @@ public abstract class Planet extends AstralBody {
     this.motionState = state;
   }
 
-  public String getName(){
+  public String getId(){
     return bodyType.toString();
   }
 }
