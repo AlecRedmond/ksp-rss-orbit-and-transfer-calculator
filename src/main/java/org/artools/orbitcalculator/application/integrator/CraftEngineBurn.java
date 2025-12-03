@@ -14,8 +14,10 @@ public class CraftEngineBurn implements OrreryEvent {
   private Instant burnEnd;
   private MotionState burnStartState;
   private MotionState burnEndState;
-  private double startMass;
-  private double endMass;
+  private double initialMass;
+  private double finalMass;
+  private double initialDeltaV;
+  private double finalDeltaV;
   private double expendedDeltaV;
 
   public CraftEngineBurn(Craft craft) {

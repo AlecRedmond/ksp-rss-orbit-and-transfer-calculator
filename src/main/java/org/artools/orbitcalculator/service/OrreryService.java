@@ -7,6 +7,7 @@ import org.artools.orbitcalculator.application.jpa.SpaceCraftDTO;
 import org.artools.orbitcalculator.application.kepler.KeplerHolds;
 import org.artools.orbitcalculator.application.kepler.KeplerOrbit;
 import org.artools.orbitcalculator.application.vector.Orrery;
+import org.artools.orbitcalculator.method.integrator.OrreryEpochController;
 import org.artools.orbitcalculator.method.integrator.OrreryIntegrator;
 import org.artools.orbitcalculator.method.kepler.KeplerBuilder;
 import org.artools.orbitcalculator.method.vector.OrreryBuilder;
@@ -20,6 +21,7 @@ public class OrreryService {
   private final OrbitService orbitService;
   private final KeplerHoldsService keplerHoldsService;
   private Orrery orrery;
+  private OrreryEpochController orreryEpochController;
 
   @Autowired
   public OrreryService(
@@ -30,6 +32,7 @@ public class OrreryService {
     this.orbitService = orbitService;
     this.keplerHoldsService = keplerHoldsService;
     this.orrery = new OrreryBuilder().getOrrery();
+    this.orreryEpochController = new OrreryEpochController(orrery);
   }
 
   @Transactional
@@ -42,9 +45,9 @@ public class OrreryService {
   }
 
   @Transactional
-  public SpaceCraftDTO addCraftToOrrery(SpaceCraftDTO spaceCraftDTO, KeplerOrbit orbit) {
-    setEpoch(orbit.getTimestamp());
-    spaceCraftDTO.setCurrentOrbit(orbit);
+  public SpaceCraftDTO addCraftToOrrery(SpaceCraftDTO spaceCraftDTO, KeplerOrbit initialOrbit) {
+    setEpoch(initialOrbit.getTimestamp());
+    spaceCraftDTO.setCurrentOrbit(initialOrbit);
     //TODO - spacecraft repository, convert to craft, add craft with ID to orrery
     return spaceCraftDTO;
   }

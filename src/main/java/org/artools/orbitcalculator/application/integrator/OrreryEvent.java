@@ -1,26 +1,23 @@
 package org.artools.orbitcalculator.application.integrator;
 
-
-import org.artools.orbitcalculator.application.vector.Orrery;
-
 import java.time.Duration;
 import java.time.Instant;
 
 public interface OrreryEvent {
-    default boolean isActive(Instant epoch){
-        if(epoch.equals(activationTime())){
-            return true;
-        }
-        return epoch.isAfter(activationTime()) && epoch.isBefore(deactivationTime());
+  default boolean isActive(Instant epoch) {
+    if (epoch.equals(activationTime())) {
+      return true;
     }
+    return epoch.isAfter(activationTime()) && epoch.isBefore(deactivationTime());
+  }
 
-    Instant activationTime();
+  Instant activationTime();
 
-    Instant deactivationTime();
+  Instant deactivationTime();
 
-    default Duration timeUntilStateChange(Instant epoch){
-        Duration duration = Duration.between(epoch,activationTime());
-        if(duration.isPositive()) return duration;
-        return Duration.between(epoch,deactivationTime());
-    }
+  default Duration timeUntilStateChange(Instant epoch) {
+    Duration duration = Duration.between(epoch, activationTime());
+    if (duration.isPositive()) return duration;
+    return Duration.between(epoch, deactivationTime());
+  }
 }

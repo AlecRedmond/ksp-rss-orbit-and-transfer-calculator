@@ -17,11 +17,11 @@ import org.artools.orbitcalculator.method.body.CraftUtils;
 
 public class NBodyODEProblem implements FirstOrderDifferentialEquations {
   private final List<AstralBody> bodies;
-  @Getter private final Map<Craft, CraftEngineBurn> craftsBurning;
+  private final Map<Craft, CraftEngineBurn> craftsBurning;
 
-  protected NBodyODEProblem(List<AstralBody> bodies) {
+  protected NBodyODEProblem(List<AstralBody> bodies, Map<Craft, CraftEngineBurn> craftsBurning) {
     this.bodies = bodies;
-    this.craftsBurning = new HashMap<>();
+    this.craftsBurning = craftsBurning;
   }
 
   @Override
