@@ -5,9 +5,10 @@ import lombok.Setter;
 import org.artools.orbitcalculator.application.bodies.planets.BodyType;
 import org.artools.orbitcalculator.application.vector.MotionState;
 
+import static org.artools.orbitcalculator.constant.Constant.GRAVITATIONAL_CONSTANT;
+
 @Getter
 public abstract class AstralBody {
-  public static final double GRAVITATIONAL_CONSTANT = 6.6743015E-11;
   protected double mass;
   protected double mu;
   @Setter protected MotionState motionState;

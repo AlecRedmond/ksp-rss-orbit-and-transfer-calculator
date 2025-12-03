@@ -4,7 +4,7 @@ import static org.artools.orbitcalculator.method.integrator.OrreryIntegrator.Vec
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
+import java.util.*;
 import java.util.stream.IntStream;
 import lombok.Getter;
 import org.apache.commons.math3.exception.NumberIsTooSmallException;
@@ -12,6 +12,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.ode.FirstOrderIntegrator;
 import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator;
 import org.artools.orbitcalculator.application.bodies.AstralBody;
+import org.artools.orbitcalculator.application.bodies.Craft;
 import org.artools.orbitcalculator.application.vector.MotionState;
 import org.artools.orbitcalculator.application.vector.Orrery;
 
@@ -21,16 +22,20 @@ public class OrreryIntegrator {
   private static final double MIN_TIMESTEP_SECONDS = 1e-6;
   private static final double MAX_TIMESTEP_SECONDS = 3600.0 * 6;
   @Getter private final Orrery orrery;
-  private final double[] stateVector;
   private final List<AstralBody> bodies;
+  private double[] stateVector;
   private Instant epoch;
 
   public OrreryIntegrator(Orrery orrery) {
     this.orrery = orrery;
     this.bodies = orrery.getAstralBodies();
+    this.epoch = orrery.getEpoch();
+    buildStateVector();
+  }
+
+  private void buildStateVector() {
     this.stateVector = new double[bodies.size() * VectorDimensionIndex.getDimension()];
     IntStream.range(0, bodies.size()).forEach(this::inputStates);
-    epoch = orrery.getEpoch();
   }
 
   private void inputStates(int bodyIndex) {
@@ -45,10 +50,11 @@ public class OrreryIntegrator {
     stateVector[X_VELOCITY.offsetIndex(vectorIndex)] = vel.getX();
     stateVector[Y_VELOCITY.offsetIndex(vectorIndex)] = vel.getY();
     stateVector[Z_VELOCITY.offsetIndex(vectorIndex)] = vel.getZ();
+    stateVector[MASS.offsetIndex(vectorIndex)] = body.getMass();
   }
 
-  public OrreryIntegrator stepForward(Duration duration) throws NumberIsTooSmallException {
-    epoch = epoch.plus(duration);
+  public OrreryIntegrator stepToTime(Instant epoch) throws NumberIsTooSmallException {
+    this.epoch = epoch;
     integrate();
     writeResultsToOrrery();
     return this;
@@ -98,13 +104,11 @@ public class OrreryIntegrator {
     body.getMotionState().setEpoch(epoch);
     body.getMotionState().setPosition(position);
     body.getMotionState().setVelocity(velocity);
-  }
 
-  public OrreryIntegrator stepToTime(Instant epoch) throws NumberIsTooSmallException {
-    this.epoch = epoch;
-    integrate();
-    writeResultsToOrrery();
-    return this;
+    if (!(body instanceof Craft craft)) return;
+
+    double mass = stateVector[MASS.offsetIndex(stateIndex)];
+    craft.setMass(mass);
   }
 
   enum VectorDimensionIndex {
@@ -113,7 +117,8 @@ public class OrreryIntegrator {
     Z_POSITION(2),
     X_VELOCITY(3),
     Y_VELOCITY(4),
-    Z_VELOCITY(5);
+    Z_VELOCITY(5),
+    MASS(6);
 
     private final int offset;
 
