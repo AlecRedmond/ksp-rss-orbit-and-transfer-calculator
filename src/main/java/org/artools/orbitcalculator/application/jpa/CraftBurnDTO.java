@@ -2,29 +2,27 @@ package org.artools.orbitcalculator.application.jpa;
 
 import jakarta.persistence.*;
 import java.sql.Timestamp;
-import java.util.List;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.artools.orbitcalculator.application.kepler.KeplerOrbit;
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
 @Data
 @NoArgsConstructor
-public class CraftItineraryDTO {
+public class CraftBurnDTO {
   @Id @UuidGenerator private String id;
 
-  @OneToOne private CraftDTO craftDTO;
+  @ManyToOne private CraftItineraryDTO craftItineraryDTO;
+
+  @OneToOne @Embedded private Vector3DTO craftInertialDeltaV;
 
   @Temporal(TemporalType.TIMESTAMP)
-  private Timestamp activationTime;
+  private Timestamp burnStart;
 
   @Temporal(TemporalType.TIMESTAMP)
-  private Timestamp deactivationTime;
+  private Timestamp burnEnd;
 
-  @OneToMany
-  private List<CraftBurnDTO> scheduledBurns;
+  @OneToOne private AstralStateDTO burnStartState;
 
-  @OneToOne private KeplerOrbit initialOrbit;
+  @OneToOne private AstralStateDTO burnEndState;
 }

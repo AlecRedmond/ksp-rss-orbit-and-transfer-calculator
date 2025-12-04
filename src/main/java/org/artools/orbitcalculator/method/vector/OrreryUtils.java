@@ -31,8 +31,8 @@ public class OrreryUtils {
       return;
     }
     OrbitalState orbitalState =
-        OrbitStateBuilder.buildFromMotionState(body.getMotionState(), sphereOfInfluence);
-    body.setMotionState(orbitalState);
+        OrbitStateBuilder.buildFromMotionState(body.getCurrentMotionState(), sphereOfInfluence);
+    body.setCurrentMotionState(orbitalState);
   }
 
   private Planet findSphereOfInfluence(AstralBody satellite) {
@@ -42,7 +42,7 @@ public class OrreryUtils {
   }
 
   private Planet maximumAccelerationValue(Craft craft) {
-    MotionState craftState = craft.getMotionState();
+    MotionState craftState = craft.getCurrentMotionState();
     List<Planet> planets = orrery.getAllPlanets();
 
     Optional<Planet> optionalPlanet =
@@ -60,7 +60,7 @@ public class OrreryUtils {
 
   private Map.Entry<Planet, Double> findAccelerationTowards(
       MotionState satelliteState, Planet focusPlanet) {
-    MotionState focusBodyState = focusPlanet.getMotionState();
+    MotionState focusBodyState = focusPlanet.getCurrentMotionState();
     double focusBodyMu = focusPlanet.getMu();
     double distance = focusBodyState.getPosition().subtract(satelliteState.getPosition()).getNorm();
     double acceleration = focusBodyMu / Math.pow(distance, 2);
@@ -68,10 +68,10 @@ public class OrreryUtils {
   }
 
   public void centreBody(AstralBody body) {
-    Vector3D positionShiftVector = body.getMotionState().getPosition().negate();
-    Vector3D velocityShiftVector = body.getMotionState().getVelocity().negate();
+    Vector3D positionShiftVector = body.getCurrentMotionState().getPosition().negate();
+    Vector3D velocityShiftVector = body.getCurrentMotionState().getVelocity().negate();
     orrery.getAstralBodies().stream()
-        .map(AstralBody::getMotionState)
+        .map(AstralBody::getCurrentMotionState)
         .forEach(
             motionState -> {
               motionState.setPosition(motionState.getPosition().add(positionShiftVector));

@@ -1,34 +1,36 @@
 package org.artools.orbitcalculator.application.integrator;
 
-import static org.artools.orbitcalculator.constant.Constant.DEFAULT_CRAFT_LIFETIME;
-
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Data;
 import org.artools.orbitcalculator.application.bodies.Craft;
 import org.artools.orbitcalculator.application.vector.MotionState;
+import org.artools.orbitcalculator.method.vector.MotionStateUtils;
 
 @Data
 public class CraftItinerary implements OrreryEvent {
   private final Craft craft;
-  private final Instant activationTime;
-  private final Instant deactivationTime;
-  private MotionState initialMotionState;
-  private MotionState finalMotionState;
+  private final List<MotionState> snapshots;
 
-  public CraftItinerary(Craft craft, MotionState motionState) {
+  public CraftItinerary(Craft craft) {
     this.craft = craft;
-    this.initialMotionState = motionState;
-    this.activationTime = motionState.getEpoch();
-    this.deactivationTime = activationTime.plus(DEFAULT_CRAFT_LIFETIME);
+    this.snapshots = new ArrayList<>();
+    this.snapshots.add(MotionStateUtils.copyOf(craft.getCurrentMotionState()));
+  }
+
+  public Instant getLastSnapshotTime() {
+    return snapshots.getFirst().getEpoch();
   }
 
   @Override
-  public Instant activationTime() {
-    return activationTime;
+  public Instant getInitializationTime() {
+    return snapshots.getFirst().getEpoch();
   }
 
   @Override
   public Instant deactivationTime() {
-    return deactivationTime;
+    return getInitializationTime().plus(100, ChronoUnit.YEARS);
   }
 }

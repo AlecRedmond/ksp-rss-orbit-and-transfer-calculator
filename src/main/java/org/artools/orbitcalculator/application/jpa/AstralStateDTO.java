@@ -15,13 +15,15 @@ import org.hibernate.annotations.UuidGenerator;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AstralPositionDTO {
+public class AstralStateDTO {
   @Id @UuidGenerator private String id;
 
   @Enumerated(EnumType.STRING)
   private BodyType bodyType;
 
-  private Double radius;
+  private double radius;
+
+  private double mass;
 
   @Temporal(TemporalType.TIMESTAMP)
   private Timestamp timestamp;

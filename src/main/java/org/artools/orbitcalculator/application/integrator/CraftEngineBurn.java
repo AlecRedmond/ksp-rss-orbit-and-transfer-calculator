@@ -8,7 +8,8 @@ import org.artools.orbitcalculator.application.vector.MotionState;
 
 @Data
 public class CraftEngineBurn implements OrreryEvent {
-  private final Craft craft;
+  private final String id;
+  private final CraftItinerary itinerary;
   private Vector3D thrustDirection;
   private Instant burnStart;
   private Instant burnEnd;
@@ -20,12 +21,17 @@ public class CraftEngineBurn implements OrreryEvent {
   private double finalDeltaV;
   private double expendedDeltaV;
 
-  public CraftEngineBurn(Craft craft) {
-    this.craft = craft;
+  public CraftEngineBurn(String id, CraftItinerary itinerary) {
+    this.id = id;
+    this.itinerary = itinerary;
+  }
+
+  public Craft getCraft() {
+    return itinerary.getCraft();
   }
 
   @Override
-  public Instant activationTime() {
+  public Instant getInitializationTime() {
     return burnStart;
   }
 

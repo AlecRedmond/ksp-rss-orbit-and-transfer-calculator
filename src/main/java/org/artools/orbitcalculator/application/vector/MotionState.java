@@ -15,4 +15,5 @@ public class MotionState {
   protected Vector3D velocity;
   protected Vector3D position;
   protected Instant epoch;
+  protected double mass;
 }

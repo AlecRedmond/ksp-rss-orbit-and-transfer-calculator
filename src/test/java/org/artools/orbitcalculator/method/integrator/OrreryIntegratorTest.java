@@ -74,7 +74,7 @@ class OrreryIntegratorTest {
     List<Double> smaList =
         orreries.stream()
             .map(orrery -> orrery.getPlanetByType(bodyType))
-            .map(Planet::getMotionState)
+            .map(Planet::getCurrentMotionState)
             .filter(OrbitalState.class::isInstance)
             .map(OrbitalState.class::cast)
             .map(OrbitalState::getSemiMajorAxis)

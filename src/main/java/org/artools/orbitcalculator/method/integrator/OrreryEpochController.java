@@ -16,55 +16,56 @@ public class OrreryEpochController {
   @Getter private final Orrery orrery;
   private final OrreryIntegrator integrator;
   private final List<OrreryEvent> events;
-  private Instant currentEpoch;
 
   public OrreryEpochController(Orrery orrery) {
     this.orrery = orrery;
     this.events = new ArrayList<>();
-    this.currentEpoch = orrery.getEpoch();
     this.integrator = new OrreryIntegrator(orrery);
   }
 
   public void addEvent(OrreryEvent event) {
-    Instant eventStart = event.activationTime();
-    if (!eventStart.isAfter(currentEpoch)) {
+    Instant eventStart = event.getInitializationTime();
+    if (!eventStart.isAfter(currentEpoch())) {
       stepToEpoch(eventStart);
     }
     events.add(event);
-    if (eventStart.equals(currentEpoch)) {
+    if (eventStart.equals(currentEpoch())) {
       switchOrreryEvent(true);
     }
   }
 
   public void removeEvent(OrreryEvent event) {
-    Instant eventStart = event.activationTime();
-    if (!eventStart.isAfter(currentEpoch)) {
+    Instant eventStart = event.getInitializationTime();
+    if (!eventStart.isAfter(currentEpoch())) {
       stepToEpoch(eventStart);
     }
     events.remove(event);
-    if (eventStart.equals(currentEpoch)) {
+    if (eventStart.equals(currentEpoch())) {
       switchOrreryEvent(true);
     }
   }
 
   public void stepToEpoch(Instant newEpoch) {
-    if (newEpoch.equals(currentEpoch)) return;
-    boolean forwards = !newEpoch.isBefore(currentEpoch);
+    if (newEpoch.equals(currentEpoch())) return;
+    boolean forwards = !newEpoch.isBefore(currentEpoch());
     Duration durationToStep = getDurationToStep(newEpoch, forwards);
     integrator.stepByDuration(durationToStep);
-    currentEpoch = orrery.getEpoch();
-    if (newEpoch.equals(currentEpoch)) return;
+    if (newEpoch.equals(currentEpoch())) return;
     switchOrreryEvent(forwards);
     stepToEpoch(newEpoch);
   }
 
+  private Instant currentEpoch() {
+    return orrery.getEpoch();
+  }
+
   private void switchOrreryEvent(boolean forwards) {
     events.stream()
-        .filter(event -> event.activationTime().equals(currentEpoch))
+        .filter(event -> event.getInitializationTime().equals(currentEpoch()))
         .forEach(e -> switchEvents(e, forwards, forwards));
 
     events.stream()
-        .filter(event -> event.deactivationTime().equals(currentEpoch))
+        .filter(event -> event.deactivationTime().equals(currentEpoch()))
         .forEach(e -> switchEvents(e, !forwards, forwards));
   }
 
@@ -83,7 +84,7 @@ public class OrreryEpochController {
   }
 
   private Duration getDurationToStep(Instant newEpoch, boolean forwards) {
-    Duration durationToStep = Duration.between(currentEpoch, newEpoch);
+    Duration durationToStep = Duration.between(currentEpoch(), newEpoch);
     Optional<Duration> toNextEventOpt = durationUntilNextEvent(newEpoch, forwards);
     if (toNextEventOpt.isEmpty()) {
       return durationToStep;

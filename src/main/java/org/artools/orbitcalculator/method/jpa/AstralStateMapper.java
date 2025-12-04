@@ -2,26 +2,28 @@ package org.artools.orbitcalculator.method.jpa;
 
 import java.sql.Timestamp;
 import org.artools.orbitcalculator.application.bodies.AstralBody;
-import org.artools.orbitcalculator.application.jpa.AstralPositionDTO;
+import org.artools.orbitcalculator.application.jpa.AstralStateDTO;
+import org.artools.orbitcalculator.application.jpa.AstralStateDTO.AstralStateDTOBuilder;
 import org.artools.orbitcalculator.application.jpa.Vector3DTO;
 import org.artools.orbitcalculator.application.kepler.KeplerOrbit;
 import org.artools.orbitcalculator.application.vector.MotionState;
 import org.artools.orbitcalculator.application.vector.OrbitalState;
 import org.artools.orbitcalculator.method.kepler.KeplerBuilder;
-import org.artools.orbitcalculator.method.vector.OrbitStateUtils;
+import org.artools.orbitcalculator.method.vector.MotionStateUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface AstralStateMapper {
   @Named("orreryToAstralState")
-  default AstralPositionDTO orreryToAstralState(AstralBody body) {
-    MotionState motionState = body.getMotionState();
+  default AstralStateDTO orreryToAstralState(AstralBody body) {
+    MotionState motionState = body.getCurrentMotionState();
 
-    AstralPositionDTO.AstralPositionDTOBuilder builder =
-        AstralPositionDTO.builder()
+    AstralStateDTOBuilder builder =
+        AstralStateDTO.builder()
             .bodyType(body.getBodyType())
             .radius(body.getBodyRadius())
+            .mass(motionState.getMass())
             .timestamp(Timestamp.from(motionState.getEpoch()));
 
     if (!(motionState instanceof OrbitalState state)) {
@@ -30,7 +32,7 @@ public interface AstralStateMapper {
       return builder.position(position).velocity(velocity).build();
     }
 
-    OrbitStateUtils utils = new OrbitStateUtils();
+    MotionStateUtils utils = new MotionStateUtils();
     Vector3DTO truePosition = new Vector3DTO(utils.getTruePosition(state));
     Vector3DTO trueVelocity = new Vector3DTO(utils.getTrueVelocity(state));
     KeplerOrbit orbit = new KeplerBuilder(state).getOrbit();

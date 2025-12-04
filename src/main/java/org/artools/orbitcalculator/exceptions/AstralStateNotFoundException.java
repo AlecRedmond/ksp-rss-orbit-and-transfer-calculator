@@ -5,6 +5,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 public class AstralStateNotFoundException extends ResponseStatusException {
   public AstralStateNotFoundException(String id) {
-    super(HttpStatus.NOT_FOUND, String.format("Could not find astral body state with id: %s", id));
+    super(HttpStatus.NOT_FOUND, "Could not find astral body state with id: %s".formatted(id));
   }
 }

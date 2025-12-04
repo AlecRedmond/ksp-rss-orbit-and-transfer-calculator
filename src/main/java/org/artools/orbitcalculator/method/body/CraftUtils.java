@@ -3,13 +3,16 @@ package org.artools.orbitcalculator.method.body;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.artools.orbitcalculator.application.bodies.Craft;
+import org.artools.orbitcalculator.application.vector.MotionState;
+import org.artools.orbitcalculator.method.vector.MotionStateUtils;
 
 public class CraftUtils {
   private CraftUtils() {}
 
   public static Craft copyOf(Craft craft) {
+    MotionState copiedState = MotionStateUtils.copyOf(craft.getCurrentMotionState());
     return new Craft(
-        craft.getMotionState(),
+        copiedState,
         craft.getId(),
         craft.getBodyRadius(),
         craft.getEngineISP(),
@@ -19,7 +22,7 @@ public class CraftUtils {
   }
 
   public static Rotation rotationToVelocityCentredFrame(Craft craft) {
-    Vector3D craftVelocityVector = craft.getMotionState().getVelocity();
+    Vector3D craftVelocityVector = craft.getCurrentMotionState().getVelocity();
     return new Rotation(craftVelocityVector, Vector3D.PLUS_I);
   }
 

@@ -2,13 +2,16 @@ package org.artools.orbitcalculator.service;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import org.artools.orbitcalculator.application.bodies.Craft;
 import org.artools.orbitcalculator.application.bodies.planets.Planet;
-import org.artools.orbitcalculator.application.jpa.SpaceCraftDTO;
+import org.artools.orbitcalculator.application.jpa.CraftDTO;
 import org.artools.orbitcalculator.application.kepler.KeplerHolds;
 import org.artools.orbitcalculator.application.kepler.KeplerOrbit;
 import org.artools.orbitcalculator.application.vector.Orrery;
+import org.artools.orbitcalculator.exceptions.CraftNotFoundException;
 import org.artools.orbitcalculator.method.integrator.OrreryEpochController;
 import org.artools.orbitcalculator.method.integrator.OrreryIntegrator;
+import org.artools.orbitcalculator.method.jpa.SpaceCraftMapper;
 import org.artools.orbitcalculator.method.kepler.KeplerBuilder;
 import org.artools.orbitcalculator.method.vector.OrreryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,8 @@ public class OrreryService {
   private final AstralPositionService positionService;
   private final OrbitService orbitService;
   private final KeplerHoldsService keplerHoldsService;
+  private final CraftService craftService;
+  private final SpaceCraftMapper spaceCraftMapper;
   private Orrery orrery;
   private OrreryEpochController orreryEpochController;
 
@@ -27,10 +32,14 @@ public class OrreryService {
   public OrreryService(
       AstralPositionService positionService,
       OrbitService orbitService,
-      KeplerHoldsService keplerHoldsService) {
+      KeplerHoldsService keplerHoldsService,
+      CraftService craftService,
+      SpaceCraftMapper spaceCraftMapper) {
     this.positionService = positionService;
     this.orbitService = orbitService;
     this.keplerHoldsService = keplerHoldsService;
+    this.craftService = craftService;
+    this.spaceCraftMapper = spaceCraftMapper;
     this.orrery = new OrreryBuilder().getOrrery();
     this.orreryEpochController = new OrreryEpochController(orrery);
   }
@@ -45,14 +54,16 @@ public class OrreryService {
   }
 
   @Transactional
-  public SpaceCraftDTO addCraftToOrrery(SpaceCraftDTO spaceCraftDTO, KeplerOrbit initialOrbit) {
-    setEpoch(initialOrbit.getTimestamp());
-    spaceCraftDTO.setCurrentOrbit(initialOrbit);
-    //TODO - spacecraft repository, convert to craft, add craft with ID to orrery
-    return spaceCraftDTO;
+  public CraftDTO addCraftToOrrery(String craftId) {
+    // TODO - spacecraft repository, convert to craft, add craft with ID to orrery
+    CraftDTO craftDTO =
+        craftService.findById(craftId).orElseThrow(() -> new CraftNotFoundException(craftId));
+    Craft craft = spaceCraftMapper.dtoToCraft(craftDTO, orrery);
+
+    return craftDTO;
   }
 
-  public void setEpoch(Timestamp timestamp) {
+  public void setOrreryEpoch(Timestamp timestamp) {
     Instant epoch = timestamp.toInstant();
     if (epoch.equals(orrery.getEpoch())) {
       return;

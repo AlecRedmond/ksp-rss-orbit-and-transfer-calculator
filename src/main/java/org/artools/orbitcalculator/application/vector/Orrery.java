@@ -35,14 +35,14 @@ public class Orrery {
   private boolean epochsAreEqual() {
     Instant firstInstant = firstInstant();
     return astralBodies.stream()
-        .map(AstralBody::getMotionState)
+        .map(AstralBody::getCurrentMotionState)
         .allMatch(motionState -> motionState.getEpoch().equals(firstInstant));
   }
 
   private Instant firstInstant() {
     return astralBodies.stream()
         .findFirst()
-        .map(AstralBody::getMotionState)
+        .map(AstralBody::getCurrentMotionState)
         .map(MotionState::getEpoch)
         .orElse(null);
   }

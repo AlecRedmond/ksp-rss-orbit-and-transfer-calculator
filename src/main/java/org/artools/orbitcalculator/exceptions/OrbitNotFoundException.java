@@ -1,7 +1,10 @@
 package org.artools.orbitcalculator.exceptions;
 
-public class OrbitNotFoundException extends RuntimeException {
-    public OrbitNotFoundException(String id) {
-        super("Orbit state not found with ID: " + id);
-    }
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
+public class OrbitNotFoundException extends ResponseStatusException {
+  public OrbitNotFoundException(String id) {
+    super(HttpStatus.NOT_FOUND, "Could not find an orbit with id: %s".formatted(id));
+  }
 }

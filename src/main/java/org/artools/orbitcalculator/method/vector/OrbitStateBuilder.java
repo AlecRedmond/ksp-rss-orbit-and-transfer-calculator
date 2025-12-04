@@ -15,12 +15,16 @@ import org.artools.orbitcalculator.application.kepler.KeplerOrbit;
 import org.artools.orbitcalculator.application.vector.MotionState;
 import org.artools.orbitcalculator.application.vector.OrbitalState;
 import org.artools.orbitcalculator.application.vector.Orrery;
+import org.artools.orbitcalculator.exceptions.UnBuiltOrbitException;
 
 @Getter
 public class OrbitStateBuilder {
   private OrbitStateBuilder() {}
 
   public static OrbitalState buildFromKeplerOrbit(KeplerOrbit orbit, Orrery orrery) {
+    if (!orbit.isAllElementsBuilt()) {
+      throw new UnBuiltOrbitException(orbit);
+    }
     Planet centralBody = orrery.getPlanetByType(orbit.getCentralBodyType());
     double angularMomentum = calculateAngularMomentum(orbit, centralBody);
     Rotation rotationToInertial = calculateRotationToInertial(orbit);
@@ -195,8 +199,8 @@ public class OrbitStateBuilder {
 
   public static OrbitalState buildFromMotionState(MotionState satelliteState, Planet centralBody) {
     Instant epoch = satelliteState.getEpoch();
-    Vector3D velocity = calculateRelativeVelocity(satelliteState, centralBody.getMotionState());
-    Vector3D position = calculateRelativePosition(satelliteState, centralBody.getMotionState());
+    Vector3D velocity = calculateRelativeVelocity(satelliteState, centralBody.getCurrentMotionState());
+    Vector3D position = calculateRelativePosition(satelliteState, centralBody.getCurrentMotionState());
     return buildFromVelocityAndPositionVectors(centralBody, position, velocity, epoch);
   }
 

@@ -26,15 +26,22 @@ public class Craft extends AstralBody {
       double engineThrustNewtons,
       double currentMass,
       double dryMass) {
-    this.motionState = motionState;
+    super();
+    setCurrentMotionState(motionState);
+    motionState.setMass(currentMass);
     this.id = id;
     this.bodyRadius = bodyRadius;
     this.engineISP = engineISP;
     this.engineThrustNewtons = engineThrustNewtons;
     this.engineMassFlowRate = calculateMassFlowRate();
-    this.mass = currentMass;
     this.dryMass = dryMass;
     this.mu = massToMu();
+    this.remainingDeltaV = calculateRemainingDeltaV();
+  }
+
+  @Override
+  public void setCurrentMotionState(MotionState currentMotionState) {
+    super.setCurrentMotionState(currentMotionState);
     this.remainingDeltaV = calculateRemainingDeltaV();
   }
 
@@ -43,21 +50,21 @@ public class Craft extends AstralBody {
   }
 
   private double calculateRemainingDeltaV() {
-    return (engineISP * EARTH_STANDARD_GRAVITY) * Math.log(mass / dryMass);
+    return (engineISP * EARTH_STANDARD_GRAVITY) * Math.log(getMass() / dryMass);
+  }
+
+  @Override
+  public BodyType getBodyType() {
+    return null;
   }
 
   public void setMass(double kgMass) {
-    mass = kgMass;
+    currentMotionState.setMass(kgMass);
     mu = massToMu();
     remainingDeltaV = calculateRemainingDeltaV();
   }
 
   public void setSphereOfInfluence(BodyType bodyType) {
     this.sphereOfInfluence = bodyType;
-  }
-
-  @Override
-  public BodyType getBodyType() {
-    return null;
   }
 }

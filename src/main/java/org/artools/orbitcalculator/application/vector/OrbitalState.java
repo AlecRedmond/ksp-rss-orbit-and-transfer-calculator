@@ -1,5 +1,6 @@
 package org.artools.orbitcalculator.application.vector;
 
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

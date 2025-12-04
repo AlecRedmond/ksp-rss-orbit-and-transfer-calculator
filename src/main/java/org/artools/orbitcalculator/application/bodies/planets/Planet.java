@@ -18,7 +18,6 @@ public abstract class Planet extends AstralBody {
     parseStateVector();
     bodyType = planetBodyType();
     sphereOfInfluence = parentBodyType();
-    mass = muToMass();
   }
 
   public void parseStateVector() {
@@ -31,7 +30,7 @@ public abstract class Planet extends AstralBody {
 
   protected abstract BodyType parentBodyType();
 
-  // These are from Barycentric (@ssb on Horizons data)
+  // These are from Barycentric (@ssb on Horizons data) @ 1951-01-01T00:00:00.00Z
   protected abstract double[] horizonsDataPosition();
 
   protected abstract double[] horizonsDataVelocity();
@@ -41,8 +40,10 @@ public abstract class Planet extends AstralBody {
     Vector3D velocity1951Jan1 = kilometreToSIVector(velocityArray);
     Vector3D position1951Jan1 = kilometreToSIVector(positionArray);
     mu = muHorizons() * 1E9;
+    double mass = muToMass();
     bodyRadius = equatorialRadiusHorizons() * 1E3;
-    motionState = new MotionState(velocity1951Jan1, position1951Jan1, initialEpoch());
+    MotionState state = new MotionState(velocity1951Jan1, position1951Jan1, initialEpoch(), mass);
+    setCurrentMotionState(state);
   }
 
   abstract double j2();
@@ -62,21 +63,16 @@ public abstract class Planet extends AstralBody {
   }
 
   @Override
-  public double getMu() {
-    return mu;
+  public MotionState getCurrentMotionState() {
+    return currentMotionState;
   }
 
   @Override
-  public MotionState getMotionState() {
-    return motionState;
+  public void setCurrentMotionState(MotionState state) {
+    this.currentMotionState = state;
   }
 
-  @Override
-  public void setMotionState(MotionState state) {
-    this.motionState = state;
-  }
-
-  public String getId(){
+  public String getId() {
     return bodyType.toString();
   }
 }

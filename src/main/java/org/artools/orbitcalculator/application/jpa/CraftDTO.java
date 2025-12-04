@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.artools.orbitcalculator.application.kepler.KeplerOrbit;
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
@@ -15,7 +16,7 @@ import org.hibernate.annotations.UuidGenerator;
 @Data
 @Builder
 @AllArgsConstructor
-public class SpaceCraftDTO {
+public class CraftDTO {
   @Id @UuidGenerator private String id;
   private double bodyRadius;
   private double engineIsp;
@@ -25,5 +26,8 @@ public class SpaceCraftDTO {
   private double remainingDeltaV;
 
   @OneToOne(cascade = CascadeType.ALL)
-  private AstralPositionDTO astralPositionDTO;
+  private KeplerOrbit orbit;
+
+  @OneToOne(cascade = CascadeType.ALL)
+  private CraftItineraryDTO craftItineraryDTO;
 }

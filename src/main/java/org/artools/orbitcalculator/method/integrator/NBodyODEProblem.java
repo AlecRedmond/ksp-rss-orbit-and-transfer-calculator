@@ -5,7 +5,6 @@ import static org.artools.orbitcalculator.method.integrator.OrreryIntegrator.Vec
 
 import java.util.*;
 import java.util.stream.IntStream;
-import lombok.Getter;
 import org.apache.commons.math3.exception.DimensionMismatchException;
 import org.apache.commons.math3.exception.MaxCountExceededException;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;

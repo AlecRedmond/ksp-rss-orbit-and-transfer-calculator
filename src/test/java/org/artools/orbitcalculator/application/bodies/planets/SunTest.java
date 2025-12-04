@@ -9,7 +9,7 @@ class SunTest {
 
     @Test
     void motionState(){
-        var motionState = test.getMotionState();
+        var motionState = test.getCurrentMotionState();
         assertNotNull(motionState);
     }
 }

@@ -5,18 +5,18 @@ import java.time.Instant;
 
 public interface OrreryEvent {
   default boolean isActive(Instant epoch) {
-    if (epoch.equals(activationTime())) {
+    if (epoch.equals(getInitializationTime())) {
       return true;
     }
-    return epoch.isAfter(activationTime()) && epoch.isBefore(deactivationTime());
+    return epoch.isAfter(getInitializationTime()) && epoch.isBefore(deactivationTime());
   }
 
-  Instant activationTime();
+  Instant getInitializationTime();
 
   Instant deactivationTime();
 
   default Duration timeUntilStateChange(Instant epoch) {
-    Duration duration = Duration.between(epoch, activationTime());
+    Duration duration = Duration.between(epoch, getInitializationTime());
     if (duration.isPositive()) return duration;
     return Duration.between(epoch, deactivationTime());
   }
