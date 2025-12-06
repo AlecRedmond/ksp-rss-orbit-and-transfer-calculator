@@ -18,7 +18,9 @@ public class CraftUtils {
         craft.getEngineISP(),
         craft.getEngineThrustNewtons(),
         craft.getMass(),
-        craft.getDryMass());
+        craft.getDryMass(),
+        craft.getInitialOrbit(),
+        craft.getFinalOrbit());
   }
 
   public static Rotation rotationToVelocityCentredFrame(Craft craft) {

@@ -30,7 +30,8 @@ public class KeplerOrbit {
 
   private boolean allElementsBuilt;
 
-  @OneToOne private AstralStateDTO astralPosition;
+  @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+  private AstralStateDTO astralPosition;
 
   public KeplerOrbit(Timestamp timestamp, BodyType centralBodyType) {
     this.timestamp = timestamp;

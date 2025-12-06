@@ -1,18 +1,13 @@
 package org.artools.orbitcalculator.service;
 
-import jakarta.annotation.PostConstruct;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
-import org.artools.orbitcalculator.application.bodies.planets.BodyType;
-import org.artools.orbitcalculator.application.bodies.planets.Planet;
+import java.util.stream.StreamSupport;
 import org.artools.orbitcalculator.application.jpa.AstralStateDTO;
 import org.artools.orbitcalculator.application.vector.Orrery;
 import org.artools.orbitcalculator.exceptions.AstralStateNotFoundException;
-import org.artools.orbitcalculator.method.integrator.OrreryIntegrator;
 import org.artools.orbitcalculator.method.jpa.AstralStateMapper;
-import org.artools.orbitcalculator.method.vector.OrreryBuilder;
 import org.artools.orbitcalculator.repository.AstralPositionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,8 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AstralPositionService {
-
-  private Orrery orrery;
   @Autowired private AstralPositionRepository repository;
   @Autowired private AstralStateMapper astralStateMapper;
 
@@ -49,38 +42,24 @@ public class AstralPositionService {
     repository.deleteById(id);
   }
 
-  @PostConstruct
-  public void initializePositions() {
-    orrery = new OrreryBuilder().getOrrery();
-    saveOrreryState(orrery);
+  @Transactional
+  public List<AstralStateDTO> saveOrreryState(Orrery orrery) {
+    //    List<AstralStateDTO> savedStates = new ArrayList<>();
+    //    orrery.getAstralBodies().stream()
+    //        .map(astralStateMapper::motionStateToDto)
+    //        .forEach(astralStateDTO -> savedStates.add(repository.save(astralStateDTO)));
+    //    return savedStates;
+    return null;
   }
 
-  public void saveOrreryState(Orrery orrery) {
-    orrery.getAstralBodies().stream()
-        .map(astralStateMapper::orreryToAstralState)
-        .forEach(repository::save);
-  }
-
-  public List<AstralStateDTO> statesAtNewEpoch(Instant epoch) {
-    stepToDate(epoch);
-    return fetchSolarSystemStates().stream()
-        .filter(astralPosition -> astralPosition.getTimestamp().equals(Timestamp.from(epoch)))
-        .toList();
-  }
-
-  public void stepToDate(Instant epoch) {
-    if (epoch.equals(orrery.getEpoch())) {
-      return;
-    }
-    orrery = new OrreryIntegrator(orrery).stepToTime(epoch).getOrrery();
-    saveOrreryState(orrery);
-  }
-
-  public List<AstralStateDTO> fetchSolarSystemStates() {
+  public List<AstralStateDTO> fetchAll() {
     return (List<AstralStateDTO>) repository.findAll();
   }
 
-  public Planet getPlanetByType(BodyType bodyType) {
-    return orrery.getPlanetByType(bodyType);
+  @Transactional
+  public void deletePositionsAfterTime(Timestamp timestamp) {
+    StreamSupport.stream(repository.findAll().spliterator(), true)
+        .filter(astralStateDTO -> astralStateDTO.getTimestamp().after(timestamp))
+        .forEach(astralStateDTO -> repository.delete(astralStateDTO));
   }
 }

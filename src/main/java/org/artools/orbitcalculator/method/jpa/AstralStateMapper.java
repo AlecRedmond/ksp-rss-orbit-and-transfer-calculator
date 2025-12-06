@@ -1,7 +1,6 @@
 package org.artools.orbitcalculator.method.jpa;
 
 import java.sql.Timestamp;
-import org.artools.orbitcalculator.application.bodies.AstralBody;
 import org.artools.orbitcalculator.application.jpa.AstralStateDTO;
 import org.artools.orbitcalculator.application.jpa.AstralStateDTO.AstralStateDTOBuilder;
 import org.artools.orbitcalculator.application.jpa.Vector3DTO;
@@ -15,16 +14,12 @@ import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface AstralStateMapper {
-  @Named("orreryToAstralState")
-  default AstralStateDTO orreryToAstralState(AstralBody body) {
-    MotionState motionState = body.getCurrentMotionState();
 
+
+  @Named("motionStateToDto")
+  default AstralStateDTO motionStateToDto(MotionState motionState) {
     AstralStateDTOBuilder builder =
-        AstralStateDTO.builder()
-            .bodyType(body.getBodyType())
-            .radius(body.getBodyRadius())
-            .mass(motionState.getMass())
-            .timestamp(Timestamp.from(motionState.getEpoch()));
+        AstralStateDTO.builder().timestamp(Timestamp.from(motionState.getEpoch()));
 
     if (!(motionState instanceof OrbitalState state)) {
       Vector3DTO position = new Vector3DTO(motionState.getPosition());

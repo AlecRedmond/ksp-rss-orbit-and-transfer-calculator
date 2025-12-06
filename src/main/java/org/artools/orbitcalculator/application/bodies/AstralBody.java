@@ -5,6 +5,7 @@ import static org.artools.orbitcalculator.constant.Constant.GRAVITATIONAL_CONSTA
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.Getter;
 import org.artools.orbitcalculator.application.bodies.planets.BodyType;
 import org.artools.orbitcalculator.application.vector.MotionState;
@@ -13,12 +14,13 @@ import org.artools.orbitcalculator.method.vector.MotionStateUtils;
 @Getter
 public abstract class AstralBody {
   protected double mu;
-  @Getter protected MotionState currentMotionState;
+  protected MotionState currentMotionState;
   protected List<MotionState> snapshots;
   protected BodyType sphereOfInfluence;
 
   protected AstralBody() {
     snapshots = new ArrayList<>();
+    currentMotionState = null;
   }
 
   public Instant getInitializationTime() {
@@ -48,13 +50,20 @@ public abstract class AstralBody {
   }
 
   public void setCurrentMotionState(MotionState state) {
-    if (state.getEpoch().isBefore(getCurrentEpoch())) {
+    if (stateIsPriorToCurrentEpoch(state)) {
       // TODO - Make a custom exception here
       throw new IllegalArgumentException(
           "Attempted to add a state prior to the current epoch in AstralBody %s".formatted(this));
     }
     currentMotionState = state;
     snapshots.add(MotionStateUtils.copyOf(state));
+  }
+
+  private boolean stateIsPriorToCurrentEpoch(MotionState state) {
+    if (Optional.ofNullable(currentMotionState).isEmpty()) {
+      return false;
+    }
+    return state.getEpoch().isBefore(getCurrentEpoch());
   }
 
   public Instant getCurrentEpoch() {

@@ -3,11 +3,13 @@ package org.artools.orbitcalculator.application.jpa;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 @Embeddable
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class Vector3DTO {
   private double x;
   private double y;

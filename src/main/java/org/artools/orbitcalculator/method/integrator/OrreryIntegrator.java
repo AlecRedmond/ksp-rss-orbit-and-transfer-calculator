@@ -14,26 +14,28 @@ import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator;
 import org.artools.orbitcalculator.application.bodies.AstralBody;
 import org.artools.orbitcalculator.application.bodies.Craft;
 import org.artools.orbitcalculator.application.integrator.CraftEngineBurn;
-import org.artools.orbitcalculator.application.integrator.CraftItinerary;
 import org.artools.orbitcalculator.application.vector.MotionState;
 import org.artools.orbitcalculator.application.vector.Orrery;
+import org.artools.orbitcalculator.method.vector.OrreryUtils;
 
 public class OrreryIntegrator {
-  private static final double SCAL_ABSOLUTE_TOLERANCE = 1e-10;
-  private static final double SCAL_RELATIVE_TOLERANCE = 1e-10;
+  private static final double ABSOLUTE_ERROR_TOLERANCE = 1e-10;
+  private static final double RELATIVE_ERROR_TOLERANCE = 1e-10;
   private static final double MIN_TIMESTEP_SECONDS = 1e-6;
   private static final double MAX_TIMESTEP_SECONDS = 3600.0 * 6;
   @Getter private final Orrery orrery;
   private final Map<Craft, CraftEngineBurn> craftsBurning;
+  private final OrreryUtils utils;
   private double[] stateVector;
 
   public OrreryIntegrator(Orrery orrery) {
     this.orrery = orrery;
+    this.utils = new OrreryUtils(orrery);
     this.craftsBurning = new HashMap<>();
-    buildStateVector();
+    rebuildStateVector();
   }
 
-  private void buildStateVector() {
+  public void rebuildStateVector() {
     this.stateVector = new double[getBodies().size() * VectorDimensionIndex.getDimension()];
     IntStream.range(0, getBodies().size()).forEach(this::inputStates);
   }
@@ -57,70 +59,6 @@ public class OrreryIntegrator {
     stateVector[MASS.offsetIndex(vectorIndex)] = body.getMass();
   }
 
-  public void addCraft(Craft craft) {
-    Instant initTime = craft.getInitializationTime();
-    if (getCurrentEpoch().equals(initTime)) {
-      getBodies().add(craft);
-      buildStateVector();
-      return;
-    }
-    throw new IllegalArgumentException(
-        "Tried to add craft %s to the Orrery at time %s. Expected time %s."
-            .formatted(craft.getId(), getCurrentEpoch(), craft.getInitializationTime()));
-  }
-
-  private Instant getCurrentEpoch() {
-    return orrery.getEpoch();
-  }
-
-  public void removeCraft(Craft craft) {
-    boolean craftRemoved = removeCraftFromBodiesIfPresent(ci, forwards);
-    if (craftRemoved) buildStateVector();
-  }
-
-  private boolean removeCraftFromBodiesIfPresent(CraftItinerary ci, boolean saveFinalState) {
-    Craft craft = ci.getCraft();
-
-    Optional<Craft> optionalCraft =
-        getBodies().stream()
-            .filter(Craft.class::isInstance)
-            .map(Craft.class::cast)
-            .filter(craft::equals)
-            .findAny();
-
-    optionalCraft.ifPresent(
-        c -> {
-          getBodies().remove(c);
-          craftsBurning.remove(c);
-          if (saveFinalState) ci.setFinalMotionState(c.getCurrentMotionState());
-        });
-
-    return optionalCraft.isPresent();
-  }
-
-  public void addCraftBurn(CraftEngineBurn burn, boolean forwards) {
-    Craft craft = burn.getCraft();
-    if (forwards) {
-      burn.setInitialMass(craft.getMass());
-      burn.setInitialDeltaV(craft.getRemainingDeltaV());
-    } else {
-      craft.setMass(burn.getFinalMass());
-    }
-    craftsBurning.put(burn.getCraft(), burn);
-  }
-
-  public void removeCraftBurn(CraftEngineBurn burn, boolean forwards) {
-    Craft craft = burn.getCraft();
-    if (forwards) {
-      burn.setFinalMass(craft.getMass());
-      burn.setFinalDeltaV(craft.getRemainingDeltaV());
-      burn.setExpendedDeltaV(burn.getFinalDeltaV() - burn.getInitialDeltaV());
-    } else {
-      craft.setMass(burn.getInitialMass());
-    }
-    craftsBurning.remove(burn.getCraft());
-  }
-
   public OrreryIntegrator stepToTime(Instant epoch) throws NumberIsTooSmallException {
     Duration toStep = Duration.between(orrery.getEpoch(), epoch);
     integrate(toStep);
@@ -133,14 +71,15 @@ public class OrreryIntegrator {
         new DormandPrince853Integrator(
             MIN_TIMESTEP_SECONDS,
             MAX_TIMESTEP_SECONDS,
-            SCAL_ABSOLUTE_TOLERANCE,
-            SCAL_RELATIVE_TOLERANCE);
+            ABSOLUTE_ERROR_TOLERANCE,
+            RELATIVE_ERROR_TOLERANCE);
     NBodyODEProblem problem = new NBodyODEProblem(getBodies(), craftsBurning);
     integrator.integrate(problem, 0, stateVector, toStep.getSeconds(), stateVector);
   }
 
   private void writeResultsToOrrery(Instant epoch) {
     IntStream.range(0, getBodies().size()).forEach(i -> writeNewBodyVectors(i, epoch));
+    utils.convertToOrbitalStates();
   }
 
   private void writeNewBodyVectors(int bodyIndex, Instant epoch) {
@@ -178,6 +117,10 @@ public class OrreryIntegrator {
     Instant newEpoch = getCurrentEpoch().plus(toStep);
     integrate(toStep);
     writeResultsToOrrery(newEpoch);
+  }
+
+  private Instant getCurrentEpoch() {
+    return orrery.getEpoch();
   }
 
   enum VectorDimensionIndex {

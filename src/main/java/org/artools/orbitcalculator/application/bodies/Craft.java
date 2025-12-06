@@ -5,6 +5,7 @@ import static org.artools.orbitcalculator.constant.Constant.EARTH_STANDARD_GRAVI
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.artools.orbitcalculator.application.bodies.planets.BodyType;
+import org.artools.orbitcalculator.application.kepler.KeplerOrbit;
 import org.artools.orbitcalculator.application.vector.MotionState;
 
 @EqualsAndHashCode(callSuper = true)
@@ -18,6 +19,9 @@ public class Craft extends AstralBody {
   private double dryMass;
   private double remainingDeltaV;
 
+  private KeplerOrbit initialOrbit;
+  private KeplerOrbit finalOrbit;
+
   public Craft(
       MotionState motionState,
       String id,
@@ -25,7 +29,9 @@ public class Craft extends AstralBody {
       double engineISP,
       double engineThrustNewtons,
       double currentMass,
-      double dryMass) {
+      double dryMass,
+      KeplerOrbit initialOrbit,
+      KeplerOrbit finalOrbit) {
     super();
     setCurrentMotionState(motionState);
     motionState.setMass(currentMass);
@@ -37,6 +43,8 @@ public class Craft extends AstralBody {
     this.dryMass = dryMass;
     this.mu = massToMu();
     this.remainingDeltaV = calculateRemainingDeltaV();
+    this.initialOrbit = initialOrbit;
+    this.finalOrbit = finalOrbit;
   }
 
   @Override

@@ -9,6 +9,7 @@ import org.artools.orbitcalculator.application.vector.MotionState;
 
 @Getter
 public abstract class Planet extends AstralBody {
+  public static final Instant PLANET_INITIALIZATION = Instant.parse("1951-01-01T00:00:00.00Z");
   private final BodyType bodyType;
   private double j2;
   private double bodyRadius;
@@ -42,14 +43,15 @@ public abstract class Planet extends AstralBody {
     mu = muHorizons() * 1E9;
     double mass = muToMass();
     bodyRadius = equatorialRadiusHorizons() * 1E3;
-    MotionState state = new MotionState(velocity1951Jan1, position1951Jan1, initialEpoch(), mass);
+    MotionState state =
+        new MotionState(velocity1951Jan1, position1951Jan1, PLANET_INITIALIZATION, mass);
     setCurrentMotionState(state);
   }
 
   abstract double j2();
 
   private Vector3D kilometreToSIVector(double[] horizonsArray) {
-    return new Vector3D(Arrays.stream(horizonsArray).map(d -> d * 1E3).toArray());
+    return new Vector3D(Arrays.stream(horizonsArray).map(kilometre -> kilometre * 1E3).toArray());
   }
 
   // in km^3/s^2
@@ -58,18 +60,14 @@ public abstract class Planet extends AstralBody {
   // in km
   abstract double equatorialRadiusHorizons();
 
-  protected Instant initialEpoch() {
-    return Instant.parse("1951-01-01T00:00:00.00Z");
-  }
-
   @Override
   public MotionState getCurrentMotionState() {
     return currentMotionState;
   }
 
   @Override
-  public void setCurrentMotionState(MotionState state) {
-    this.currentMotionState = state;
+  public Instant getInitializationTime() {
+    return PLANET_INITIALIZATION;
   }
 
   public String getId() {
