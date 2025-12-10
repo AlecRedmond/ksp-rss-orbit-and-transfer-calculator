@@ -3,6 +3,7 @@ package org.artools.orbitcalculator.service;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
+import org.artools.orbitcalculator.application.bodies.planets.BodyType;
 import org.artools.orbitcalculator.application.jpa.AstralBodyDTO;
 import org.artools.orbitcalculator.application.jpa.PlanetDTO;
 import org.artools.orbitcalculator.application.vector.Orrery;
@@ -42,7 +43,18 @@ class AstralBodyServiceTest {
   }
 
   @Test
-  void findById() {}
+  void findById() {
+    List<AstralBodyDTO> bodies = test.convertOrreryBodiesToDto(orrery);
+    String id = "";
+    for (AstralBodyDTO bodyDTO : bodies) {
+      PlanetDTO newDTO = (PlanetDTO) test.save(bodyDTO);
+      if (newDTO.getBodyType().equals(BodyType.EARTH)) {
+        id = newDTO.getId();
+      }
+    }
+    PlanetDTO planetDTO = (PlanetDTO) test.findById(id).orElseThrow();
+    assertEquals(BodyType.EARTH, planetDTO.getBodyType());
+  }
 
   @Test
   void fetchAll() {}
