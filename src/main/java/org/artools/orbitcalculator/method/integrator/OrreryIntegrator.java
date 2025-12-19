@@ -13,6 +13,7 @@ import org.apache.commons.math3.ode.FirstOrderIntegrator;
 import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator;
 import org.artools.orbitcalculator.application.bodies.AstralBody;
 import org.artools.orbitcalculator.application.bodies.Craft;
+import org.artools.orbitcalculator.application.bodies.planets.BodyType;
 import org.artools.orbitcalculator.application.integrator.CraftEngineBurn;
 import org.artools.orbitcalculator.application.vector.MotionState;
 import org.artools.orbitcalculator.application.vector.Orrery;
@@ -37,6 +38,10 @@ public class OrreryIntegrator {
 
   public void rebuildStateVector() {
     this.stateVector = new double[getBodies().size() * VectorDimensionIndex.getDimension()];
+    reInputStatesFromOrrery();
+  }
+
+  private void reInputStatesFromOrrery() {
     IntStream.range(0, getBodies().size()).forEach(this::inputStates);
   }
 
@@ -79,7 +84,9 @@ public class OrreryIntegrator {
 
   private void writeResultsToOrrery(Instant epoch) {
     IntStream.range(0, getBodies().size()).forEach(i -> writeNewBodyVectors(i, epoch));
+    utils.centreSun();
     utils.convertToOrbitalStates();
+    reInputStatesFromOrrery();
   }
 
   private void writeNewBodyVectors(int bodyIndex, Instant epoch) {

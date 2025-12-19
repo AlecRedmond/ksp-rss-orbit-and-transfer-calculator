@@ -1,19 +1,18 @@
 package org.artools.orbitcalculator.application.jpa;
 
 import jakarta.persistence.*;
-import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.artools.orbitcalculator.application.kepler.KeplerOrbit;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.sql.Timestamp;
+
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class AstralStateDTO {
   @Id @UuidGenerator private String id;
 
@@ -34,4 +33,52 @@ public class AstralStateDTO {
 
   @OneToOne(cascade = CascadeType.ALL)
   private KeplerOrbit orbit;
+
+  public static AstralStateDTOBuilder builder() {
+    return new AstralStateDTOBuilder();
+  }
+
+  public static class AstralStateDTOBuilder {
+    private String id;
+    private Timestamp timestamp;
+    private Vector3DTO position;
+    private Vector3DTO velocity;
+    private KeplerOrbit orbit;
+
+    AstralStateDTOBuilder() {
+    }
+
+    public AstralStateDTOBuilder id(String id) {
+      this.id = id;
+      return this;
+    }
+
+    public AstralStateDTOBuilder timestamp(Timestamp timestamp) {
+      this.timestamp = timestamp;
+      return this;
+    }
+
+    public AstralStateDTOBuilder position(Vector3DTO position) {
+      this.position = position;
+      return this;
+    }
+
+    public AstralStateDTOBuilder velocity(Vector3DTO velocity) {
+      this.velocity = velocity;
+      return this;
+    }
+
+    public AstralStateDTOBuilder orbit(KeplerOrbit orbit) {
+      this.orbit = orbit;
+      return this;
+    }
+
+    public AstralStateDTO build() {
+      return new AstralStateDTO(this.id, this.timestamp, this.position, this.velocity, this.orbit);
+    }
+
+    public String toString() {
+      return "AstralStateDTO.AstralStateDTOBuilder(id=" + this.id + ", timestamp=" + this.timestamp + ", position=" + this.position + ", velocity=" + this.velocity + ", orbit=" + this.orbit + ")";
+    }
+  }
 }

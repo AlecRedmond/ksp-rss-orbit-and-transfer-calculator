@@ -7,6 +7,7 @@ import lombok.Getter;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.artools.orbitcalculator.application.bodies.AstralBody;
 import org.artools.orbitcalculator.application.bodies.Craft;
+import org.artools.orbitcalculator.application.bodies.planets.BodyType;
 import org.artools.orbitcalculator.application.bodies.planets.Planet;
 import org.artools.orbitcalculator.application.vector.MotionState;
 import org.artools.orbitcalculator.application.vector.OrbitalState;
@@ -77,5 +78,9 @@ public class OrreryUtils {
               motionState.setPosition(motionState.getPosition().add(positionShiftVector));
               motionState.setVelocity(motionState.getVelocity().add(velocityShiftVector));
             });
+  }
+
+  public void centreSun() {
+    centreBody(orrery.getPlanetByType(BodyType.SUN));
   }
 }
